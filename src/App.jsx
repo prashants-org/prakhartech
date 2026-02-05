@@ -14,6 +14,14 @@ import WhyChoose from './pages/WhyChoose'
 import VehicleFleet from './pages/VehicleFleet'
 import Security from './pages/Security'
 import Personal from './pages/Personal'
+import ElideFireball from './pages/ElideFireball'
+import ElideProductOverview from './pages/ElideProductOverview'
+import ElideFaq from './pages/ElideFaq'
+import ElideHealthSafety from './pages/ElideHealthSafety'
+import ElideDisposal from './pages/ElideDisposal'
+import ElideWarranty from './pages/ElideWarranty'
+import ElidePatents from './pages/ElidePatents'
+import ElideStory from './pages/ElideStory'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -34,6 +42,14 @@ function App() {
         <Route path="personal" element={<Personal />} />
         <Route path="whychoose" element={<WhyChoose />} />
         <Route path="whygps" element={<WhyGps />} />
+        <Route path="elidefireball" element={<ElideFireball />} />
+        <Route path="elidefireball/product-overview" element={<ElideProductOverview />} />
+        <Route path="elidefireball/faq" element={<ElideFaq />} />
+        <Route path="elidefireball/health-and-safety" element={<ElideHealthSafety />} />
+        <Route path="elidefireball/disposal" element={<ElideDisposal />} />
+        <Route path="elidefireball/product-warrantee" element={<ElideWarranty />} />
+        <Route path="elidefireball/patents" element={<ElidePatents />} />
+        <Route path="elidefireball/the-elide-fire-ball-story" element={<ElideStory />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

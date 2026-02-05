@@ -4,6 +4,7 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 function Layout() {
   const location = useLocation()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isNavOpen, setIsNavOpen] = useState(false)
   const baseUrl = import.meta.env.BASE_URL
 
   useEffect(() => {
@@ -22,6 +23,10 @@ function Layout() {
       window.removeEventListener('open-enquiry', handleOpen)
     }
   }, [location.hash])
+
+  useEffect(() => {
+    setIsNavOpen(false)
+  }, [location.pathname])
 
   return (
     <div className="app-shell">
@@ -43,8 +48,21 @@ function Layout() {
         </div>
       </header>
 
-      <nav className="nav nav--creative">
+      <nav className={`nav nav--creative ${isNavOpen ? 'nav--open' : ''}`}>
         <div className="container nav-inner">
+          <button
+            type="button"
+            className="nav-toggle"
+            onClick={() => setIsNavOpen((prev) => !prev)}
+            aria-expanded={isNavOpen}
+            aria-controls="primary-navigation"
+          >
+            <span className="nav-toggle-bar" />
+            <span className="nav-toggle-bar" />
+            <span className="nav-toggle-bar" />
+            <span className="nav-toggle-label">Menu</span>
+          </button>
+          <div id="primary-navigation" className="nav-links">
           <NavLink to="/" end className="nav-link">
             Home
           </NavLink>
@@ -72,9 +90,10 @@ function Layout() {
           <NavLink to="/faq" className="nav-link">
             FAQ
           </NavLink>
-          <a href={`${baseUrl}elidefireball/index.html`} className="nav-logo">
+          <NavLink to="/elidefireball" className="nav-logo">
             <img src={`${baseUrl}images/logo2.png`} alt="Elide Fireball" />
-          </a>
+          </NavLink>
+          </div>
         </div>
       </nav>
 
