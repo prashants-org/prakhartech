@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { contactInfo } from '../data/contactInfo'
 
 function Layout() {
   const location = useLocation()
@@ -40,7 +41,7 @@ function Layout() {
             </div>
           </Link>
           <div className="topbar-actions">
-            <span className="callout">Call us: 9822193603</span>
+            <span className="callout">Call us: {contactInfo.phone}</span>
             <button type="button" className="primary-btn" onClick={() => setIsModalOpen(true)}>
               Get a Demo
             </button>

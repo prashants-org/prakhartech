@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { contactInfo } from '../data/contactInfo'
 
 function Enquiry() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -75,7 +76,7 @@ function Enquiry() {
           <div className="cta-panel">
             <div>
               <h2>Prefer to call us?</h2>
-              <p className="muted">Reach the head office at 9822193603.</p>
+              <p className="muted">Reach the head office at {contactInfo.phone}.</p>
             </div>
             <Link to="/contact" className="primary-btn">
               Go to Contact

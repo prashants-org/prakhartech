@@ -1,48 +1,11 @@
 import { useState } from 'react'
-
-const locations = [
-  {
-    title: 'Head Sales & Marketing',
-    details: ['Prashant Srivastava : 9326950999', 'Email: prashant@prakhartech.com']
-  },
-  {
-    title: 'Corporate, Sales & Marketing Office',
-    details: [
-      'LG 03, Pheonix Market City,',
-      'East Court, Viman Nagar,',
-      'Pune - 411014',
-      'Contact: 9822193603'
-    ],
-    address: 'LG 03, Pheonix Market City, East Court, Viman Nagar, Pune - 411014'
-  },
-  {
-    title: 'Mumbai Office',
-    details: [
-      '02, Ulhas Building, Near Railway Station,',
-      'OPP. Kaveri Jeweller, Bharucha Road,',
-      'Dahisar (E), Mumbai-68'
-    ],
-    address: '02, Ulhas Building, Near Railway Station, OPP. Kaveri Jeweller, Bharucha Road, Dahisar (E), Mumbai-68'
-  },
-  {
-    title: 'Bangalore Office',
-    details: [
-      'No 3/23, 2nd Floor, Anand Complex,',
-      'Service Road, Outer Ring Road,',
-      'Malagala Nagarbhavi 2nd Stage, Bangalore - 560072'
-    ],
-    address: 'No 3/23, 2nd Floor, Anand Complex, Service Road, Outer Ring Road, Malagala Nagarbhavi 2nd Stage, Bangalore - 560072'
-  },
-  {
-    title: 'Delhi Office',
-    details: ['414, 3rd Floor, Sunlight Colony Part 2, Ashram, Delhi - 110014'],
-    address: '414, 3rd Floor, Sunlight Colony Part 2, Ashram, Delhi - 110014'
-  }
-]
+import { contactInfo } from '../data/contactInfo'
 
 function Contact() {
-  const mapLocations = locations.filter((location) => location.address)
+  const mapLocations = contactInfo.locations.filter((location) => location.address)
   const [selectedAddress, setSelectedAddress] = useState(mapLocations[0]?.address || '')
+  const hasMultipleLocations = mapLocations.length > 1
+  const mapLocationLabel = mapLocations[0]?.title || 'Head Office'
   const baseUrl = import.meta.env.BASE_URL
 
   return (
@@ -66,15 +29,15 @@ function Contact() {
             <div className="contact-highlight">
               <div>
                 <h3>Call Us</h3>
-                <p>9822193603</p>
+                <p>{contactInfo.phone}</p>
               </div>
               <div>
                 <h3>Sales Email</h3>
-                <p>prashant@prakhartech.com</p>
+                <p>{contactInfo.salesEmail}</p>
               </div>
               <div>
                 <h3>Regions</h3>
-                <p>Pune · Bangalore · Mumbai · Delhi</p>
+                <p>{contactInfo.regions.join(' · ')}</p>
               </div>
             </div>
           </div>
@@ -82,20 +45,24 @@ function Contact() {
             <div className="map-card">
               <div className="map-header">
                 <h3>Find a location</h3>
-                <select
-                  value={selectedAddress}
-                  onChange={(event) => setSelectedAddress(event.target.value)}
-                >
-                  {mapLocations.map((location) => (
-                    <option key={location.title} value={location.address}>
-                      {location.title}
-                    </option>
-                  ))}
-                </select>
+                {hasMultipleLocations ? (
+                  <select
+                    value={selectedAddress}
+                    onChange={(event) => setSelectedAddress(event.target.value)}
+                  >
+                    {mapLocations.map((location) => (
+                      <option key={location.title} value={location.address}>
+                        {location.title}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="muted">{mapLocationLabel}</p>
+                )}
               </div>
               <iframe
                 title="Location map"
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(selectedAddress)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(selectedAddress)}&t=&z=14&ie=UTF8&iwloc=near&output=embed`}
                 loading="lazy"
               />
             </div>
@@ -121,7 +88,7 @@ function Contact() {
             <p className="muted">Reach a local team for faster assistance.</p>
           </div>
           <div className="contact-grid">
-            {locations.map((location) => (
+            {contactInfo.locations.map((location) => (
               <div className="contact-card" key={location.title}>
                 <h3>{location.title}</h3>
                 <ul>
