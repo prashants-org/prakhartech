@@ -1,4 +1,7 @@
 import { defineConfig } from "@playwright/test";
+import { env } from "node:process";
+
+const isCI = Boolean(env.CI);
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -13,7 +16,7 @@ export default defineConfig({
   webServer: {
     command: "npm run dev -- --host",
     url: "http://127.0.0.1:5173",
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: !isCI,
     timeout: 120 * 1000,
   },
 });

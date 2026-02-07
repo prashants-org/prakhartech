@@ -15,18 +15,23 @@ function Layout() {
 
     window.addEventListener('open-enquiry', handleOpen)
 
+    let hashTimerId
     if (location.hash === '#enquiry') {
-      setIsModalOpen(true)
+      hashTimerId = setTimeout(() => setIsModalOpen(true), 0)
       window.history.replaceState(null, '', location.pathname)
     }
 
     return () => {
       window.removeEventListener('open-enquiry', handleOpen)
+      if (hashTimerId) {
+        clearTimeout(hashTimerId)
+      }
     }
-  }, [location.hash])
+  }, [location.hash, location.pathname])
 
   useEffect(() => {
-    setIsNavOpen(false)
+    const navTimerId = setTimeout(() => setIsNavOpen(false), 0)
+    return () => clearTimeout(navTimerId)
   }, [location.pathname])
 
   return (

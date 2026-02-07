@@ -8,12 +8,14 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: "./src/test/setupTests.js",
-    include: ["src/test/**/*.{test,spec}.{js,jsx,ts,tsx}"],
+    include: ["src/**/*.{test,spec}.{js,jsx,ts,tsx}"],
     exclude: ["tests/e2e/**", "node_modules/**"],
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],
       reportsDirectory: "coverage",
+      include: ["src/**/*"],
+      exclude: ["src/main.tsx", "src/**/*.d.ts"],
     },
   },
 });
