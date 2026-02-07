@@ -22,6 +22,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
       # 1. Run Tests and pipe output to a file (so we can put it in the issue)
       - name: Run Tests
         id: run-tests
