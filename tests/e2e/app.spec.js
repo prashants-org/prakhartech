@@ -42,7 +42,7 @@ test("opens enquiry modal from home", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Request Online Demo" }).click();
   await expect(
-    page.getByRole("heading", { name: "Enquiry Form" }),
+    page.getByRole("heading", { name: "Get in Touch" }),
   ).toBeVisible();
 });
 
