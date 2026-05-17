@@ -17,13 +17,13 @@ describe('App routing and key flows', () => {
     renderWithRoute('/')
 
     expect(
-      screen.getByRole('heading', {
+      await screen.findByRole('heading', {
         name: /keep every vehicle visible/i
       }),
     ).toBeInTheDocument()
 
     await userEvent.click(screen.getByRole('button', { name: /request online demo/i }))
-    expect(await screen.findByRole('heading', { name: /enquiry form/i })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: /get in touch/i })).toBeInTheDocument()
   })
 
   it('navigates to contact and updates map location', async () => {
@@ -50,9 +50,9 @@ describe('App routing and key flows', () => {
     }
   })
 
-  it('renders a 404 page for unknown routes', () => {
+  it('renders a 404 page for unknown routes', async () => {
     renderWithRoute('/this-route-does-not-exist')
 
-    expect(screen.getByRole('heading', { name: /page not found/i })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: /page not found/i })).toBeInTheDocument()
   })
 })

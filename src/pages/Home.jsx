@@ -36,7 +36,7 @@ function Home() {
           </div>
           <div className="hero-visual">
             <div className="glow-card">
-              <img src={`${baseUrl}images/1.jpg`} alt="GPS Tracking" />
+              <img src={`${baseUrl}images/1.jpg`} alt="GPS Tracking dashboard" width="600" height="400" />
             </div>
             <div className="stat-cards">
               <div>
@@ -115,7 +115,7 @@ function Home() {
               </div>
             </div>
             <div className="glow-card">
-              <img src={`${baseUrl}images/whychoose.jpg`} alt="Fleet insights" />
+              <img src={`${baseUrl}images/whychoose.jpg`} alt="Fleet insights dashboard" loading="lazy" />
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@ function Home() {
           </div>
           <div className="card-grid">
             <div className="card">
-              <img src={`${baseUrl}images/serives_img1.png`} alt="Vehicle Fleet Management" />
+              <img src={`${baseUrl}images/serives_img1.png`} alt="Vehicle Fleet Management" loading="lazy" />
               <div>
                 <h4>Vehicle Fleet Management</h4>
                 <p>Improve safety and productivity with always-on tracking.</p>
@@ -141,7 +141,7 @@ function Home() {
               </div>
             </div>
             <div className="card">
-              <img src={`${baseUrl}images/serives_img2.png`} alt="Security Enforcement" />
+              <img src={`${baseUrl}images/serives_img2.png`} alt="Security Enforcement" loading="lazy" />
               <div>
                 <h4>Security Enforcement</h4>
                 <p>Track vehicle activity for secure and covert surveillance.</p>
@@ -151,7 +151,7 @@ function Home() {
               </div>
             </div>
             <div className="card">
-              <img src={`${baseUrl}images/serives_img3.png`} alt="Personal GPS Tracking" />
+              <img src={`${baseUrl}images/serives_img3.png`} alt="Personal GPS Tracking" loading="lazy" />
               <div>
                 <h4>Personal GPS Tracking</h4>
                 <p>Safe, convenient, and easy-to-use GPS tracking tools.</p>
@@ -174,14 +174,14 @@ function Home() {
           </div>
           <div className="image-grid">
             <Link to="/whygps" className="image-card">
-              <img src={`${baseUrl}images/GPS.jpg`} alt="Why GPS Tracking" />
+              <img src={`${baseUrl}images/GPS.jpg`} alt="Why GPS Tracking" loading="lazy" />
               <div>
                 <h4>Why GPS Tracking</h4>
                 <p>Increase productivity, improve management, and enable live navigation.</p>
               </div>
             </Link>
             <Link to="/whychoose" className="image-card">
-              <img src={`${baseUrl}images/whychoose.jpg`} alt="Why Choose Prakhar Technology" />
+              <img src={`${baseUrl}images/whychoose.jpg`} alt="Why Choose Prakhar Technology" loading="lazy" />
               <div>
                 <h4>Why Choose Us</h4>
                 <p>Certified operations across the country with trusted expertise.</p>
@@ -192,7 +192,7 @@ function Home() {
               className="image-card"
               onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
             >
-              <img src={`${baseUrl}images/demo.png`} alt="Online Demo" />
+              <img src={`${baseUrl}images/demo.png`} alt="Online Demo" loading="lazy" />
               <div>
                 <h4>Online Demo</h4>
                 <p>Request a demo and our team will get back to you.</p>

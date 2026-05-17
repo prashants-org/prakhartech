@@ -59,7 +59,7 @@ function WhyGps() {
             </div>
           </div>
           <div className="glow-card">
-            <img src={`${baseUrl}images/gps_img.png`} alt="GPS Tracking" />
+            <img loading="lazy" src={`${baseUrl}images/gps_img.png`} alt="GPS Tracking" />
           </div>
         </div>
       </section>

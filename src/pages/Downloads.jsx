@@ -42,7 +42,7 @@ function Downloads() {
           <div className="download-grid">
             {downloads(baseUrl).map((item) => (
               <div className="download-card" key={item.title}>
-                <img src={item.image} alt={item.title} />
+                <img loading="lazy" src={item.image} alt={item.title} />
                 <div>
                   <h3>{item.title}</h3>
                   <p className="muted">Model: {item.code}</p>

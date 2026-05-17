@@ -45,7 +45,7 @@ function WhyChoose() {
             </div>
           </div>
           <div className="glow-card">
-            <img src={`${baseUrl}images/why_manyatech_img.png`} alt="Why Prakhar Technology" />
+            <img loading="lazy" src={`${baseUrl}images/why_manyatech_img.png`} alt="Why Prakhar Technology" />
           </div>
         </div>
       </section>

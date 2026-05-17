@@ -73,7 +73,7 @@ function Personal() {
             </div>
           </div>
           <div className="glow-card">
-            <img src={`${baseUrl}images/serives_img3.png`} alt="Personal tracking" />
+            <img loading="lazy" src={`${baseUrl}images/serives_img3.png`} alt="Personal tracking" />
           </div>
         </div>
       </section>
@@ -88,7 +88,7 @@ function Personal() {
             {personalSegments(baseUrl).map((segment) => (
               <article className="service-card" key={segment.title}>
                 <div className="service-card__media">
-                  <img src={segment.image} alt={segment.title} />
+                  <img loading="lazy" src={segment.image} alt={segment.title} />
                 </div>
                 <div className="service-card__body">
                   <h3>{segment.title}</h3>

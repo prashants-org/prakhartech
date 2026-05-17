@@ -1,56 +1,219 @@
+import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import Layout from './components/Layout'
-import Home from './pages/Home'
-import About from './pages/About'
-import Products from './pages/Products'
-import Softwares from './pages/Softwares'
-import WhyGps from './pages/WhyGps'
-import Downloads from './pages/Downloads'
-import Faq from './pages/Faq'
-import Contact from './pages/Contact'
-import OpenEnquiry from './pages/OpenEnquiry'
-import WhyChoose from './pages/WhyChoose'
-import VehicleFleet from './pages/VehicleFleet'
-import Security from './pages/Security'
-import Personal from './pages/Personal'
-import ElideFireball from './pages/ElideFireball'
-import ElideProductOverview from './pages/ElideProductOverview'
-import ElideFaq from './pages/ElideFaq'
-import ElideHealthSafety from './pages/ElideHealthSafety'
-import ElideDisposal from './pages/ElideDisposal'
-import ElideWarranty from './pages/ElideWarranty'
-import ElidePatents from './pages/ElidePatents'
-import ElideStory from './pages/ElideStory'
-import NotFound from './pages/NotFound'
+
+const Home = lazy(() => import('./pages/Home'))
+const About = lazy(() => import('./pages/About'))
+const Products = lazy(() => import('./pages/Products'))
+const Softwares = lazy(() => import('./pages/Softwares'))
+const WhyGps = lazy(() => import('./pages/WhyGps'))
+const Downloads = lazy(() => import('./pages/Downloads'))
+const Faq = lazy(() => import('./pages/Faq'))
+const Contact = lazy(() => import('./pages/Contact'))
+const OpenEnquiry = lazy(() => import('./pages/OpenEnquiry'))
+const WhyChoose = lazy(() => import('./pages/WhyChoose'))
+const VehicleFleet = lazy(() => import('./pages/VehicleFleet'))
+const Security = lazy(() => import('./pages/Security'))
+const Personal = lazy(() => import('./pages/Personal'))
+const ElideFireball = lazy(() => import('./pages/ElideFireball'))
+const ElideProductOverview = lazy(() => import('./pages/ElideProductOverview'))
+const ElideFaq = lazy(() => import('./pages/ElideFaq'))
+const ElideHealthSafety = lazy(() => import('./pages/ElideHealthSafety'))
+const ElideDisposal = lazy(() => import('./pages/ElideDisposal'))
+const ElideWarranty = lazy(() => import('./pages/ElideWarranty'))
+const ElidePatents = lazy(() => import('./pages/ElidePatents'))
+const ElideStory = lazy(() => import('./pages/ElideStory'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="contact" element={<Contact />} />
-        <Route path="products" element={<Products />} />
-        <Route path="softwares" element={<Softwares />} />
-        <Route path="downloads" element={<Downloads />} />
-        <Route path="enquiry" element={<OpenEnquiry />} />
-        <Route path="demo" element={<OpenEnquiry />} />
-        <Route path="faq" element={<Faq />} />
-        <Route path="vehicle-fleet" element={<VehicleFleet />} />
-        <Route path="security" element={<Security />} />
-        <Route path="personal" element={<Personal />} />
-        <Route path="whychoose" element={<WhyChoose />} />
-        <Route path="whygps" element={<WhyGps />} />
-        <Route path="elidefireball" element={<ElideFireball />} />
-        <Route path="elidefireball/product-overview" element={<ElideProductOverview />} />
-        <Route path="elidefireball/faq" element={<ElideFaq />} />
-        <Route path="elidefireball/health-and-safety" element={<ElideHealthSafety />} />
-        <Route path="elidefireball/disposal" element={<ElideDisposal />} />
-        <Route path="elidefireball/product-warrantee" element={<ElideWarranty />} />
-        <Route path="elidefireball/patents" element={<ElidePatents />} />
-        <Route path="elidefireball/the-elide-fire-ball-story" element={<ElideStory />} />
-        <Route path="*" element={<NotFound />} />
+        <Route
+          index
+          element={
+            <Suspense fallback={null}>
+              <Home />
+            </Suspense>
+          }
+        />
+        <Route
+          path="about"
+          element={
+            <Suspense fallback={null}>
+              <About />
+            </Suspense>
+          }
+        />
+        <Route
+          path="contact"
+          element={
+            <Suspense fallback={null}>
+              <Contact />
+            </Suspense>
+          }
+        />
+        <Route
+          path="products"
+          element={
+            <Suspense fallback={null}>
+              <Products />
+            </Suspense>
+          }
+        />
+        <Route
+          path="softwares"
+          element={
+            <Suspense fallback={null}>
+              <Softwares />
+            </Suspense>
+          }
+        />
+        <Route
+          path="downloads"
+          element={
+            <Suspense fallback={null}>
+              <Downloads />
+            </Suspense>
+          }
+        />
+        <Route
+          path="enquiry"
+          element={
+            <Suspense fallback={null}>
+              <OpenEnquiry />
+            </Suspense>
+          }
+        />
+        <Route
+          path="demo"
+          element={
+            <Suspense fallback={null}>
+              <OpenEnquiry />
+            </Suspense>
+          }
+        />
+        <Route
+          path="faq"
+          element={
+            <Suspense fallback={null}>
+              <Faq />
+            </Suspense>
+          }
+        />
+        <Route
+          path="vehicle-fleet"
+          element={
+            <Suspense fallback={null}>
+              <VehicleFleet />
+            </Suspense>
+          }
+        />
+        <Route
+          path="security"
+          element={
+            <Suspense fallback={null}>
+              <Security />
+            </Suspense>
+          }
+        />
+        <Route
+          path="personal"
+          element={
+            <Suspense fallback={null}>
+              <Personal />
+            </Suspense>
+          }
+        />
+        <Route
+          path="whychoose"
+          element={
+            <Suspense fallback={null}>
+              <WhyChoose />
+            </Suspense>
+          }
+        />
+        <Route
+          path="whygps"
+          element={
+            <Suspense fallback={null}>
+              <WhyGps />
+            </Suspense>
+          }
+        />
+        <Route
+          path="elidefireball"
+          element={
+            <Suspense fallback={null}>
+              <ElideFireball />
+            </Suspense>
+          }
+        />
+        <Route
+          path="elidefireball/product-overview"
+          element={
+            <Suspense fallback={null}>
+              <ElideProductOverview />
+            </Suspense>
+          }
+        />
+        <Route
+          path="elidefireball/faq"
+          element={
+            <Suspense fallback={null}>
+              <ElideFaq />
+            </Suspense>
+          }
+        />
+        <Route
+          path="elidefireball/health-and-safety"
+          element={
+            <Suspense fallback={null}>
+              <ElideHealthSafety />
+            </Suspense>
+          }
+        />
+        <Route
+          path="elidefireball/disposal"
+          element={
+            <Suspense fallback={null}>
+              <ElideDisposal />
+            </Suspense>
+          }
+        />
+        <Route
+          path="elidefireball/product-warrantee"
+          element={
+            <Suspense fallback={null}>
+              <ElideWarranty />
+            </Suspense>
+          }
+        />
+        <Route
+          path="elidefireball/patents"
+          element={
+            <Suspense fallback={null}>
+              <ElidePatents />
+            </Suspense>
+          }
+        />
+        <Route
+          path="elidefireball/the-elide-fire-ball-story"
+          element={
+            <Suspense fallback={null}>
+              <ElideStory />
+            </Suspense>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <Suspense fallback={null}>
+              <NotFound />
+            </Suspense>
+          }
+        />
       </Route>
     </Routes>
   )

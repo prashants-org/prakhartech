@@ -1,121 +1,157 @@
-import { Link } from 'react-router-dom'
+import ElideSubnav from '../components/ElideSubnav'
 
-const steps = [
+const RETURN_STEPS = [
   {
-    title: 'Request a return',
-    detail: 'Contact our support team with your order details and reason for return.'
+    num: '01',
+    title: 'Contact our support team',
+    detail: 'Email Info@prakhartech.com or call us with your order reference, purchase date, and the reason for return. We will respond within 24 business hours.',
   },
   {
-    title: 'Receive instructions',
-    detail: 'We will provide packaging and shipment guidance based on your location.'
+    num: '02',
+    title: 'Receive return instructions',
+    detail: 'We will send you step-by-step packaging guidance, carrier requirements, and a return authorisation number specific to your location in India.',
   },
   {
-    title: 'Ship safely',
-    detail: 'Use protective packaging and follow the provided carrier requirements.'
+    num: '03',
+    title: 'Pack and ship safely',
+    detail: 'Use sturdy protective packaging. Follow the carrier requirements provided. Do not mark the package with any content description that could trigger inspection issues.',
   },
   {
-    title: 'Confirmation',
-    detail: 'Once received and verified, we will confirm next steps or replacements.'
-  }
+    num: '04',
+    title: 'Confirmation and resolution',
+    detail: 'Once we receive and inspect the returned unit, we will confirm the outcome and arrange a replacement, credit, or warranty resolution as applicable.',
+  },
 ]
 
-const disposalTips = [
-  'Follow local regulations for fire suppression devices.',
-  'Do not puncture or disassemble the ball.',
-  'Contact support for recycling or disposal partners.',
-  'Store in a dry area until disposal is arranged.'
+const DISPOSAL_RULES = [
+  {
+    icon: '🏛️',
+    title: 'Follow local regulations',
+    detail: 'Fire suppression devices are subject to hazardous materials regulations in most regions. Check with your local municipal authority for the correct disposal category.',
+  },
+  {
+    icon: '🚫',
+    title: 'Do not puncture or incinerate',
+    detail: 'Never pierce, crush, or incinerate the ball. The internal chemical charge can react dangerously if the casing is compromised outside of its designed activation conditions.',
+  },
+  {
+    icon: '📦',
+    title: 'Store safely until disposal',
+    detail: 'If you cannot dispose of it immediately, store in a cool, dry, well-ventilated area away from heat sources and flammable materials until proper disposal is arranged.',
+  },
+  {
+    icon: '♻️',
+    title: 'Ask us about recycling partners',
+    detail: 'Contact our team and we can connect you with approved recycling or disposal facilities in your region that handle fire safety equipment responsibly.',
+  },
 ]
 
 function ElideDisposal() {
   return (
-    <div className="elide-theme">
-      <section className="elide-hero-alt">
-        <div className="container elide-hero-grid">
-          <div className="elide-hero-copy">
-            <div className="elide-breadcrumb">
-              <Link to="/elidefireball">Elide Fireball</Link>
-              <span>/</span>
-              <span>Returns & Disposals</span>
-            </div>
-            <p className="elide-kicker">Returns & Disposals</p>
-            <h1>Safe returns and responsible disposal guidance.</h1>
-            <p className="elide-lead">
-              Whether you are arranging a return or planning end-of-life disposal, follow the
-              steps below to ensure compliance and safety.
-            </p>
-            <div className="elide-hero-actions">
-              <Link to="/contact" className="primary-btn">
-                Request a Return
-              </Link>
-              <Link to="/elidefireball/product-warrantee" className="secondary-btn">
-                Warranty Details
-              </Link>
-            </div>
+    <>
+      <section className="ef-subpage-hero">
+        <div className="ef-hero-glow" aria-hidden="true" />
+        <div className="container ef-subpage-inner">
+          <div className="ef-breadcrumb">
+            <a href="/elidefireball">← Elide Fireball</a>
+            <span>/</span>
+            <span>Returns &amp; Disposal</span>
           </div>
-          <div className="elide-hero-visual">
-            <div className="elide-hero-note">
-              <h4>Important</h4>
-              <p>Do not dispose of the ball with regular waste.</p>
-            </div>
-            <div className="elide-hero-card">
-              <img
-                src={`${import.meta.env.BASE_URL}elidefireball/assets/img/slide.png`}
-                alt="Elide Fireball returns"
-              />
-            </div>
+          <span className="ef-label">Returns &amp; Disposal</span>
+          <h1>Safe returns and responsible disposal guidance.</h1>
+          <p className="ef-subpage-lead">
+            Whether you need to return a product under warranty or dispose of an activated or
+            expired unit, follow these steps to stay safe and compliant with local regulations.
+          </p>
+          <div className="ef-hero-actions">
+            <button
+              type="button"
+              className="ef-btn-primary"
+              onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+            >
+              Request a Return
+            </button>
+            <a href="/elidefireball/product-warrantee" className="ef-btn-ghost">
+              Warranty Details →
+            </a>
           </div>
         </div>
       </section>
 
-      <section className="elide-section">
+      <ElideSubnav />
+
+      {/* Return process */}
+      <section className="ef-section">
         <div className="container">
-          <div className="elide-section-head">
-            <h2>Return process</h2>
-            <p>We will guide you at each step of the return process.</p>
+          <div className="ef-section-head">
+            <span className="ef-label">Return Process</span>
+            <h2>How to return a product</h2>
+            <p>A simple four-step process — we guide you through every stage.</p>
           </div>
-          <div className="elide-steps">
-            {steps.map((step, index) => (
-              <div key={step.title} className="elide-step">
-                <span className="elide-step-number">{String(index + 1).padStart(2, '0')}</span>
-                <div>
-                  <h4>{step.title}</h4>
-                  <p>{step.detail}</p>
-                </div>
+          <div className="ef-steps">
+            {RETURN_STEPS.map((step) => (
+              <div key={step.num} className="ef-step-card">
+                <div className="ef-step-num">{step.num}</div>
+                <h4>{step.title}</h4>
+                <p>{step.detail}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="elide-section elide-section-soft">
-        <div className="container elide-duo">
-          <div>
-            <h2>Disposal checklist</h2>
-            <p>Use this guide for safe storage and disposal.</p>
+      {/* Disposal guidance */}
+      <section className="ef-section ef-section--dark">
+        <div className="container">
+          <div className="ef-section-head ef-section-head--light">
+            <span className="ef-label">Disposal</span>
+            <h2>End-of-life disposal rules</h2>
+            <p>Handle spent or expired units responsibly — they contain chemical charge materials.</p>
           </div>
-          <div className="elide-facts">
-            {disposalTips.map((tip) => (
-              <div key={tip} className="elide-fact">
-                <span className="elide-fact-dot" aria-hidden="true" />
-                <p>{tip}</p>
+          <div className="ef-safety-grid">
+            {DISPOSAL_RULES.map((rule) => (
+              <div key={rule.title} className="ef-safety-card ef-safety-card--dark">
+                <div className="ef-safety-icon" aria-hidden="true">{rule.icon}</div>
+                <h4>{rule.title}</h4>
+                <p>{rule.detail}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="elide-cta">
-        <div className="container elide-cta-inner">
+      {/* Important note */}
+      <section className="ef-section ef-section--soft">
+        <div className="container ef-notice-inner">
+          <div className="ef-notice-icon" aria-hidden="true">⚠️</div>
           <div>
-            <h2>Need return support?</h2>
-            <p>We will coordinate the safest and fastest process for your region.</p>
+            <h3>Do not dispose of with regular household waste</h3>
+            <p>
+              Elide Fireball units contain dry chemical powder that is classified as a hazardous material
+              in many jurisdictions. Placing spent or expired units in general waste or recycling bins is
+              unsafe and may violate local environmental regulations. Contact us and we will help you find
+              an approved disposal route.
+            </p>
           </div>
-          <Link to="/contact" className="primary-btn">
-            Contact Support
-          </Link>
         </div>
       </section>
-    </div>
+
+      <section className="ef-cta-band">
+        <div className="container ef-cta-band-inner">
+          <div>
+            <h2>Need return or disposal support?</h2>
+            <p>Our team coordinates the safest and fastest process for your region.</p>
+          </div>
+          <button
+            type="button"
+            className="ef-btn-primary"
+            onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+          >
+            Contact Support →
+          </button>
+        </div>
+      </section>
+    </>
   )
 }
 

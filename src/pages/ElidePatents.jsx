@@ -1,70 +1,81 @@
-import { Link } from 'react-router-dom'
+import ElideSubnav from '../components/ElideSubnav'
 
-const highlights = [
+const PATENTS = [
   {
+    icon: '🌐',
     title: 'International patents',
-    detail: 'Elide Fireball innovation is protected by multiple patents worldwide.'
+    detail: 'The Elide Fireball technology is protected by multiple patents registered across key international markets, covering the self-activation mechanism and chemical formulation.',
   },
   {
-    title: 'Trademarks',
-    detail: 'Elide Fireball branding and visual identity are registered in key markets.'
+    icon: '™️',
+    title: 'Registered trademarks',
+    detail: 'The Elide Fireball name, logo, and distinctive visual identity are registered trademarks in key markets worldwide, protecting brand integrity and authenticity.',
   },
   {
+    icon: '🇮🇳',
     title: 'India registrations',
-    detail: 'Specific patents and trademarks are filed for India distribution.'
-  }
+    detail: 'Specific patent and trademark filings have been completed for the Indian market through our authorised distribution partnership with Prakhar Technology in Pune.',
+  },
+  {
+    icon: '🏆',
+    title: 'Award recognition',
+    detail: 'The innovation has been recognised with multiple international safety and product design awards, reinforcing its status as a genuine breakthrough in fire suppression.',
+  },
+]
+
+const WHY_IT_MATTERS = [
+  'Genuine Elide Fireball units carry traceable patent documentation',
+  'Counterfeit products may not meet safety certifications',
+  'Purchase only through authorised channels to ensure warranty validity',
+  'Ask us for certification documents to support procurement or insurance requirements',
 ]
 
 function ElidePatents() {
   return (
-    <div className="elide-theme">
-      <section className="elide-hero-alt">
-        <div className="container elide-hero-grid">
-          <div className="elide-hero-copy">
-            <div className="elide-breadcrumb">
-              <Link to="/elidefireball">Elide Fireball</Link>
-              <span>/</span>
-              <span>Patents & Trademarks</span>
-            </div>
-            <p className="elide-kicker">Patents & Trademarks</p>
-            <h1>Innovation protected by global patents and trademarks.</h1>
-            <p className="elide-lead">
-              Elide Fireball is backed by registered intellectual property to protect the technology
-              and the brand across international markets.
-            </p>
-            <div className="elide-hero-actions">
-              <Link to="/contact" className="primary-btn">
-                Request Documentation
-              </Link>
-              <Link to="/elidefireball/the-elide-fire-ball-story" className="secondary-btn">
-                Read the Story
-              </Link>
-            </div>
+    <>
+      <section className="ef-subpage-hero">
+        <div className="ef-hero-glow" aria-hidden="true" />
+        <div className="container ef-subpage-inner">
+          <div className="ef-breadcrumb">
+            <a href="/elidefireball">← Elide Fireball</a>
+            <span>/</span>
+            <span>Patents &amp; Trademarks</span>
           </div>
-          <div className="elide-hero-visual">
-            <div className="elide-hero-note">
-              <h4>Protected tech</h4>
-              <p>Ask us for certificates and filings relevant to your region.</p>
-            </div>
-            <div className="elide-hero-card">
-              <img
-                src={`${import.meta.env.BASE_URL}elidefireball/assets/img/logo.png`}
-                alt="Elide Fireball trademarks"
-              />
-            </div>
+          <span className="ef-label">Patents &amp; Trademarks</span>
+          <h1>Globally protected innovation you can trust.</h1>
+          <p className="ef-subpage-lead">
+            Elide Fireball is backed by registered patents and trademarks in key international markets,
+            guaranteeing the authenticity and uniqueness of the technology.
+          </p>
+          <div className="ef-hero-actions">
+            <button
+              type="button"
+              className="ef-btn-primary"
+              onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+            >
+              Request Documentation
+            </button>
+            <a href="/elidefireball/the-elide-fire-ball-story" className="ef-btn-ghost">
+              Read the Story →
+            </a>
           </div>
         </div>
       </section>
 
-      <section className="elide-section">
+      <ElideSubnav />
+
+      {/* Patent highlights */}
+      <section className="ef-section">
         <div className="container">
-          <div className="elide-section-head">
+          <div className="ef-section-head">
+            <span className="ef-label">Intellectual Property</span>
             <h2>Patent and trademark coverage</h2>
-            <p>Key points about Elide Fireball intellectual property.</p>
+            <p>The innovation behind Elide Fireball is comprehensively protected globally.</p>
           </div>
-          <div className="elide-list-grid">
-            {highlights.map((item) => (
-              <div key={item.title} className="elide-list-card">
+          <div className="ef-safety-grid">
+            {PATENTS.map((item) => (
+              <div key={item.title} className="ef-safety-card">
+                <div className="ef-safety-icon" aria-hidden="true">{item.icon}</div>
                 <h4>{item.title}</h4>
                 <p>{item.detail}</p>
               </div>
@@ -73,18 +84,41 @@ function ElidePatents() {
         </div>
       </section>
 
-      <section className="elide-cta">
-        <div className="container elide-cta-inner">
-          <div>
-            <h2>Need verification?</h2>
-            <p>We can share documentation to support your procurement process.</p>
+      {/* Why it matters */}
+      <section className="ef-section ef-section--dark">
+        <div className="container">
+          <div className="ef-section-head ef-section-head--light">
+            <span className="ef-label">Why It Matters</span>
+            <h2>Buy genuine. Stay protected.</h2>
+            <p>Only authorised Elide Fireball units carry the full suite of international certifications and warranty coverage.</p>
           </div>
-          <Link to="/contact" className="primary-btn">
-            Contact Legal Support
-          </Link>
+          <div className="ef-checklist-grid">
+            {WHY_IT_MATTERS.map((item, i) => (
+              <div key={i} className="ef-checklist-item">
+                <div className="ef-checklist-num">{String(i + 1).padStart(2, '0')}</div>
+                <p>{item}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
-    </div>
+
+      <section className="ef-cta-band">
+        <div className="container ef-cta-band-inner">
+          <div>
+            <h2>Need patent certificates or verification?</h2>
+            <p>We can provide documentation to support your procurement or compliance process.</p>
+          </div>
+          <button
+            type="button"
+            className="ef-btn-primary"
+            onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+          >
+            Request Documents →
+          </button>
+        </div>
+      </section>
+    </>
   )
 }
 

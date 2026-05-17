@@ -41,7 +41,7 @@ function Softwares() {
           <div className="software-gallery">
             {softwareShots(baseUrl).map((shot) => (
               <div className="software-card" key={shot.title}>
-                <img src={shot.image} alt={shot.title} />
+                <img loading="lazy" src={shot.image} alt={shot.title} />
                 <div>
                   <h4>{shot.title}</h4>
                   <p>Clean layouts with real-time visibility and powerful controls.</p>

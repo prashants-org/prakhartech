@@ -109,9 +109,9 @@ function Contact() {
             <p className="muted">Stay connected with updates and announcements.</p>
           </div>
           <div className="social-row">
-            <img src={`${baseUrl}images/facebook.png`} alt="Facebook" />
-            <img src={`${baseUrl}images/twitter.png`} alt="Twitter" />
-            <img src={`${baseUrl}images/google-plus.png`} alt="Google Plus" />
+            <img loading="lazy" src={`${baseUrl}images/facebook.png`} alt="Facebook" />
+            <img loading="lazy" src={`${baseUrl}images/twitter.png`} alt="Twitter" />
+            <img loading="lazy" src={`${baseUrl}images/google-plus.png`} alt="Google Plus" />
           </div>
         </div>
       </section>

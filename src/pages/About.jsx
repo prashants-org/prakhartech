@@ -40,7 +40,7 @@ function About() {
             </div>
           </div>
           <div className="about-visual">
-            <img src={`${baseUrl}images/whychoose.jpg`} alt="Prakhar Technology" />
+            <img loading="lazy" src={`${baseUrl}images/whychoose.jpg`} alt="Prakhar Technology" />
             <div className="about-card">
               <h3>Our Mission</h3>
               <p>
@@ -60,42 +60,42 @@ function About() {
           </div>
           <div className="about-solutions">
             <Link to="/vehicle-fleet" className="solution-card">
-              <img src={`${baseUrl}images/icon1.png`} alt="Fleet Solutions" />
+              <img loading="lazy" src={`${baseUrl}images/icon1.png`} alt="Fleet Solutions" />
               <div>
                 <h4>Fleet Solutions</h4>
                 <p>Optimize routes, monitor assets, and improve productivity.</p>
               </div>
             </Link>
             <Link to="/security" className="solution-card">
-              <img src={`${baseUrl}images/icon2.png`} alt="Corporate Solutions" />
+              <img loading="lazy" src={`${baseUrl}images/icon2.png`} alt="Corporate Solutions" />
               <div>
                 <h4>Corporate Solutions</h4>
                 <p>Secure tracking for sensitive and high-value operations.</p>
               </div>
             </Link>
             <Link to="/personal" className="solution-card">
-              <img src={`${baseUrl}images/icon3.png`} alt="Individual Solutions" />
+              <img loading="lazy" src={`${baseUrl}images/icon3.png`} alt="Individual Solutions" />
               <div>
                 <h4>Individual Solutions</h4>
                 <p>Personal GPS tracking for safety and peace of mind.</p>
               </div>
             </Link>
             <Link to="/whygps" className="solution-card">
-              <img src={`${baseUrl}images/icon4.png`} alt="Why GPS" />
+              <img loading="lazy" src={`${baseUrl}images/icon4.png`} alt="Why GPS" />
               <div>
                 <h4>Why Go GPS</h4>
                 <p>Discover the advantages of live tracking and insights.</p>
               </div>
             </Link>
             <Link to="/whychoose" className="solution-card">
-              <img src={`${baseUrl}images/icon5.png`} alt="Why Prakhar" />
+              <img loading="lazy" src={`${baseUrl}images/icon5.png`} alt="Why Prakhar" />
               <div>
                 <h4>Why Prakhar</h4>
                 <p>Trusted partner with nationwide operations and expertise.</p>
               </div>
             </Link>
             <div className="solution-card">
-              <img src={`${baseUrl}images/icon6.png`} alt="Validation Approval" />
+              <img loading="lazy" src={`${baseUrl}images/icon6.png`} alt="Validation Approval" />
               <div>
                 <h4>Validation Approval</h4>
                 <p>Quality-checked systems built to comply and perform.</p>

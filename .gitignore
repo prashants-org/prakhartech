@@ -18,6 +18,9 @@ test-results
 playwright-report
 blob-report
 
+# Claude Code memory
+.claude
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

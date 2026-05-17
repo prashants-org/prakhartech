@@ -82,7 +82,7 @@ function Security() {
             </div>
           </div>
           <div className="glow-card">
-            <img src={`${baseUrl}images/serives_img2.png`} alt="Security enforcement" />
+            <img loading="lazy" src={`${baseUrl}images/serives_img2.png`} alt="Security enforcement" />
           </div>
         </div>
       </section>
@@ -97,7 +97,7 @@ function Security() {
             {securitySegments(baseUrl).map((segment) => (
               <article className="service-card" key={segment.title}>
                 <div className="service-card__media">
-                  <img src={segment.image} alt={segment.title} />
+                  <img loading="lazy" src={segment.image} alt={segment.title} />
                 </div>
                 <div className="service-card__body">
                   <h3>{segment.title}</h3>

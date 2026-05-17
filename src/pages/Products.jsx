@@ -62,14 +62,14 @@ function Products() {
               </div>
             </div>
             <div className="glow-card">
-              <img src={`${baseUrl}images/product1.png`} alt="GPS Tracking Device" />
+              <img loading="lazy" src={`${baseUrl}images/product1.png`} alt="GPS Tracking Device" />
             </div>
           </div>
 
           <div className="product-grid">
             {products(baseUrl).map((product) => (
               <div className="product-card" key={product.title}>
-                <img src={product.image} alt={product.title} />
+                <img loading="lazy" src={product.image} alt={product.title} />
                 <div>
                   <h3>{product.title}</h3>
                   <p>{product.description}</p>
