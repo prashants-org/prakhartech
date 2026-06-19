@@ -24,6 +24,7 @@ const ElideDisposal = lazy(() => import('./pages/ElideDisposal'))
 const ElideWarranty = lazy(() => import('./pages/ElideWarranty'))
 const ElidePatents = lazy(() => import('./pages/ElidePatents'))
 const ElideStory = lazy(() => import('./pages/ElideStory'))
+const Gifts = lazy(() => import('./pages/Gifts'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 function App() {
@@ -203,6 +204,14 @@ function App() {
           element={
             <Suspense fallback={null}>
               <ElideStory />
+            </Suspense>
+          }
+        />
+        <Route
+          path="gifts"
+          element={
+            <Suspense fallback={null}>
+              <Gifts />
             </Suspense>
           }
         />

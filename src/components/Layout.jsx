@@ -90,6 +90,7 @@ function Layout() {
             </button>
             <NavLink to="/contact" className="nav-link">Contact</NavLink>
             <NavLink to="/faq" className="nav-link">FAQ</NavLink>
+            <NavLink to="/gifts" className="nav-link">Gifts</NavLink>
             <NavLink to="/elidefireball" className="nav-logo" aria-label="Elide Fireball product">
               <img src={`${baseUrl}images/logo2.png`} alt="Elide Fireball" height="28" />
             </NavLink>
@@ -131,6 +132,7 @@ function Layout() {
               <li><Link to="/personal">Personal Tracking</Link></li>
               <li><Link to="/whygps">Why GPS?</Link></li>
               <li><Link to="/elidefireball">Elide Fireball</Link></li>
+              <li><Link to="/gifts">Gifts</Link></li>
             </ul>
           </div>
           <div>
