@@ -1,114 +1,157 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
+function useInView(threshold = 0.08) {
+  const ref = useRef(null)
+  const [inView, setInView] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect() } },
+      { threshold }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [threshold])
+  return [ref, inView]
+}
+
+/*
+  large: true  → tile spans 2 rows. Two large tiles anchor the mosaic:
+  index 0 (left anchor) and index 7 (right anchor).
+
+  Layout with auto-placement (3-col grid, span-2 on index 0 and 7):
+  [ 0 LARGE ] [ 1 ] [ 2 ]
+  [ 0 LARGE ] [ 3 ] [ 4 ]
+  [ 5 ] [ 6 ] [ 7 LARGE ]
+  [ 8 ] [ 9 ] [ 7 LARGE ]
+*/
 const PRODUCTS = [
   {
-    name: 'Carvaan',
-    category: 'Electronics',
-    icon: '🎵',
-    desc: 'A premium digital music player pre-loaded with classic Hindi songs — the perfect nostalgic gift for music lovers and elders.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.39.02-AM-300x300.png',
-    url: 'https://amananindia.com/product/carvaan/',
-  },
-  {
-    name: 'Diya',
-    category: 'Festive Decor',
-    icon: '🪔',
-    desc: 'Beautifully handcrafted diyas for festivals, weddings, and home decoration. A timeless gifting option for every occasion.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.37.49-AM-300x300.png',
-    url: 'https://amananindia.com/product/golden-flatware/',
+    name: 'Titan Watch',
+    category: 'Accessories',
+    tagline: 'Time, elegantly marked',
+    desc: 'Iconic Titan timepieces that carry decades of trust. A watch gifted is a memory worn every single day.',
+    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.36.45-AM.png',
+    large: true,
   },
   {
     name: 'Gold Coins',
     category: 'Tanishq',
-    icon: '🥇',
-    desc: 'Certified gold coins from Tanishq — an elegant and valuable gift for weddings, anniversaries, and corporate milestones.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.38.16-AM-300x300.png',
-    url: 'https://amananindia.com/product/bowl/',
+    tagline: 'Certified purity, lasting value',
+    desc: 'Certified gold coins from Tanishq — an auspicious and valuable gift for weddings, anniversaries, and corporate milestones.',
+    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.38.16-AM.png',
   },
   {
-    name: 'IRTH Bags',
-    category: 'Bags',
-    icon: '👜',
-    desc: 'Stylish and functional bags from IRTH — ideal for corporate gifting, employee recognition, and brand promotions.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.37.21-AM-300x300.png',
-    url: 'https://amananindia.com/product/fusce-porta-armchair/',
-  },
-  {
-    name: 'Pigeon',
-    category: 'Kitchen Appliances',
-    icon: '🍳',
-    desc: 'Quality kitchen appliances from Pigeon — practical and thoughtful gifts for new homes, housewarmings, and festive occasions.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-11.39.25-AM-300x232.png',
-    url: 'https://amananindia.com/product/pigeon/',
+    name: 'Skinn Festive',
+    category: 'Fragrances',
+    tagline: "A scent they won't forget",
+    desc: 'Curated festive fragrance sets by Skinn — luxurious perfumes that leave a lasting impression long after the occasion.',
+    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.36.59-AM.png',
   },
   {
     name: 'Silver Articles',
     category: 'Tanishq',
-    icon: '🥈',
-    desc: 'Exquisite silver articles and artefacts — premium gifting choices for festivals, pooja ceremonies, and special events.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.38.02-AM-300x300.png',
-    url: 'https://amananindia.com/product/ceramic-vase/',
+    tagline: 'Crafted for every occasion',
+    desc: 'Exquisite silver artefacts that carry cultural significance and aesthetic beauty — perfect for pooja gifts and festive hampers.',
+    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.38.02-AM.png',
+  },
+  {
+    name: 'Diya',
+    category: 'Festive Decor',
+    tagline: 'Light up their space',
+    desc: 'Beautifully handcrafted diyas for festivals, weddings, and home decoration — a timeless gifting choice for every occasion.',
+    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.37.49-AM.png',
+  },
+  {
+    name: 'Carvaan',
+    category: 'Electronics',
+    tagline: 'Classic music, reimagined',
+    desc: 'A premium digital music player pre-loaded with thousands of classic Hindi songs — the most nostalgic gift you can give.',
+    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.39.02-AM.png',
   },
   {
     name: 'Silver Coins',
     category: 'Tanishq',
-    icon: '🪙',
-    desc: 'Pure silver coins from Tanishq — auspicious and cherished gifts for Diwali, weddings, and corporate events.',
-    img: 'https://amananindia.com/wp-content/uploads/2022/11/Screenshot-2024-09-23-at-11.25.06-AM-300x300.png',
-    url: 'https://amananindia.com/product/gore-wear-c7/',
-  },
-  {
-    name: 'Skinn Festive',
-    category: 'Personal Care',
-    icon: '🌸',
-    desc: 'Luxurious festive fragrance sets by Skinn — curated perfume collections that make memorable gifts for every celebration.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.36.59-AM-300x300.png',
-    url: 'https://amananindia.com/product/aqua-globes/',
-  },
-  {
-    name: 'Titan Watch',
-    category: 'Accessories',
-    icon: '⌚',
-    desc: 'Iconic Titan timepieces — elegant and reliable watches that make prestigious gifts for executives and loved ones alike.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.36.45-AM-300x300.png',
-    url: 'https://amananindia.com/product/accent-cabinet/',
+    tagline: 'Pure silver, pure intent',
+    desc: 'Pure silver coins from Tanishq — auspicious and cherished gifts for Diwali, housewarmings, and corporate events.',
+    img: 'https://amananindia.com/wp-content/uploads/2022/11/Screenshot-2024-09-23-at-11.25.06-AM.png',
   },
   {
     name: 'VIP Bags',
     category: 'Bags',
-    icon: '🧳',
-    desc: 'Premium VIP travel and lifestyle bags — sophisticated gifting options for business travelers and corporate clients.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-11.30.48-AM-300x300.png',
-    url: 'https://amananindia.com/product/vip-bags/',
+    tagline: 'Carry it with confidence',
+    desc: 'Premium VIP travel and lifestyle bags — a sophisticated choice for business travellers and high-value client gifts.',
+    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-11.30.48-AM.png',
+    large: true,
+  },
+  {
+    name: 'Pigeon',
+    category: 'Kitchen',
+    tagline: 'Practical, premium, purposeful',
+    desc: 'Quality kitchen appliances from Pigeon — thoughtful gifts for new homes, housewarmings, and festive occasions.',
+    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-11.39.25-AM.png',
+  },
+  {
+    name: 'IRTH Bags',
+    category: 'Bags',
+    tagline: 'Style that travels with them',
+    desc: 'Stylish and functional bags from IRTH — designed for daily use and built for corporate gifting at any scale.',
+    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.37.21-AM.png',
   },
 ]
 
 const CATEGORIES = ['All', ...Array.from(new Set(PRODUCTS.map((p) => p.category)))]
-
-const WHY_GIFT = [
-  { icon: '🎁', title: 'Curated Selection', desc: 'Every product is hand-picked for quality, brand value, and gifting appeal.' },
-  { icon: '🏷️', title: 'Custom Branding', desc: 'Add your company logo or personalised message to any gift for a lasting impression.' },
-  { icon: '📦', title: 'Bulk Orders', desc: 'Seamless bulk procurement for Diwali, employee appreciation, and client gifting events.' },
-  { icon: '🚀', title: 'Pan-India Delivery', desc: 'Reliable delivery across India — on time, every time, with full tracking.' },
-]
-
-const OCCASIONS = [
-  { icon: '🪔', title: 'Diwali & Festivals' },
-  { icon: '💍', title: 'Weddings' },
-  { icon: '🏢', title: 'Corporate Events' },
-  { icon: '🎓', title: 'Graduations' },
-  { icon: '🏠', title: 'Housewarmings' },
-  { icon: '🎂', title: 'Birthdays & Anniversaries' },
-]
-
 const EMPTY_FORM = { name: '', email: '', phone: '', company: '', occasion: '', message: '' }
+
+/* ── Single mosaic tile ── */
+function MosaicTile({ product, index, flat }) {
+  const isLarge = !flat && product.large
+  const num = String(index + 1).padStart(2, '0')
+
+  return (
+    <article
+      className={`gfm-tile${isLarge ? ' gfm-tile--large' : ''} gfm-tile-enter`}
+      style={{ '--ti': index }}
+    >
+      <img src={product.img} alt={product.name} loading="lazy" className="gfm-img" />
+
+      {/* always-on gradient scrim */}
+      <div className="gfm-scrim" aria-hidden="true" />
+
+      {/* top: serial number */}
+      <span className="gfm-num" aria-hidden="true">{num}</span>
+
+      {/* bottom: content */}
+      <div className="gfm-content">
+        <span className="gfm-cat">{product.category}</span>
+        <h3 className="gfm-name">{product.name}</h3>
+        <p className="gfm-tagline">{product.tagline}</p>
+        <div className="gfm-hover-reveal">
+          <p className="gfm-desc">{product.desc}</p>
+          <a href="#gf-enquiry" className="gfm-enquire">
+            Enquire
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </article>
+  )
+}
 
 function Gifts() {
   const [activeCategory, setActiveCategory] = useState('All')
-  const [form, setForm] = useState(EMPTY_FORM)
+  const [form, setForm]     = useState(EMPTY_FORM)
   const [status, setStatus] = useState('idle')
 
-  const filtered = activeCategory === 'All' ? PRODUCTS : PRODUCTS.filter((p) => p.category === activeCategory)
+  const [catalogRef, catalogInView] = useInView()
+  const [processRef, processInView] = useInView()
+  const [enquiryRef, enquiryInView] = useInView()
+
+  const isFiltering = activeCategory !== 'All'
+  const filtered    = isFiltering ? PRODUCTS.filter((p) => p.category === activeCategory) : PRODUCTS
 
   function handleChange(e) {
     const { name, value } = e.target
@@ -124,212 +167,229 @@ function Gifts() {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
           _subject: `Gifts Enquiry – ${form.name}`,
-          Name: form.name,
-          Email: form.email,
-          Phone: form.phone,
-          Company: form.company,
-          Occasion: form.occasion,
-          Message: form.message,
+          Name: form.name, Email: form.email, Phone: form.phone,
+          Company: form.company, Occasion: form.occasion, Message: form.message,
         }),
       })
-      if (res.ok) {
-        setStatus('success')
-        setForm(EMPTY_FORM)
-      } else {
-        setStatus('error')
-      }
-    } catch {
-      setStatus('error')
-    }
+      if (res.ok) { setStatus('success'); setForm(EMPTY_FORM) }
+      else setStatus('error')
+    } catch { setStatus('error') }
   }
 
   return (
     <>
       {/* ── Hero ── */}
       <section className="gf-hero">
-        <div className="gf-hero-glow" aria-hidden="true" />
-        <div className="container gf-hero-inner">
-          <span className="gf-eyebrow">Corporate & Festive Gifting · Pan-India Delivery</span>
-          <h1 className="gf-headline">
-            Make every occasion<br />
-            <span className="gf-headline-accent">unforgettable.</span>
-          </h1>
-          <p className="gf-lead">
-            Discover our curated collection of premium gifts — from Tanishq gold &amp; silver to Titan watches,
-            Skinn fragrances, and more. Perfect for corporate gifting, Diwali, weddings, and every milestone.
-          </p>
-          <div className="gf-hero-actions">
-            <a href="#gf-products" className="gf-btn-primary">Browse Products</a>
-            <a href="#gf-enquiry" className="gf-btn-ghost">Request a Quote</a>
-          </div>
-          <div className="gf-trust-row">
-            <span className="gf-trust-badge">🏆 Premium Brands</span>
-            <span className="gf-trust-badge">📦 Bulk Orders Welcome</span>
-            <span className="gf-trust-badge">🎀 Custom Branding</span>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Why Gift with Us ── */}
-      <section className="gf-section gf-section--soft">
+        <div className="gf-hero-bg" aria-hidden="true" />
+        <div className="gf-hero-noise" aria-hidden="true" />
         <div className="container">
-          <div className="gf-section-head">
-            <span className="gf-label">Why Choose Us</span>
-            <h2>Gifting made effortless</h2>
-            <p>We handle everything — selection, branding, packaging, and delivery — so you can focus on what matters.</p>
-          </div>
-          <div className="gf-why-grid">
-            {WHY_GIFT.map((w) => (
-              <div key={w.title} className="gf-why-card">
-                <span className="gf-why-icon">{w.icon}</span>
-                <h4>{w.title}</h4>
-                <p>{w.desc}</p>
+          <div className="gf-hero-layout">
+            <div className="gf-hero-text">
+              <p className="gf-overline gf-anim-overline">Corporate &amp; Festive Gifting</p>
+              <h1 className="gf-hero-h1 gf-anim-h1">
+                Gifts that<br /><em>leave a mark.</em>
+              </h1>
+              <p className="gf-hero-body gf-anim-body">
+                Premium branded gifts — curated for Diwali, weddings, corporate events, and every milestone worth celebrating.
+                Custom branded, bulk-ready, delivered across India.
+              </p>
+              <div className="gf-hero-cta gf-anim-cta">
+                <a href="#gf-products" className="gf-cta-primary">Browse Products</a>
+                <a href="#gf-enquiry" className="gf-cta-text">Request a quote →</a>
               </div>
-            ))}
+            </div>
+            <div className="gf-hero-aside gf-anim-aside">
+              <div className="gf-stat-stack">
+                {[
+                  { num: '10+',       label: 'Premium brands' },
+                  { num: 'Pan-India', label: 'Delivery'       },
+                  { num: 'Bulk',      label: 'Orders welcome' },
+                ].map((s, i) => (
+                  <div key={s.num} className="gf-stat" style={{ '--si': i }}>
+                    <span className="gf-stat-num">{s.num}</span>
+                    <span className="gf-stat-label">{s.label}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="gf-featured-img-wrap">
+                <img
+                  src="https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.36.45-AM.png"
+                  alt="Premium gift — Titan Watch"
+                  className="gf-featured-img"
+                />
+                <div className="gf-img-tag">Featured pick</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Products ── */}
-      <section className="gf-section" id="gf-products">
+      {/* ── Mosaic catalog ── */}
+      <section
+        ref={catalogRef}
+        className={`gfm-section${catalogInView ? ' gf--visible' : ''}`}
+        id="gf-products"
+      >
         <div className="container">
-          <div className="gf-section-head">
-            <span className="gf-label">Our Products</span>
-            <h2>Gifts for every occasion</h2>
-            <p>A handpicked selection of premium branded products ready for individual or bulk orders.</p>
+          {/* Header */}
+          <div className="gfm-header gf-reveal">
+            <div>
+              <p className="gf-overline gf-overline--dark">Our Collection</p>
+              <h2 className="gf-section-h2">Curated for every occasion</h2>
+            </div>
+            <p className="gfm-header-sub">
+              Each product is selected for brand trust, gifting appeal, and the impression it leaves.
+            </p>
           </div>
 
-          {/* Category filter */}
-          <div className="gf-filter-bar">
+          {/* Filter tabs */}
+          <nav className="gfm-tabs gf-reveal gf-reveal--d1" aria-label="Filter by category">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
-                className={`gf-filter-btn${activeCategory === cat ? ' gf-filter-btn--active' : ''}`}
                 onClick={() => setActiveCategory(cat)}
+                className={`gfm-tab${activeCategory === cat ? ' gfm-tab--on' : ''}`}
               >
                 {cat}
+                {cat !== 'All' && (
+                  <span className="gfm-tab-count">
+                    {PRODUCTS.filter((p) => p.category === cat).length}
+                  </span>
+                )}
               </button>
             ))}
-          </div>
+          </nav>
+        </div>
 
-          <div className="gf-product-grid">
-            {filtered.map((product) => (
-              <div key={product.name} className="gf-product-card">
-                <div className="gf-product-img-wrap">
-                  <img src={product.img} alt={product.name} loading="lazy" className="gf-product-img" />
-                  <span className="gf-product-category">{product.category}</span>
-                </div>
-                <div className="gf-product-body">
-                  <span className="gf-product-icon">{product.icon}</span>
-                  <h3 className="gf-product-name">{product.name}</h3>
-                  <p className="gf-product-desc">{product.desc}</p>
-                  <a href="#gf-enquiry" className="gf-product-cta">Enquire Now →</a>
-                </div>
-              </div>
-            ))}
-          </div>
+        {/* Mosaic / flat grid */}
+        <div
+          key={activeCategory}
+          className={isFiltering ? 'gfm-flat container' : 'gfm-mosaic'}
+        >
+          {filtered.map((p, i) => (
+            <MosaicTile key={p.name} product={p} index={i} flat={isFiltering} />
+          ))}
         </div>
       </section>
 
-      {/* ── Occasions ── */}
-      <section className="gf-section gf-section--dark">
+      {/* ── Process ── */}
+      <section
+        ref={processRef}
+        className={`gf-process-section${processInView ? ' gf--visible' : ''}`}
+      >
         <div className="container">
-          <div className="gf-section-head gf-section-head--light">
-            <span className="gf-label">Perfect For</span>
-            <h2>Every celebration, covered.</h2>
-            <p>From intimate gatherings to large corporate events — we have the right gift for every moment.</p>
-          </div>
-          <div className="gf-occasion-grid">
-            {OCCASIONS.map((o) => (
-              <div key={o.title} className="gf-occasion-card">
-                <span className="gf-occasion-icon">{o.icon}</span>
-                <h4>{o.title}</h4>
-              </div>
-            ))}
+          <div className="gf-process-layout">
+            <div className="gf-process-left gf-reveal">
+              <p className="gf-overline">How It Works</p>
+              <h2 className="gf-section-h2">From enquiry<br />to doorstep.</h2>
+              <p className="gf-process-body">
+                We handle selection, custom branding, packaging, and pan-India delivery — so your gifting experience is seamless from start to finish.
+              </p>
+              <a href="#gf-enquiry" className="gf-cta-primary">Get started</a>
+            </div>
+            <div className="gf-process-steps">
+              {[
+                { num: '01', h: 'Share your requirements', p: "Tell us the occasion, quantity, budget, and any branding needs. We'll take it from there." },
+                { num: '02', h: 'We curate & quote',       p: 'Our team handpicks the best options and sends you a detailed quote within 24 hours.' },
+                { num: '03', h: 'Branded & delivered',     p: 'Your gifts are packaged with your branding and delivered pan-India on schedule.' },
+              ].map((s, i) => (
+                <div key={s.num} className="gf-step gf-reveal" style={{ '--ri': i }}>
+                  <span className="gf-step-num">{s.num}</span>
+                  <div><h4>{s.h}</h4><p>{s.p}</p></div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Enquiry Form ── */}
-      <section className="gf-section gf-section--gift" id="gf-enquiry">
-        <div className="container gf-enquiry-grid">
-          <div className="gf-enquiry-copy">
-            <span className="gf-label gf-label--light">Get In Touch</span>
-            <h2 className="gf-enquiry-heading">Ready to place a gift order?</h2>
-            <p>Tell us what you need — we'll put together a personalised quote with branding options and bulk pricing.</p>
-            <div className="gf-enquiry-points">
-              <div className="gf-enq-point"><span>✓</span><p>Personalised gift hampers for any budget</p></div>
-              <div className="gf-enq-point"><span>✓</span><p>Custom branding and packaging available</p></div>
-              <div className="gf-enq-point"><span>✓</span><p>Competitive pricing for bulk orders</p></div>
-              <div className="gf-enq-point"><span>✓</span><p>Pan-India delivery with full tracking</p></div>
-            </div>
-            <div className="gf-enquiry-contact">
-              <a href="mailto:Info@prakhartech.com" className="gf-contact-pill">✉ Info@prakhartech.com</a>
-              <a href="tel:+919309847652" className="gf-contact-pill">📞 +91-9309847652</a>
-            </div>
-          </div>
-
-          <div className="gf-form-card">
-            {status === 'success' ? (
-              <div className="gf-form-success">
-                <div className="gf-success-icon">✓</div>
-                <h3>Enquiry sent!</h3>
-                <p>Thank you. We'll get back to you within 24 business hours with a personalised quote.</p>
-                <button type="button" className="gf-btn-primary" onClick={() => setStatus('idle')}>
-                  Send another
-                </button>
+      {/* ── Enquiry ── */}
+      <section
+        ref={enquiryRef}
+        className={`gf-enquiry-section${enquiryInView ? ' gf--visible' : ''}`}
+        id="gf-enquiry"
+      >
+        <div className="container">
+          <div className="gf-enquiry-layout">
+            <div className="gf-enquiry-left gf-reveal">
+              <p className="gf-overline gf-overline--gold">Get In Touch</p>
+              <h2 className="gf-enquiry-h2">Let's plan<br />your gifting.</h2>
+              <p className="gf-enquiry-body">
+                Fill in the form — our team will come back to you within 24 hours with a personalised quote, branding options, and delivery timelines.
+              </p>
+              <div className="gf-contact-links">
+                <a href="mailto:Info@prakhartech.com" className="gf-contact-item">
+                  <span className="gf-contact-icon">✉</span><span>Info@prakhartech.com</span>
+                </a>
+                <a href="tel:+919309847652" className="gf-contact-item">
+                  <span className="gf-contact-icon">↗</span><span>+91 93098 47652</span>
+                </a>
               </div>
-            ) : (
-              <form className="gf-form" onSubmit={handleSubmit} noValidate>
-                <h3 className="gf-form-title">Gifts &amp; Corporate Gifting Enquiry</h3>
-                <div className="gf-form-row">
-                  <div className="gf-field">
-                    <label htmlFor="gf-name">Full name *</label>
-                    <input id="gf-name" type="text" name="name" value={form.name} onChange={handleChange} placeholder="Your full name" required />
-                  </div>
-                  <div className="gf-field">
-                    <label htmlFor="gf-email">Email address *</label>
-                    <input id="gf-email" type="email" name="email" value={form.email} onChange={handleChange} placeholder="you@company.com" required />
-                  </div>
-                </div>
-                <div className="gf-form-row">
-                  <div className="gf-field">
-                    <label htmlFor="gf-phone">Phone number</label>
-                    <input id="gf-phone" type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+91 XXXXX XXXXX" />
-                  </div>
-                  <div className="gf-field">
-                    <label htmlFor="gf-company">Company / Organisation</label>
-                    <input id="gf-company" type="text" name="company" value={form.company} onChange={handleChange} placeholder="Your company name" />
-                  </div>
-                </div>
-                <div className="gf-field">
-                  <label htmlFor="gf-occasion">Gifting occasion</label>
-                  <select id="gf-occasion" name="occasion" value={form.occasion} onChange={handleChange}>
-                    <option value="">Select an occasion</option>
-                    <option value="Diwali / Festive">Diwali / Festive</option>
-                    <option value="Wedding">Wedding</option>
-                    <option value="Corporate Event">Corporate Event</option>
-                    <option value="Employee Appreciation">Employee Appreciation</option>
-                    <option value="Housewarming">Housewarming</option>
-                    <option value="Birthday / Anniversary">Birthday / Anniversary</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                <div className="gf-field">
-                  <label htmlFor="gf-message">Message</label>
-                  <textarea id="gf-message" name="message" value={form.message} onChange={handleChange} placeholder="Tell us about the products you're interested in, quantity needed, budget, and any branding requirements…" rows={4} />
-                </div>
+              <div className="gf-guarantee-list">
+                <p>Personalised gift hampers for any budget</p>
+                <p>Custom branding and packaging available</p>
+                <p>Competitive pricing for bulk orders</p>
+                <p>Pan-India delivery with full tracking</p>
+              </div>
+            </div>
 
-                {status === 'error' && (
-                  <p className="gf-form-error">Something went wrong. Please try again or email us at Info@prakhartech.com</p>
-                )}
-
-                <button type="submit" className="gf-btn-submit" disabled={status === 'sending'}>
-                  {status === 'sending' ? 'Sending…' : 'Send Enquiry →'}
-                </button>
-                <p className="gf-form-note">Your details are sent directly to our team and never shared with third parties.</p>
-              </form>
-            )}
+            <div className="gf-form-wrap gf-reveal gf-reveal--d1">
+              {status === 'success' ? (
+                <div className="gf-success">
+                  <div className="gf-success-check">✓</div>
+                  <h3>We've got your enquiry.</h3>
+                  <p>Expect a response from our team within 24 business hours.</p>
+                  <button className="gf-cta-primary" onClick={() => setStatus('idle')}>Send another</button>
+                </div>
+              ) : (
+                <form className="gf-form" onSubmit={handleSubmit} noValidate>
+                  <div className="gf-form-row">
+                    <div className="gf-field">
+                      <label htmlFor="gf-name">Full name *</label>
+                      <input id="gf-name" type="text" name="name" value={form.name} onChange={handleChange} placeholder="Your name" required />
+                    </div>
+                    <div className="gf-field">
+                      <label htmlFor="gf-email">Email *</label>
+                      <input id="gf-email" type="email" name="email" value={form.email} onChange={handleChange} placeholder="you@company.com" required />
+                    </div>
+                  </div>
+                  <div className="gf-form-row">
+                    <div className="gf-field">
+                      <label htmlFor="gf-phone">Phone</label>
+                      <input id="gf-phone" type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+91 XXXXX XXXXX" />
+                    </div>
+                    <div className="gf-field">
+                      <label htmlFor="gf-company">Company</label>
+                      <input id="gf-company" type="text" name="company" value={form.company} onChange={handleChange} placeholder="Your company" />
+                    </div>
+                  </div>
+                  <div className="gf-field">
+                    <label htmlFor="gf-occasion">Occasion</label>
+                    <select id="gf-occasion" name="occasion" value={form.occasion} onChange={handleChange}>
+                      <option value="">Select an occasion</option>
+                      <option>Diwali / Festive</option>
+                      <option>Wedding</option>
+                      <option>Corporate Event</option>
+                      <option>Employee Appreciation</option>
+                      <option>Housewarming</option>
+                      <option>Birthday / Anniversary</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div className="gf-field">
+                    <label htmlFor="gf-message">Tell us more</label>
+                    <textarea id="gf-message" name="message" value={form.message} onChange={handleChange} rows={4} placeholder="Products you're interested in, quantity, budget, branding requirements…" />
+                  </div>
+                  {status === 'error' && (
+                    <p className="gf-error">Something went wrong — please email us at Info@prakhartech.com</p>
+                  )}
+                  <button type="submit" className="gf-submit" disabled={status === 'sending'}>
+                    {status === 'sending' ? 'Sending…' : 'Send Enquiry'}
+                  </button>
+                  <p className="gf-form-note">Your details go directly to our team. Never shared.</p>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       </section>
