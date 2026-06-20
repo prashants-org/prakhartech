@@ -351,31 +351,33 @@ function Stationery() {
           <p>Serving 20+ corporate clients across manufacturing, finance, and industry in Pune.</p>
         </div>
         <div className="st-marquee-wrap">
-          <div className="st-marquee-track">
-            {[...CLIENTS, ...CLIENTS].map((c, i) => (
-              <div key={`${c.name}-${i}`} className="st-marquee-card">
-                {c.logo ? (
-                  <img
-                    src={`${baseUrl}${c.logo.replace(/^\//, '')}`}
-                    alt={c.name}
-                    className="st-marquee-logo"
-                    loading="lazy"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none'
-                      e.currentTarget.nextSibling.style.display = 'flex'
-                    }}
-                  />
-                ) : null}
-                <div
-                  className="st-marquee-fallback"
-                  style={{ display: c.logo ? 'none' : 'flex' }}
-                >
-                  {c.name.split(' ').map(w => w[0]).slice(0, 2).join('')}
+          {[CLIENTS.slice(0, 11), CLIENTS.slice(11)].map((row, rowIdx) => (
+            <div key={rowIdx} className={`st-marquee-track${rowIdx === 1 ? ' st-marquee-track--reverse' : ''}`}>
+              {[...row, ...row].map((c, i) => (
+                <div key={`${c.name}-${i}`} className="st-marquee-card">
+                  {c.logo ? (
+                    <img
+                      src={`${baseUrl}${c.logo.replace(/^\//, '')}`}
+                      alt={c.name}
+                      className="st-marquee-logo"
+                      loading="lazy"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                        e.currentTarget.nextSibling.style.display = 'flex'
+                      }}
+                    />
+                  ) : null}
+                  <div
+                    className="st-marquee-fallback"
+                    style={{ display: c.logo ? 'none' : 'flex' }}
+                  >
+                    {c.name.split(' ').map(w => w[0]).slice(0, 2).join('')}
+                  </div>
+                  <span className="st-marquee-name">{c.name}</span>
                 </div>
-                <span className="st-marquee-name">{c.name}</span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ))}
         </div>
       </section>
 

@@ -5446,8 +5446,12 @@ img[loading="lazy"]:not([src=""]) {
   display: flex;
   gap: 14px;
   width: max-content;
-  animation: st-scroll 40s linear infinite;
-  padding: 8px 0 20px;
+  animation: st-scroll 32s linear infinite;
+  padding: 8px 0 10px;
+}
+.st-marquee-track--reverse {
+  animation-direction: reverse;
+  padding: 10px 0 20px;
 }
 .st-marquee-card {
   background: #fff;
