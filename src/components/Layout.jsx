@@ -36,9 +36,13 @@ function Layout() {
     return () => clearTimeout(navTimerId)
   }, [location.pathname])
 
-  // Determine which product interest to pre-fill based on current route
   const isElidePage = location.pathname.startsWith('/elidefireball')
-  const defaultInterest = isElidePage ? 'Elide Fireball' : 'GPS Vehicle Tracking'
+  const isStationeryPage = location.pathname.startsWith('/stationery')
+  const defaultInterest = isElidePage
+    ? 'Elide Fireball'
+    : isStationeryPage
+    ? 'Office Stationery & Supplies'
+    : 'GPS Vehicle Tracking'
 
   return (
     <div className="app-shell">
@@ -53,7 +57,7 @@ function Layout() {
           </Link>
           <div className="topbar-actions">
             <a href={`tel:${contactInfo.phone}`} className="callout topbar-phone" aria-label={`Call us at ${contactInfo.phone}`}>
-              <span className="callout-icon" aria-hidden="true">📞</span>
+              <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.01 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.13 1 .36 1.97.71 2.91a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.17-1.17a2 2 0 012.11-.45c.94.35 1.91.58 2.91.71A2 2 0 0122 14.92z"/></svg>
               {contactInfo.phone}
             </a>
             <button type="button" className="primary-btn" onClick={() => setIsModalOpen(true)}>
@@ -91,6 +95,7 @@ function Layout() {
             <NavLink to="/contact" className="nav-link">Contact</NavLink>
             <NavLink to="/faq" className="nav-link">FAQ</NavLink>
             <NavLink to="/gifts" className="nav-link">Gifts</NavLink>
+            <NavLink to="/stationery" className="nav-link">Stationery</NavLink>
             <NavLink to="/elidefireball" className="nav-logo" aria-label="Elide Fireball product">
               <img src={`${baseUrl}images/logo2.png`} alt="Elide Fireball" height="28" />
             </NavLink>
@@ -145,10 +150,10 @@ function Layout() {
             </ul>
             <div className="footer-contact-block">
               <a href={`tel:${contactInfo.phone}`} className="footer-contact-link">
-                <span aria-hidden="true">📞</span> {contactInfo.phone}
+                <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.01 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.13 1 .36 1.97.71 2.91a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.17-1.17a2 2 0 012.11-.45c.94.35 1.91.58 2.91.71A2 2 0 0122 14.92z"/></svg> {contactInfo.phone}
               </a>
               <a href={`mailto:${contactInfo.salesEmail}`} className="footer-contact-link">
-                <span aria-hidden="true">✉</span> {contactInfo.salesEmail}
+                <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg> {contactInfo.salesEmail}
               </a>
             </div>
           </div>

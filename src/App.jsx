@@ -25,6 +25,7 @@ const ElideWarranty = lazy(() => import('./pages/ElideWarranty'))
 const ElidePatents = lazy(() => import('./pages/ElidePatents'))
 const ElideStory = lazy(() => import('./pages/ElideStory'))
 const Gifts = lazy(() => import('./pages/Gifts'))
+const Stationery = lazy(() => import('./pages/Stationery'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 function App() {
@@ -212,6 +213,14 @@ function App() {
           element={
             <Suspense fallback={null}>
               <Gifts />
+            </Suspense>
+          }
+        />
+        <Route
+          path="stationery"
+          element={
+            <Suspense fallback={null}>
+              <Stationery />
             </Suspense>
           }
         />

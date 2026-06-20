@@ -119,10 +119,21 @@ function EnquiryForm({ defaultInterest = '' }) {
           onChange={handleChange}
         >
           <option value="">Select a product or service</option>
-          <option value="GPS Vehicle Tracking">GPS Vehicle Tracking</option>
-          <option value="Fleet Management System">Fleet Management System</option>
-          <option value="Elide Fireball">Elide Fireball</option>
-          <option value="GPS Tracking + Elide Fireball">GPS Tracking + Elide Fireball</option>
+          <optgroup label="GPS & Fleet">
+            <option value="GPS Vehicle Tracking">GPS Vehicle Tracking</option>
+            <option value="Fleet Management System">Fleet Management System</option>
+          </optgroup>
+          <optgroup label="Safety">
+            <option value="Elide Fireball">Elide Fireball</option>
+            <option value="GPS Tracking + Elide Fireball">GPS Tracking + Elide Fireball</option>
+          </optgroup>
+          <optgroup label="Office & Stationery">
+            <option value="Office Stationery & Supplies">Office Stationery &amp; Supplies</option>
+            <option value="Housekeeping Supplies">Housekeeping Supplies</option>
+            <option value="Safety Equipment (PPE)">Safety Equipment (PPE)</option>
+            <option value="Packaging Materials">Packaging Materials</option>
+            <option value="Computer Accessories">Computer Accessories</option>
+          </optgroup>
           <option value="General Enquiry">General Enquiry</option>
         </select>
       </div>
