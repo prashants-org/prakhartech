@@ -16,7 +16,7 @@ const TIMELINE = [
   {
     year: '2009–2012',
     title: 'Testing and certification',
-    detail: 'Extensive testing was conducted across fire classes A, B, C, D, E, and F. Multiple international safety certifications were obtained, validating the product for commercial distribution.',
+    detail: 'Extensive testing was conducted across fire classes A, B, C, E and F. Multiple international safety certifications were obtained, validating the product for commercial distribution.',
   },
   {
     year: '2013+',
@@ -33,7 +33,7 @@ const TIMELINE = [
 const IMPACT = [
   { icon: '🌍', stat: '100+', label: 'Countries', desc: 'Adopted across six continents in residential, commercial, and industrial settings' },
   { icon: '🏆', stat: 'Multiple', label: 'Awards', desc: 'International product innovation and fire safety awards received' },
-  { icon: '🔬', stat: '6', label: 'Fire classes', desc: 'Certified to suppress Class A, B, C, D, E, and F fires' },
+  { icon: '🔬', stat: '5', label: 'Fire classes', desc: 'Rated for Class A, B, C, E and F fires' },
   { icon: '⏱️', stat: '3–10s', label: 'Activation time', desc: 'From flame contact to full chemical suppression' },
 ]
 

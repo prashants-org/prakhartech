@@ -41,7 +41,8 @@ function pageAssets(page) {
   }
   walk(key)
   return [
-    ...[...css].map((href) => `<link rel="stylesheet" crossorigin href="/${href}">`),
+    // skip stylesheets the entry already links in index.html
+    ...[...css].filter((href) => !template.includes(`/${href}`)).map((href) => `<link rel="stylesheet" crossorigin href="/${href}">`),
     `<link rel="modulepreload" crossorigin href="/${manifest[key].file}">`,
   ].join('\n    ')
 }

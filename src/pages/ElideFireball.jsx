@@ -1,8 +1,11 @@
 import '../styles/elide.css'
-import { Link, NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import ElideSubnav from '../components/ElideSubnav'
 import FieldError from '../components/FieldError'
 import { contactInfo } from '../data/contactInfo'
 import { useEnquiryForm } from '../hooks/useEnquiryForm'
+import ElideDemoMedia from '../components/ElideDemoMedia'
+import { ELIDE_VIDEO_ID, FIRE_CLASSES } from '../data/elide'
 
 const USE_CASES = [
   { icon: '🏠', title: 'Homes & Kitchens', desc: 'Gas cylinders, cooking areas, electrical panels — protect your family automatically.' },
@@ -11,15 +14,6 @@ const USE_CASES = [
   { icon: '🏭', title: 'Warehouses', desc: 'Storage facilities, logistics hubs, and factories with high fire-risk loads.' },
   { icon: '🍳', title: 'Restaurants', desc: 'Commercial kitchens, deep fryers, and cooking oil fires stopped at the source.' },
   { icon: '⛵', title: 'Marine & Boats', desc: 'Engine compartments, fuel storage, and below-deck areas on vessels.' },
-]
-
-const FIRE_CLASSES = [
-  { cls: 'A', label: 'Solids', desc: 'Wood, paper, cloth, rubber' },
-  { cls: 'B', label: 'Liquids', desc: 'Petrol, diesel, alcohol' },
-  { cls: 'C', label: 'Electrical', desc: 'Wiring, panels, appliances' },
-  { cls: 'D', label: 'Gases', desc: 'Flammable gas sources' },
-  { cls: 'E', label: 'Light metals', desc: 'Magnesium, lithium' },
-  { cls: 'F', label: 'Cooking oils', desc: 'Deep fryers, fats' },
 ]
 
 const STATS = [
@@ -104,17 +98,7 @@ function ElideFireball() {
         </div>
       </section>
 
-      {/* ── Sub-navigation ── */}
-      <nav className="ef-subnav" aria-label="Elide Fireball sections">
-        <div className="container ef-subnav-inner">
-          <NavLink to="/elidefireball/product-overview">Product Overview</NavLink>
-          <NavLink to="/elidefireball/faq">FAQ</NavLink>
-          <NavLink to="/elidefireball/health-and-safety">Health &amp; Safety</NavLink>
-          <NavLink to="/elidefireball/product-warranty">Warranty</NavLink>
-          <NavLink to="/elidefireball/patents">Patents</NavLink>
-          <NavLink to="/elidefireball/the-elide-fire-ball-story">Our Story</NavLink>
-        </div>
-      </nav>
+      <ElideSubnav />
 
       {/* ── How it works ── */}
       <section className="ef-section ef-section--dark">
@@ -140,18 +124,12 @@ function ElideFireball() {
       <section className="ef-section">
         <div className="container">
           <div className="ef-section-head">
-            <span className="ef-label">See It In Action</span>
-            <h2>Watch how it stops fires in seconds</h2>
+            <span className="ef-label">{ELIDE_VIDEO_ID ? 'See It In Action' : 'At a Glance'}</span>
+            <h2>{ELIDE_VIDEO_ID ? 'Watch how it stops fires in seconds' : 'How it stops fires in seconds'}</h2>
           </div>
           <div className="ef-video-split">
             <div className="ef-video-wrap">
-              <iframe
-                title="Elide Fireball demonstration"
-                src="https://www.youtube.com/embed/0LE5cKdM96M"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                loading="lazy"
-              />
+              <ElideDemoMedia />
             </div>
             <div className="ef-video-facts">
               <div className="ef-fact-card">
@@ -212,7 +190,7 @@ function ElideFireball() {
         <div className="container">
           <div className="ef-section-head ef-section-head--light">
             <span className="ef-label">Fire Classifications</span>
-            <h2>One ball. Six fire classes.</h2>
+            <h2>One ball. Five fire classes.</h2>
             <p>Handles the most common fire types found in homes, offices, and industrial environments.</p>
           </div>
           <div className="ef-class-grid">
@@ -252,7 +230,7 @@ function ElideFireball() {
               <div className="ef-spec-row"><span>Alert sound</span><strong>120 dB burst</strong></div>
               <div className="ef-spec-row"><span>Product life</span><strong>5 years</strong></div>
               <div className="ef-spec-row"><span>Mounting height</span><strong>10–30 cm above ignition point</strong></div>
-              <div className="ef-spec-row"><span>Fire classes</span><strong>A, B, C, D, E, F</strong></div>
+              <div className="ef-spec-row"><span>Fire classes</span><strong>A, B, C, E, F</strong></div>
             </div>
             <a
               href={`${baseUrl}elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf`}

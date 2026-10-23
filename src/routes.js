@@ -9,7 +9,7 @@
 
 export const SITE_URL = 'https://www.prakhartech.com'
 export const SITE_NAME = 'Prakhar Technology'
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/images/logo.png`
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/brand/og-image.png`
 
 export const SECTIONS = {
   fleet: { label: 'GPS & Fleet Tracking', interest: 'GPS Vehicle Tracking' },

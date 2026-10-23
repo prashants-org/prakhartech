@@ -1,6 +1,8 @@
 import '../styles/elide.css'
 import ElideSubnav from '../components/ElideSubnav'
 import { openEnquiry } from '../lib/enquiry'
+import ElideDemoMedia from '../components/ElideDemoMedia'
+import { ELIDE_VIDEO_ID, FIRE_CLASSES } from '../data/elide'
 
 const QUICK_FACTS = [
   { icon: '⚖️', label: '1.3 kg', desc: 'Lightweight enough for anyone to carry and throw' },
@@ -9,15 +11,6 @@ const QUICK_FACTS = [
   { icon: '📡', label: 'Up to 9 m²', desc: 'Effective coverage area (tested to 18 m²)' },
   { icon: '📢', label: '120 dB alert', desc: 'Loud burst instantly notifies occupants' },
   { icon: '🔋', label: '5-year life', desc: 'Zero maintenance required for five full years' },
-]
-
-const FIRE_CLASSES = [
-  { cls: 'A', label: 'Solids', desc: 'Wood, paper, cloth, rubber' },
-  { cls: 'B', label: 'Liquids', desc: 'Petrol, diesel, alcohol' },
-  { cls: 'C', label: 'Electrical', desc: 'Wiring, panels, appliances' },
-  { cls: 'D', label: 'Gases', desc: 'Flammable gas sources' },
-  { cls: 'E', label: 'Light metals', desc: 'Magnesium, lithium' },
-  { cls: 'F', label: 'Cooking oils', desc: 'Deep fryers, fats' },
 ]
 
 const INSTALL_LOCATIONS = [
@@ -100,18 +93,12 @@ function ElideProductOverview() {
       <section className="ef-section ef-section--soft">
         <div className="container">
           <div className="ef-section-head">
-            <span className="ef-label">See It In Action</span>
-            <h2>Watch the Elide Fireball suppress a fire</h2>
+            <span className="ef-label">{ELIDE_VIDEO_ID ? 'See It In Action' : 'At a Glance'}</span>
+            <h2>{ELIDE_VIDEO_ID ? 'Watch the Elide Fireball suppress a fire' : 'Fire protection in a small red ball'}</h2>
           </div>
           <div className="ef-video-split">
             <div className="ef-video-wrap">
-              <iframe
-                title="Elide Fireball demonstration"
-                src="https://www.youtube.com/embed/0LE5cKdM96M"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                loading="lazy"
-              />
+              <ElideDemoMedia />
             </div>
             <div className="ef-video-facts">
               <div className="ef-fact-card">
@@ -209,7 +196,7 @@ function ElideProductOverview() {
         <div className="container">
           <div className="ef-section-head ef-section-head--light">
             <span className="ef-label">Coverage</span>
-            <h2>One ball. Six fire classes.</h2>
+            <h2>One ball. Five fire classes.</h2>
             <p>Handles the most common fire types found in homes, offices, and industry.</p>
           </div>
           <div className="ef-class-grid">

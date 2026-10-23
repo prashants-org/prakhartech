@@ -74,7 +74,7 @@ function Layout() {
         <header className="topbar">
           <div className="container topbar-inner">
             <Link to="/" className="brand">
-              <img src={`${baseUrl}images/logo.webp`} alt="" width="56" height="56" />
+              <img src={`${baseUrl}brand/prakhar-icon.svg`} alt="" width="43" height="48" />
               <div>
                 <span className="brand-title">Prakhar Technology</span>
                 <span className="brand-subtitle">Fleet · Safety · Workplace Solutions</span>
@@ -110,7 +110,7 @@ function Layout() {
         <footer className="footer-modern" aria-label="Site footer">
           <div className="container footer-grid">
             <div className="footer-brand">
-              <img src={`${baseUrl}images/logo.webp`} alt="" width="48" height="48" className="footer-logo" />
+              <img src={`${baseUrl}brand/prakhar-icon-reversed.svg`} alt="" width="38" height="42" className="footer-logo" />
               <h4>Prakhar Technology</h4>
               <p>GPS fleet tracking, Elide Fire Ball fire safety and workplace supplies for businesses across India.</p>
               <address className="footer-address">

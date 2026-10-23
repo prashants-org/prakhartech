@@ -30,8 +30,8 @@ const FAQS = [
     a: 'No maintenance is required for up to 5 years from the date of manufacture. Simply inspect it visually during routine safety checks to ensure it is clean, unobstructed, and in the correct position. Replace after activation or after the 5-year guarantee period.',
   },
   {
-    q: 'Can it be used on any type of fire?',
-    a: 'Yes. The Elide Fireball is certified to handle fire classes A (solids), B (liquids), C (electrical), D (gases), E (light metals), and F (cooking oils). This makes it effective against the most common fire types found in homes, offices, kitchens, and industrial settings.',
+    q: 'Which types of fire can it put out?',
+    a: 'The Elide Fireball is rated for five fire classes: A (solids such as wood, paper and plastic), B (flammable liquids), C (combustible gases), E (energised electrical equipment) and F (cooking oils and fats). It is not intended for class D metal fires. This makes it effective against the most common fire types found in homes, offices, kitchens, and industrial settings.',
   },
   {
     q: 'What happens after it activates?',

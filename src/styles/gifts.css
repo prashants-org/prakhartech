@@ -31,18 +31,10 @@
   from { opacity: 0; transform: translateX(20px); }
   to   { opacity: 1; transform: translateX(0); }
 }
-@keyframes gf-card-in {
-  from { opacity: 0; transform: translateY(14px) scale(.98); }
-  to   { opacity: 1; transform: translateY(0)   scale(1); }
-}
 @keyframes gf-glow-drift {
   0%,100% { transform: translate(0, 0)   scale(1); }
   33%      { transform: translate(3%, 2%) scale(1.04); }
   66%      { transform: translate(-2%,3%) scale(.97); }
-}
-@keyframes gf-line-grow {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
 }
 
 /* ── Scroll-reveal base ── */
@@ -267,10 +259,6 @@
 
 
 /* ═══ CATALOG SECTION ═══ */
-.gf-catalog-section {
-  background: #fff;
-  padding-bottom: 0;
-}
 
 /* Header */
 /* ═══ CATALOG – MOSAIC ═══ */
@@ -458,20 +446,6 @@
   line-height: 1.55;
   margin: 10px 0 12px;
 }
-
-.gfm-enquire {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: .75rem;
-  font-weight: 600;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: var(--gf-gold2);
-  text-decoration: none;
-  transition: gap .2s var(--gf-ease);
-}
-.gfm-enquire:hover { gap: 10px; }
 
 /* ═══ PROCESS ═══ */
 .gf-process-section {
@@ -706,7 +680,6 @@
 @media (max-width: 900px) {
   .gf-hero-layout    { grid-template-columns: 1fr; gap: 48px; }
   .gf-hero-aside     { display: none; }
-  .gf-section-intro  { flex-direction: column; align-items: flex-start; gap: 12px; }
   .gfm-header        { flex-direction: column; align-items: flex-start; gap: 12px; }
   .gfm-header-sub    { text-align: left; max-width: 100%; }
   .gf-process-layout { grid-template-columns: 1fr; gap: 48px; }
