@@ -3,7 +3,7 @@ import { openEnquiry } from '../lib/enquiry'
 const securitySegments = (baseUrl) => [
   {
     title: 'Bank Mortgage Vehicles',
-    image: `${baseUrl}images/bank_mortgage_vehicles.png`,
+    image: `${baseUrl}images/bank_mortgage_vehicles.webp`,
     points: [
       'Monitor real-time location and vehicle status.',
       'Set electronic fences to reduce fraud risk.',
@@ -12,7 +12,7 @@ const securitySegments = (baseUrl) => [
   },
   {
     title: 'Police Vehicles',
-    image: `${baseUrl}images/police_vehicles.png`,
+    image: `${baseUrl}images/police_vehicles.webp`,
     points: [
       'Centralized monitoring for rapid coordination.',
       'Accurate incident location sharing.',
@@ -21,7 +21,7 @@ const securitySegments = (baseUrl) => [
   },
   {
     title: 'Rapid Response Vehicles',
-    image: `${baseUrl}images/rapid_response_vehicles.png`,
+    image: `${baseUrl}images/rapid_response_vehicles.webp`,
     points: [
       'Dynamic dispatch for emergency services.',
       'Live status updates for field teams.',
@@ -30,7 +30,7 @@ const securitySegments = (baseUrl) => [
   },
   {
     title: 'Financial Vehicles',
-    image: `${baseUrl}images/personal_tracker1.jpg`,
+    image: `${baseUrl}images/personal_tracker1.webp`,
     points: [
       'Secure GSM/GPRS transmission for alarms.',
       'Supports active alerts and remote monitoring.',
@@ -39,7 +39,7 @@ const securitySegments = (baseUrl) => [
   },
   {
     title: 'Fire Fighters',
-    image: `${baseUrl}images/fire_fighters.png`,
+    image: `${baseUrl}images/fire_fighters.webp`,
     points: [
       'Coordinate units with live location updates.',
       'Improve safety for high-risk deployments.',
@@ -84,7 +84,7 @@ function Security() {
             </div>
           </div>
           <div className="glow-card">
-            <img loading="lazy" src={`${baseUrl}images/serives_img2.png`} alt="Security enforcement" />
+            <img loading="lazy" src={`${baseUrl}images/serives_img2.webp`} alt="Security enforcement" />
           </div>
         </div>
       </section>

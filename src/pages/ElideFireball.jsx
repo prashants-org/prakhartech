@@ -86,7 +86,7 @@ function ElideFireball() {
           <div className="ef-hero-visual">
             <div className="ef-product-frame">
               <img
-                src={`${baseUrl}elidefireball/assets/img/slide.png`}
+                src={`${baseUrl}elidefireball/assets/img/slide.webp`}
                 alt="Elide Fireball fire suppression ball"
                 className="ef-product-img"
               />
@@ -232,7 +232,7 @@ function ElideFireball() {
         <div className="container ef-spec-split">
           <div className="ef-spec-visual">
             <img
-              src={`${baseUrl}elidefireball/assets/img/bt2.png`}
+              src={`${baseUrl}elidefireball/assets/img/bt2.webp`}
               alt="Elide Fireball product detail"
               loading="lazy"
               className="ef-spec-img"

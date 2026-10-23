@@ -3,7 +3,7 @@ import { openEnquiry } from '../lib/enquiry'
 const personalSegments = (baseUrl) => [
   {
     title: 'Private Vehicles',
-    image: `${baseUrl}images/private_vehicle.png`,
+    image: `${baseUrl}images/private_vehicle.webp`,
     points: [
       'Protect vehicles from theft with live tracking.',
       'Highlight security requirements with alerts.',
@@ -12,7 +12,7 @@ const personalSegments = (baseUrl) => [
   },
   {
     title: 'Bike',
-    image: `${baseUrl}images/bike.png`,
+    image: `${baseUrl}images/bike.webp`,
     points: [
       'Track routes and waypoints for riders.',
       'Use live location for urban mobility.',
@@ -21,7 +21,7 @@ const personalSegments = (baseUrl) => [
   },
   {
     title: 'Official Vehicles',
-    image: `${baseUrl}images/official_vehicles.png`,
+    image: `${baseUrl}images/official_vehicles.webp`,
     points: [
       'Improve reliability and security for official fleets.',
       'Enable information sharing across teams.',
@@ -30,7 +30,7 @@ const personalSegments = (baseUrl) => [
   },
   {
     title: 'Vintage Cars',
-    image: `${baseUrl}images/whychoose.jpg`,
+    image: `${baseUrl}images/whychoose.webp`,
     points: [
       'Keep limited-edition vehicles protected.',
       'Monitor location without intrusive systems.',
@@ -75,7 +75,7 @@ function Personal() {
             </div>
           </div>
           <div className="glow-card">
-            <img loading="lazy" src={`${baseUrl}images/serives_img3.png`} alt="Personal tracking" />
+            <img loading="lazy" src={`${baseUrl}images/serives_img3.webp`} alt="Personal tracking" />
           </div>
         </div>
       </section>

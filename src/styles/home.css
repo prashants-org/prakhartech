@@ -103,7 +103,7 @@
 }
 .hm-line:nth-child(2) { animation-delay: 0.1s; }
 .hm-line:nth-child(3) { animation-delay: 0.2s; }
-@keyframes hmRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes hmRise { from { transform: translateY(14px); } to { transform: none; } }
 
 .hm-em {
   font-style: normal;

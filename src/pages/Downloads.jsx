@@ -4,19 +4,19 @@ const downloads = (baseUrl) => [
   {
     title: 'GPS Tracking System',
     code: 'KS668',
-    image: `${baseUrl}images/product1.png`,
+    image: `${baseUrl}images/product1.webp`,
     file: `${baseUrl}images/Camera-Tracker-Specifications.doc`
   },
   {
     title: 'GPS-TK118 User’s Manual',
     code: 'TK103',
-    image: `${baseUrl}images/product2.png`,
+    image: `${baseUrl}images/product2.webp`,
     file: `${baseUrl}images/TK-118.doc`
   },
   {
     title: 'Vehicle Tracking System',
     code: 'TK118',
-    image: `${baseUrl}images/product3.png`,
+    image: `${baseUrl}images/product3.webp`,
     file: `${baseUrl}images/Vehicle-Tracking-Systems.doc`
   }
 ]

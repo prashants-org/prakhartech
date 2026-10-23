@@ -4,7 +4,12 @@ const primaryRoutes = [
   "/",
   "/about",
   "/products",
-  "/softwares",
+  "/software",
+  "/fleet-savings-calculator",
+  "/stationery",
+  "/gifts",
+  "/corporate-gifting",
+  "/elidefireball",
   "/downloads",
   "/faq",
   "/vehicle-fleet",
@@ -40,7 +45,7 @@ test("home to contact and map location", async ({ page }) => {
 
 test("opens enquiry modal from home", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Request Online Demo" }).click();
+  await page.getByRole("button", { name: "Get a free consultation" }).click();
   await expect(
     page.getByRole("heading", { name: "Get in Touch" }),
   ).toBeVisible();
@@ -61,4 +66,28 @@ test("primary routes render without 404", async ({ page }) => {
       page.getByRole("heading", { name: "Page not found" }),
     ).toHaveCount(0);
   }
+});
+
+test("grouped navigation opens a business-line menu", async ({ page }) => {
+  await page.setViewportSize({ width: 1366, height: 860 });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Fire Safety" }).click();
+  await page.locator("#nav-panel-safety").getByRole("link", { name: /Specs & Fire Classes/ }).click();
+  await expect(page).toHaveURL(/\/elidefireball\/product-overview$/);
+  await expect(page).toHaveTitle(/Elide Fire Ball Product Overview/);
+});
+
+test("old URLs redirect to their new home", async ({ page }) => {
+  await page.goto("/softwares");
+  await expect(page).toHaveURL(/\/software$/);
+  await page.goto("/elidefireball/product-warrantee");
+  await expect(page).toHaveURL(/\/elidefireball\/product-warranty$/);
+});
+
+test("savings calculator pre-fills a proposal enquiry", async ({ page }) => {
+  await page.goto("/fleet-savings-calculator");
+  await page.locator("#fc-vehicles").fill("25");
+  await page.getByRole("button", { name: /Get a proposal for this fleet/ }).click();
+  const dialog = page.getByRole("dialog", { name: "Enquiry form" });
+  await expect(dialog.getByLabel("Message")).toHaveValue(/25 vehicles/);
 });

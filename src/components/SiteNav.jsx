@@ -122,7 +122,7 @@ function SiteNav({ activeSection, onEnquiry }) {
           </li>
           <li className="nav-elide-logo">
             <Link to="/elidefireball" className="nav-logo" aria-label="Elide Fire Ball">
-              <img src={`${import.meta.env.BASE_URL}images/logo2.png`} alt="" height="28" width="84" />
+              <img src={`${import.meta.env.BASE_URL}images/logo2.webp`} alt="" height="28" width="84" />
             </Link>
           </li>
         </ul>

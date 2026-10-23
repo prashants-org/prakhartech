@@ -58,7 +58,7 @@ export const routes = [
   },
   {
     path: '/software',
-    page: 'Softwares',
+    page: 'Software',
     section: 'fleet',
     title: 'Fleet Tracking Software | Web & Mobile Dashboard – Prakhar Technology',
     description:

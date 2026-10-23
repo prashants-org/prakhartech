@@ -7,7 +7,6 @@ function Contact() {
   const [selectedAddress, setSelectedAddress] = useState(mapLocations[0]?.address || '')
   const hasMultipleLocations = mapLocations.length > 1
   const mapLocationLabel = mapLocations[0]?.title || 'Head Office'
-  const baseUrl = import.meta.env.BASE_URL
 
   return (
     <>
@@ -106,13 +105,20 @@ function Contact() {
       <section className="contact-strip">
         <div className="container contact-strip-inner">
           <div>
-            <h3>Follow us</h3>
-            <p className="muted">Stay connected with updates and announcements.</p>
+            <h3>Prefer to chat?</h3>
+            <p className="muted">Message us on WhatsApp, call, or email. We reply within 24 business hours.</p>
           </div>
-          <div className="social-row">
-            <img loading="lazy" src={`${baseUrl}images/facebook.png`} alt="Facebook" />
-            <img loading="lazy" src={`${baseUrl}images/twitter.png`} alt="Twitter" />
-            <img loading="lazy" src={`${baseUrl}images/google-plus.png`} alt="Google Plus" />
+          <div className="contact-quick">
+            <a
+              className="contact-quick-btn contact-quick-btn--wa"
+              href={`https://wa.me/${contactInfo.phone.replace(/[^0-9]/g, '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WhatsApp us
+            </a>
+            <a className="contact-quick-btn" href={`tel:${contactInfo.phone}`}>Call {contactInfo.phone}</a>
+            <a className="contact-quick-btn" href={`mailto:${contactInfo.enquiryEmail}`}>{contactInfo.enquiryEmail}</a>
           </div>
         </div>
       </section>

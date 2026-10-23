@@ -18,11 +18,11 @@ describe('App routing and key flows', () => {
 
     expect(
       await screen.findByRole('heading', {
-        name: /keep every vehicle visible/i
+        name: /track every vehicle/i
       }),
     ).toBeInTheDocument()
 
-    await userEvent.click(screen.getByRole('button', { name: /request online demo/i }))
+    await userEvent.click(screen.getByRole('button', { name: /get a free consultation/i }))
     expect(await screen.findByRole('heading', { name: /get in touch/i })).toBeInTheDocument()
   })
 

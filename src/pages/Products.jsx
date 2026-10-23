@@ -4,25 +4,25 @@ import { openEnquiry } from '../lib/enquiry'
 const products = (baseUrl) => [
   {
     title: 'GPS Tracker (TK103)',
-    image: `${baseUrl}images/gps_tracker_img.png`,
+    image: `${baseUrl}images/gps_tracker_img.webp`,
     description:
       'A multi-functional GPS satellite positioning tracker for cars, e-cars, special vehicles, and motorcycles. Wide voltage support (9V–24V), compact design, and high-sensitivity GPS/GSM modules for real-time monitoring via SMS or GPRS.'
   },
   {
     title: 'Camera Tracker (KS668)',
-    image: `${baseUrl}images/camera_tracker.png`,
+    image: `${baseUrl}images/camera_tracker.webp`,
     description:
       'Real-time vehicle monitoring with omni-directional image capture. Uploads images through multiple cameras to the control center, deterring illegal activity and monitoring passenger safety.'
   },
   {
     title: 'Bike Tracker (TK118)',
-    image: `${baseUrl}images/bike_tracker.png`,
+    image: `${baseUrl}images/bike_tracker.webp`,
     description:
       'Wireless tracking for trucks, buses, containers, ambulances, and more. A hardware/software solution designed for commercial and security vehicles requiring reliable GPS + GPRS tracking.'
   },
   {
     title: 'Personal Tracker',
-    image: `${baseUrl}images/personal_tracker1.jpg`,
+    image: `${baseUrl}images/personal_tracker1.webp`,
     description:
       'Track family members, employees, or valuable assets. Choose real-time tracking devices or GPS data loggers, all in compact, portable designs.'
   }
@@ -63,7 +63,7 @@ function Products() {
               </div>
             </div>
             <div className="glow-card">
-              <img loading="lazy" src={`${baseUrl}images/product1.png`} alt="GPS Tracking Device" />
+              <img loading="lazy" src={`${baseUrl}images/product1.webp`} alt="GPS Tracking Device" />
             </div>
           </div>
 

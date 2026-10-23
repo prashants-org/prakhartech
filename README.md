@@ -25,7 +25,8 @@ npm run dev        # http://localhost:5173
 | Script | What it does |
 |---|---|
 | `npm run dev` | Start the Vite dev server |
-| `npm run build` | Production build to `dist/` |
+| `npm run build` | Production build to `dist/`, with every page prerendered |
+| `npm run optimize:images` | Convert new PNG/JPG images in `public/` to WebP |
 | `npm run preview` | Serve the production build locally |
 | `npm run lint` | Run ESLint |
 | `npm run test:unit` | Run Vitest unit tests |
@@ -39,32 +40,47 @@ First time running e2e tests? Install the browsers with `npx playwright install`
 
 ## Site sections
 
+Every URL lives in [`src/routes.js`](src/routes.js), together with its title, description and sitemap priority. The router, the per-page `<head>` tags, the prerender and `sitemap.xml` are all generated from that one list, so **to add a page: create `src/pages/MyPage.jsx` and add one entry to `routes.js`.**
+
 | Area | Routes |
 |---|---|
-| Company | `/`, `/about`, `/contact`, `/enquiry`, `/demo`, `/faq`, `/downloads` |
-| GPS tracking | `/products`, `/softwares`, `/vehicle-fleet`, `/security`, `/personal`, `/whychoose`, `/whygps` |
-| Elide Fire Ball | `/elidefireball` and its sub-pages: `product-overview`, `faq`, `health-and-safety`, `disposal`, `product-warrantee`, `patents`, `the-elide-fire-ball-story` |
-| Supplies | `/stationery`, `/gifts` |
+| Company | `/`, `/about`, `/contact`, `/whychoose`, `/downloads`, `/enquiry`, `/demo` |
+| GPS & fleet | `/vehicle-fleet`, `/products`, `/software`, `/security`, `/personal`, `/whygps`, `/faq`, `/fleet-savings-calculator` |
+| Fire safety (Elide Fire Ball) | `/elidefireball` and `product-overview`, `faq`, `health-and-safety`, `disposal`, `product-warranty`, `patents`, `the-elide-fire-ball-story` |
+| Workplace supplies | `/stationery`, `/gifts`, `/corporate-gifting` (seasonal: update `SEASON` in `CorporateGifting.jsx` each year) |
+
+Old URLs `/softwares` and `/elidefireball/product-warrantee` redirect to their new addresses.
+
+## How it works
+
+- **Prerendering.** `npm run build` builds the client, builds a server bundle (`src/entry-server.jsx`), then `scripts/prerender.mjs` renders every route to static HTML in `dist/` (`about.html` and `about/index.html`), plus a real `404.html` and `sitemap.xml`. Crawlers get the full page with its own title and canonical; the browser then hydrates it. `npm run dev` is a normal SPA.
+- **Enquiries.** Every form uses `useEnquiryForm` (`src/hooks`) and `src/lib/enquiry.js`: validation, a honeypot field against bots, and delivery through FormSubmit to `contactInfo.enquiryEmail`. Open the site-wide form from anywhere with `openEnquiry({ interest, message })`.
+- **Quote basket.** Stationery and gift products have *Add to quote*; buyers send one request for many items. State lives in `src/components/quote/`.
+- **Analytics.** Off by default. Set the repository variable `VITE_PLAUSIBLE_DOMAIN` (recommended: cookieless, no consent banner) or `VITE_GA_ID`. Conversion events: `enquiry_submit`, `quote_submit`, `whatsapp_click`, `call_click`, `calculator_estimate`.
+- **Styles.** `src/App.css` holds the base design system; `src/styles/components.css` the shared components; each section (`home`, `elide`, `gifts`, `stationery`, `calculator`, `gifting`) has its own stylesheet that loads only with its pages. Business-line accents are CSS variables: `--fleet`, `--safety`, `--workplace`.
+- **Images.** Put PNG/JPG files in `public/`, then run `npm run optimize:images -- --prune` to convert them to WebP and update references.
 
 ## Project structure
 
 ```
-├── index.html              # Vite entry HTML (SEO meta tags)
-├── public/                 # Static assets served as-is
-│   ├── images/ css/ js/ font/
-│   ├── elidefireball/      # Elide Fire Ball assets and user manual
-│   ├── stationery/         # Product photos and client logos
-│   ├── 404.html            # GitHub Pages SPA fallback
-│   ├── robots.txt
-│   └── sitemap.xml
+├── index.html                # HTML shell (head markers are filled per page at build time)
+├── scripts/
+│   ├── prerender.mjs         # Static HTML for every route + 404 + sitemap
+│   └── optimize-images.mjs   # PNG/JPG → WebP
+├── public/                   # Static assets (images, logos, PDFs)
 ├── src/
-│   ├── App.jsx             # Route definitions
-│   ├── components/         # Layout, EnquiryForm, ElideSubnav, ScrollToTop
-│   ├── pages/              # One component per page
-│   ├── data/contactInfo.js # Phone numbers, emails, office addresses
-│   └── test/               # Vitest unit tests
-├── tests/e2e/              # Playwright specs
-└── .github/workflows/      # CI and deployment
+│   ├── routes.js             # Every URL, title, description
+│   ├── App.jsx               # Router built from routes.js
+│   ├── entry-server.jsx      # Build-time renderer
+│   ├── components/           # Layout, SiteNav, Modal, EnquiryForm, quote basket, home visuals
+│   ├── hooks/                # useEnquiryForm
+│   ├── lib/                  # seo, enquiry, analytics, fleetSavings, structuredData
+│   ├── data/                 # contactInfo, navigation, clients, gifts
+│   ├── pages/                # One component per page
+│   ├── styles/               # Per-section stylesheets
+│   └── test/                 # Vitest unit tests
+├── tests/e2e/                # Playwright specs
+└── .github/workflows/        # CI and deployment
 ```
 
 To change contact details across the site, edit `src/data/contactInfo.js`.

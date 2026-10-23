@@ -29,6 +29,9 @@ function Layout() {
   const route = findRoute(location.pathname)
   const section = SECTIONS[route.section] ?? SECTIONS.company
   const baseUrl = import.meta.env.BASE_URL
+  // Animate page changes, but not the first paint (keeps LCP fast).
+  const [firstPath] = useState(location.pathname)
+  const hasNavigated = location.pathname !== firstPath
 
   const openEnquiry = (detail = {}) =>
     setEnquiry({ interest: detail.interest ?? section.interest, message: detail.message ?? '', source: detail.source ?? 'site' })
@@ -71,7 +74,7 @@ function Layout() {
         <header className="topbar">
           <div className="container topbar-inner">
             <Link to="/" className="brand">
-              <img src={`${baseUrl}images/logo.png`} alt="" width="56" height="56" />
+              <img src={`${baseUrl}images/logo.webp`} alt="" width="56" height="56" />
               <div>
                 <span className="brand-title">Prakhar Technology</span>
                 <span className="brand-subtitle">Fleet · Safety · Workplace Solutions</span>
@@ -97,7 +100,7 @@ function Layout() {
         <SiteNav activeSection={route.section} onEnquiry={() => openEnquiry({ source: 'mobile-nav' })} />
 
         <main id="main" className="page" tabIndex={-1}>
-          <div key={location.pathname} className="page-transition">
+          <div key={location.pathname} className={hasNavigated ? 'page-transition' : undefined}>
             <Suspense fallback={<div className="page-loading" aria-hidden="true" />}>
               <Outlet />
             </Suspense>
@@ -107,7 +110,7 @@ function Layout() {
         <footer className="footer-modern" aria-label="Site footer">
           <div className="container footer-grid">
             <div className="footer-brand">
-              <img src={`${baseUrl}images/logo.png`} alt="" width="48" height="48" className="footer-logo" />
+              <img src={`${baseUrl}images/logo.webp`} alt="" width="48" height="48" className="footer-logo" />
               <h4>Prakhar Technology</h4>
               <p>GPS fleet tracking, Elide Fire Ball fire safety and workplace supplies for businesses across India.</p>
               <address className="footer-address">

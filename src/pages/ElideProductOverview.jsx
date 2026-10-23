@@ -229,7 +229,7 @@ function ElideProductOverview() {
         <div className="container ef-overview-cta-inner">
           <div className="ef-overview-cta-visual">
             <img
-              src={`${baseUrl}elidefireball/assets/img/bt2.png`}
+              src={`${baseUrl}elidefireball/assets/img/bt2.webp`}
               alt="Elide Fireball product"
               loading="lazy"
             />

@@ -3,7 +3,7 @@ import { openEnquiry } from '../lib/enquiry'
 const fleetSegments = (baseUrl) => [
   {
     title: 'Taxis',
-    image: `${baseUrl}images/taxi_fleet.png`,
+    image: `${baseUrl}images/taxi_fleet.webp`,
     points: [
       'Track trips and routes for owners and vendors.',
       'Improve passenger safety and confidence.',
@@ -12,7 +12,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'JCB / Earth Movers',
-    image: `${baseUrl}images/jcb_earth_mover.png`,
+    image: `${baseUrl}images/jcb_earth_mover.webp`,
     points: [
       'Measure working hours and ignition time precisely.',
       'Reduce resource wastage and increase ROI.',
@@ -21,7 +21,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Construction Vehicles',
-    image: `${baseUrl}images/construction_vehicle.png`,
+    image: `${baseUrl}images/construction_vehicle.webp`,
     points: [
       'Monitor loading and unloading times.',
       'Reduce hidden delays and optimize dispatch.',
@@ -30,7 +30,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Frozen / Food Vehicles',
-    image: `${baseUrl}images/frozen_food_vehicle.png`,
+    image: `${baseUrl}images/frozen_food_vehicle.webp`,
     points: [
       'Integrate temperature sensors for cold chains.',
       'Identify problem areas during the journey.',
@@ -39,7 +39,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Auto',
-    image: `${baseUrl}images/auto.png`,
+    image: `${baseUrl}images/auto.webp`,
     points: [
       'Improve passenger safety and owner visibility.',
       'Capture total running distance per day.',
@@ -48,7 +48,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Cement Mixer',
-    image: `${baseUrl}images/cement_mixer.png`,
+    image: `${baseUrl}images/cement_mixer.webp`,
     points: [
       'Color-coded status from plant to site and back.',
       'Ensure on-time delivery and dispatch.',
@@ -57,7 +57,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Logistics Vehicles',
-    image: `${baseUrl}images/logistic_vehicle.png`,
+    image: `${baseUrl}images/logistic_vehicle.webp`,
     points: [
       'Reduce unnecessary trips and stoppages.',
       'Optimize allocation and support breakdowns.',
@@ -66,7 +66,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Cargo Van',
-    image: `${baseUrl}images/cargo_van.png`,
+    image: `${baseUrl}images/cargo_van.webp`,
     points: [
       'Keep a tab on dispatches and deliveries.',
       'Enable immediate dispatch for urgent runs.',
@@ -75,7 +75,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Bus',
-    image: `${baseUrl}images/bus.png`,
+    image: `${baseUrl}images/bus.webp`,
     points: [
       'Plan routes based on traffic conditions.',
       'Monitor vehicle status for safer operations.',
@@ -84,7 +84,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Postal Truck',
-    image: `${baseUrl}images/postal_truck.png`,
+    image: `${baseUrl}images/postal_truck.webp`,
     points: [
       'Improve operational efficiency of postal routes.',
       'Reduce costs with optimized dispatching.',
@@ -93,7 +93,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Dangerous Goods Vehicles',
-    image: `${baseUrl}images/dangerous_good_vehicles.png`,
+    image: `${baseUrl}images/dangerous_good_vehicles.webp`,
     points: [
       'Real-time monitoring for high-risk cargo.',
       'Enhance safety of goods and the public.',
@@ -102,7 +102,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Tow Truck',
-    image: `${baseUrl}images/tow_truck.png`,
+    image: `${baseUrl}images/tow_truck.webp`,
     points: [
       'Know exact positions of towed vehicles.',
       'Improve response and time management.',
@@ -147,7 +147,7 @@ function VehicleFleet() {
             </div>
           </div>
           <div className="glow-card">
-            <img loading="lazy" src={`${baseUrl}images/serives_img1.png`} alt="Fleet management" />
+            <img loading="lazy" src={`${baseUrl}images/serives_img1.webp`} alt="Fleet management" />
           </div>
         </div>
       </section>
