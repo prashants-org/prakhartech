@@ -24,9 +24,11 @@ jobs:
 
       - run: npm ci
 
-      # The e2e tests only use Chromium; installing just that is faster and less likely to hang.
+      # The e2e tests only use Chromium. GitHub's Ubuntu image already ships Google
+      # Chrome, so Chromium's system libraries are present: skip --with-deps, which
+      # pulls packages from the (sometimes very slow) Ubuntu apt mirror.
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
         timeout-minutes: 8
 
       # 1. Run Tests and pipe output to a file (so we can put it in the issue)
