@@ -58,6 +58,8 @@ Old URLs `/softwares` and `/elidefireball/product-warrantee` redirect to their n
 - **Quote basket.** Stationery and gift products have *Add to quote*; buyers send one request for many items. State lives in `src/components/quote/`.
 - **Analytics.** Off by default. Set the repository variable `VITE_PLAUSIBLE_DOMAIN` (recommended: cookieless, no consent banner) or `VITE_GA_ID`. Conversion events: `enquiry_submit`, `quote_submit`, `whatsapp_click`, `call_click`, `calculator_estimate`.
 - **Styles.** `src/App.css` holds the base design system; `src/styles/components.css` the shared components; each section (`home`, `elide`, `gifts`, `stationery`, `calculator`, `gifting`) has its own stylesheet that loads only with its pages. Business-line accents are CSS variables: `--fleet`, `--safety`, `--workplace`.
+- **Brand.** The logos are vector files in `public/brand/` (`prakhar-icon.svg`, `prakhar-logo.svg`, `prakhar-icon-reversed.svg` for dark backgrounds). After changing them, run `node scripts/brand-assets.mjs` to regenerate the favicon, app icons and the social share image.
+- **Elide demo video.** Set `ELIDE_VIDEO_ID` in `src/data/elide.js`; while it is `null` the product infographic is shown instead.
 - **Images.** Put PNG/JPG files in `public/`, then run `npm run optimize:images -- --prune` to convert them to WebP and update references.
 
 ## Project structure
