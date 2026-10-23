@@ -11,6 +11,7 @@ permissions:
 jobs:
   test-and-manage:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -23,8 +24,10 @@ jobs:
 
       - run: npm ci
 
+      # The e2e tests only use Chromium; installing just that is faster and less likely to hang.
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
+        timeout-minutes: 8
 
       # 1. Run Tests and pipe output to a file (so we can put it in the issue)
       - name: Run Tests
