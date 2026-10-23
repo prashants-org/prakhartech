@@ -3,8 +3,9 @@ import { useState } from 'react'
 // YouTube "facade": shows the video thumbnail and a play button, and only
 // loads the real player (≈1 MB of YouTube scripts and cookies) on click.
 // Uses youtube-nocookie.com for the privacy-enhanced player.
-function LiteYouTube({ id, title }) {
-  const [playing, setPlaying] = useState(false)
+// autoplay: start the player immediately (used when a playlist item is picked).
+function LiteYouTube({ id, title, autoplay = false }) {
+  const [playing, setPlaying] = useState(autoplay)
 
   if (playing) {
     return (

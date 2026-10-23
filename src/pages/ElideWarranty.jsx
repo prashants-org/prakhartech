@@ -1,6 +1,6 @@
 import '../styles/elide.css'
-import ElideSubnav from '../components/ElideSubnav'
 import { openEnquiry } from '../lib/enquiry'
+import ElideRelated from '../components/ElideRelated'
 
 const COVERAGE = [
   {
@@ -87,7 +87,6 @@ function ElideWarranty() {
         </div>
       </section>
 
-      <ElideSubnav />
 
       {/* Warranty summary card */}
       <section className="ef-section">
@@ -152,6 +151,8 @@ function ElideWarranty() {
           </div>
         </div>
       </section>
+
+      <ElideRelated />
 
       <section className="ef-cta-band">
         <div className="container ef-cta-band-inner">

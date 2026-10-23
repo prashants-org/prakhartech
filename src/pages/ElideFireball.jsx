@@ -1,11 +1,11 @@
 import '../styles/elide.css'
 import { Link } from 'react-router-dom'
-import ElideSubnav from '../components/ElideSubnav'
 import FieldError from '../components/FieldError'
 import { contactInfo } from '../data/contactInfo'
 import { useEnquiryForm } from '../hooks/useEnquiryForm'
-import ElideDemoMedia from '../components/ElideDemoMedia'
-import { ELIDE_VIDEO_ID, FIRE_CLASSES } from '../data/elide'
+import ElideRelated from '../components/ElideRelated'
+import ElideVideoGallery from '../components/ElideVideoGallery'
+import { FIRE_CLASSES } from '../data/elide'
 
 const USE_CASES = [
   { icon: '🏠', title: 'Homes & Kitchens', desc: 'Gas cylinders, cooking areas, electrical panels — protect your family automatically.' },
@@ -98,7 +98,6 @@ function ElideFireball() {
         </div>
       </section>
 
-      <ElideSubnav />
 
       {/* ── How it works ── */}
       <section className="ef-section ef-section--dark">
@@ -124,13 +123,11 @@ function ElideFireball() {
       <section className="ef-section">
         <div className="container">
           <div className="ef-section-head">
-            <span className="ef-label">{ELIDE_VIDEO_ID ? 'See It In Action' : 'At a Glance'}</span>
-            <h2>{ELIDE_VIDEO_ID ? 'Watch how it stops fires in seconds' : 'How it stops fires in seconds'}</h2>
+            <span className="ef-label">See It In Action</span>
+            <h2>Watch how it stops fires in seconds</h2>
           </div>
           <div className="ef-video-split">
-            <div className="ef-video-wrap">
-              <ElideDemoMedia />
-            </div>
+            <ElideVideoGallery />
             <div className="ef-video-facts">
               <div className="ef-fact-card">
                 <div className="ef-fact-icon">🔥</div>
@@ -350,53 +347,7 @@ function ElideFireball() {
         </div>
       </section>
 
-      {/* ── Support links ── */}
-      <section className="ef-section">
-        <div className="container">
-          <div className="ef-section-head">
-            <span className="ef-label">Product Resources</span>
-            <h2>Everything you need to know</h2>
-          </div>
-          <div className="ef-resource-grid">
-            <Link to="/elidefireball/product-overview" className="ef-resource-card">
-              <div className="ef-resource-icon">📋</div>
-              <h4>Product Overview</h4>
-              <p>Full specification, deployment guide, and fire class details.</p>
-              <span className="ef-resource-link">Read more →</span>
-            </Link>
-            <Link to="/elidefireball/faq" className="ef-resource-card">
-              <div className="ef-resource-icon">❓</div>
-              <h4>FAQ</h4>
-              <p>Common questions about activation, safety, and maintenance.</p>
-              <span className="ef-resource-link">Read more →</span>
-            </Link>
-            <Link to="/elidefireball/health-and-safety" className="ef-resource-card">
-              <div className="ef-resource-icon">🛡️</div>
-              <h4>Health &amp; Safety</h4>
-              <p>Guidelines for safe handling, storage, and deployment.</p>
-              <span className="ef-resource-link">Read more →</span>
-            </Link>
-            <Link to="/elidefireball/product-warranty" className="ef-resource-card">
-              <div className="ef-resource-icon">📜</div>
-              <h4>Warranty</h4>
-              <p>5-year product guarantee terms and return policies.</p>
-              <span className="ef-resource-link">Read more →</span>
-            </Link>
-            <Link to="/elidefireball/patents" className="ef-resource-card">
-              <div className="ef-resource-icon">💡</div>
-              <h4>Patents</h4>
-              <p>International patents and certifications behind the technology.</p>
-              <span className="ef-resource-link">Read more →</span>
-            </Link>
-            <Link to="/elidefireball/the-elide-fire-ball-story" className="ef-resource-card">
-              <div className="ef-resource-icon">📖</div>
-              <h4>Our Story</h4>
-              <p>How Elide Fireball was invented and became a global product.</p>
-              <span className="ef-resource-link">Read more →</span>
-            </Link>
-          </div>
-        </div>
-      </section>
+      <ElideRelated label="Product Resources" title="Everything you need to know" />
     </>
   )
 }

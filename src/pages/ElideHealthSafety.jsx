@@ -1,6 +1,6 @@
 import '../styles/elide.css'
-import ElideSubnav from '../components/ElideSubnav'
 import { openEnquiry } from '../lib/enquiry'
+import ElideRelated from '../components/ElideRelated'
 
 const GUIDELINES = [
   {
@@ -76,7 +76,6 @@ function ElideHealthSafety() {
         </div>
       </section>
 
-      <ElideSubnav />
 
       {/* Safety guidelines */}
       <section className="ef-section">
@@ -132,6 +131,8 @@ function ElideHealthSafety() {
           </div>
         </div>
       </section>
+
+      <ElideRelated />
 
       <section className="ef-cta-band">
         <div className="container ef-cta-band-inner">

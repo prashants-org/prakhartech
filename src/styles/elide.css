@@ -223,70 +223,6 @@
 }
 
 /* ── Subnav ── */
-.ef-subnav {
-  background: var(--ef-dark2);
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-  position: sticky;
-  top: 179px;
-  z-index: 30;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-}
-
-.ef-subnav-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  padding: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.ef-subnav-inner::-webkit-scrollbar {
-  display: none;
-}
-
-.ef-subnav-inner a {
-  position: relative;
-  padding: 14px 18px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.55);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color 0.2s;
-}
-
-.ef-subnav-inner a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 18px;
-  right: 18px;
-  height: 2px;
-  background: var(--ef-fire2);
-  border-radius: 2px 2px 0 0;
-  transform: scaleX(0);
-  transition: transform 0.2s ease;
-}
-
-.ef-subnav-inner a:hover {
-  color: #fff;
-}
-
-.ef-subnav-inner a:hover::after {
-  transform: scaleX(0.5);
-}
-
-.ef-subnav-inner a.active {
-  color: #fff;
-}
-
-.ef-subnav-inner a.active::after {
-  transform: scaleX(1);
-}
 
 /* ── Shared section styles ── */
 .ef-section {
@@ -1598,9 +1534,6 @@
 
 /* ── Additional responsive overrides ── */
 @media (max-width: 980px) {
-  .ef-subnav {
-    top: 128px;
-  }
 
   .ef-subpage-hero {
     padding: 52px 0 44px;
@@ -1696,5 +1629,60 @@
 .lite-yt:hover img { opacity: 1; }
 .lite-yt:hover .lite-yt-play svg,
 .lite-yt:focus-visible .lite-yt-play svg { transform: scale(1.08); }
-.ef-video-wrap:has(.ef-demo-infographic) { background: #fff; }
-.ef-demo-infographic { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+/* ── Official video gallery (components/ElideVideoGallery) ── */
+.ef-vgallery { display: grid; gap: 12px; }
+.ef-vgallery-caption { margin: 0; font-weight: 600; color: var(--ink); }
+.ef-vgallery-rail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.ef-vgallery-thumb {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+.ef-vgallery-thumb img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 10px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: outline-color 0.2s, opacity 0.2s;
+  opacity: 0.75;
+}
+.ef-vgallery-thumb span {
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ef-vgallery-thumb:hover img { opacity: 1; }
+.ef-vgallery-thumb.is-active img { opacity: 1; outline-color: var(--ef-fire); }
+.ef-vgallery-thumb.is-active span { color: var(--ink); font-weight: 600; }
+
+/* ── Related Elide pages (components/ElideRelated) ── */
+.ef-resource-card h3 { margin: 0; font-size: 1rem; color: var(--ink); }
+.ef-resource-grid--compact { grid-template-columns: repeat(4, 1fr); }
+.ef-resource-grid--compact .ef-resource-card { padding: 22px 20px; }
+@media (max-width: 1024px) {
+  .ef-resource-grid--compact { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .ef-resource-grid--compact { grid-template-columns: 1fr; }
+  .ef-vgallery-rail { grid-template-columns: repeat(2, 1fr); }
+}

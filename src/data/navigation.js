@@ -1,3 +1,5 @@
+import { ELIDE_PAGES } from './elide'
+
 // Primary navigation, grouped by business line. Each group is a "door" into
 // one of the three businesses, plus the company pages.
 export const navGroups = [
@@ -21,12 +23,7 @@ export const navGroups = [
     label: 'Fire Safety',
     accent: 'safety',
     blurb: 'Elide Fire Ball — the automatic fire extinguisher.',
-    links: [
-      { to: '/elidefireball', label: 'Elide Fire Ball', desc: 'Self-activating in 3–10 seconds' },
-      { to: '/elidefireball/product-overview', label: 'Specs & Fire Classes', desc: 'Weight, coverage, where to install' },
-      { to: '/elidefireball/faq', label: 'Elide FAQ', desc: 'Safety, life, pricing' },
-      { to: '/elidefireball/product-warranty', label: 'Warranty', desc: 'Coverage & claims' },
-    ],
+    links: ELIDE_PAGES.map(({ to, label, desc }) => ({ to, label, desc })),
   },
   {
     id: 'workplace',

@@ -1,8 +1,8 @@
 import '../styles/elide.css'
-import ElideSubnav from '../components/ElideSubnav'
 import { openEnquiry } from '../lib/enquiry'
-import ElideDemoMedia from '../components/ElideDemoMedia'
-import { ELIDE_VIDEO_ID, FIRE_CLASSES } from '../data/elide'
+import ElideRelated from '../components/ElideRelated'
+import LiteYouTube from '../components/LiteYouTube'
+import { ELIDE_PRODUCT_VIDEO, FIRE_CLASSES } from '../data/elide'
 
 const QUICK_FACTS = [
   { icon: '⚖️', label: '1.3 kg', desc: 'Lightweight enough for anyone to carry and throw' },
@@ -67,7 +67,6 @@ function ElideProductOverview() {
         </div>
       </section>
 
-      <ElideSubnav />
 
       {/* Quick facts strip */}
       <section className="ef-section">
@@ -93,12 +92,12 @@ function ElideProductOverview() {
       <section className="ef-section ef-section--soft">
         <div className="container">
           <div className="ef-section-head">
-            <span className="ef-label">{ELIDE_VIDEO_ID ? 'See It In Action' : 'At a Glance'}</span>
-            <h2>{ELIDE_VIDEO_ID ? 'Watch the Elide Fireball suppress a fire' : 'Fire protection in a small red ball'}</h2>
+            <span className="ef-label">See It In Action</span>
+            <h2>Watch the Elide Fireball suppress a fire</h2>
           </div>
           <div className="ef-video-split">
             <div className="ef-video-wrap">
-              <ElideDemoMedia />
+              <LiteYouTube id={ELIDE_PRODUCT_VIDEO.id} title={ELIDE_PRODUCT_VIDEO.title} />
             </div>
             <div className="ef-video-facts">
               <div className="ef-fact-card">
@@ -248,6 +247,7 @@ function ElideProductOverview() {
           </div>
         </div>
       </section>
+      <ElideRelated />
     </>
   )
 }

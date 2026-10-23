@@ -59,7 +59,7 @@ Old URLs `/softwares` and `/elidefireball/product-warrantee` redirect to their n
 - **Analytics.** Off by default. Set the repository variable `VITE_PLAUSIBLE_DOMAIN` (recommended: cookieless, no consent banner) or `VITE_GA_ID`. Conversion events: `enquiry_submit`, `quote_submit`, `whatsapp_click`, `call_click`, `calculator_estimate`.
 - **Styles.** `src/App.css` holds the base design system; `src/styles/components.css` the shared components; each section (`home`, `elide`, `gifts`, `stationery`, `calculator`, `gifting`) has its own stylesheet that loads only with its pages. Business-line accents are CSS variables: `--fleet`, `--safety`, `--workplace`.
 - **Brand.** The logos are vector files in `public/brand/` (`prakhar-icon.svg`, `prakhar-logo.svg`, `prakhar-icon-reversed.svg` for dark backgrounds). After changing them, run `node scripts/brand-assets.mjs` to regenerate the favicon, app icons and the social share image.
-- **Elide demo video.** Set `ELIDE_VIDEO_ID` in `src/data/elide.js`; while it is `null` the product infographic is shown instead.
+- **Elide pages.** `src/data/elide.js` lists every Elide page (feeding the Fire Safety menu and the related-links strip), the fire classes, and the embedded videos from the official [ELIDE FIRE® YouTube channel](https://www.youtube.com/c/ELIDEFIREextinguishingball). Videos are embedded, not re-hosted, and the player only loads on click.
 - **Images.** Put PNG/JPG files in `public/`, then run `npm run optimize:images -- --prune` to convert them to WebP and update references.
 
 ## Project structure

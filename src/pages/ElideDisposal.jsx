@@ -1,7 +1,7 @@
 import '../styles/elide.css'
 import { Link } from 'react-router-dom'
-import ElideSubnav from '../components/ElideSubnav'
 import { openEnquiry } from '../lib/enquiry'
+import ElideRelated from '../components/ElideRelated'
 
 const RETURN_STEPS = [
   {
@@ -81,7 +81,6 @@ function ElideDisposal() {
         </div>
       </section>
 
-      <ElideSubnav />
 
       {/* Return process */}
       <section className="ef-section">
@@ -138,6 +137,8 @@ function ElideDisposal() {
           </div>
         </div>
       </section>
+
+      <ElideRelated />
 
       <section className="ef-cta-band">
         <div className="container ef-cta-band-inner">

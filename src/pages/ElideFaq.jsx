@@ -1,8 +1,8 @@
 import '../styles/elide.css'
 import JsonLd from '../components/JsonLd'
 import { faqSchema } from '../lib/structuredData'
-import ElideSubnav from '../components/ElideSubnav'
 import { openEnquiry } from '../lib/enquiry'
+import ElideRelated from '../components/ElideRelated'
 
 const FAQS = [
   {
@@ -76,7 +76,6 @@ function ElideFaq() {
         </div>
       </section>
 
-      <ElideSubnav />
 
       <section className="ef-section">
         <div className="container ef-faq-layout">
@@ -108,6 +107,8 @@ function ElideFaq() {
           </div>
         </div>
       </section>
+
+      <ElideRelated />
 
       <section className="ef-cta-band">
         <div className="container ef-cta-band-inner">

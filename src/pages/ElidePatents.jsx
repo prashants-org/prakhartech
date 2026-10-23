@@ -1,6 +1,6 @@
 import '../styles/elide.css'
-import ElideSubnav from '../components/ElideSubnav'
 import { openEnquiry } from '../lib/enquiry'
+import ElideRelated from '../components/ElideRelated'
 
 const PATENTS = [
   {
@@ -64,7 +64,6 @@ function ElidePatents() {
         </div>
       </section>
 
-      <ElideSubnav />
 
       {/* Patent highlights */}
       <section className="ef-section">
@@ -104,6 +103,8 @@ function ElidePatents() {
           </div>
         </div>
       </section>
+
+      <ElideRelated />
 
       <section className="ef-cta-band">
         <div className="container ef-cta-band-inner">
