@@ -198,8 +198,6 @@
 }
 
 .nav-mobile-cta { display: none; }
-.nav-elide-logo { margin-left: 6px; padding-left: 10px; border-left: 1px solid rgba(148, 163, 184, 0.3); }
-.nav-elide-logo img { height: 28px; width: auto; display: block; }
 
 @media (max-width: 1024px) {
   .nav--grouped { top: 0; padding: 8px 0 12px; }
@@ -236,7 +234,6 @@
   .nav-panel-blurb { display: none; }
   .nav-mobile-cta { display: block; padding-top: 8px; }
   .nav-mobile-cta .primary-btn { width: 100%; }
-  .nav-elide-logo { border: 0; margin: 4px 0 0; padding: 8px 14px; }
 }
 
 /* ═══ Modal & drawer ═══ */
