@@ -17,95 +17,6 @@
 
 /* ── Buttons ── */
 
-/* ── Hero ── */
-.hm-hero {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(48px, 7vw, 96px) 0 clamp(56px, 7vw, 96px);
-  background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
-}
-.hm-hero-bg {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(600px 300px at 85% 10%, rgba(37, 99, 235, 0.12), transparent 70%),
-    radial-gradient(500px 260px at 70% 95%, rgba(234, 88, 12, 0.09), transparent 70%),
-    radial-gradient(500px 300px at 5% 90%, rgba(13, 148, 136, 0.08), transparent 70%);
-  pointer-events: none;
-}
-.hm-hero-grid {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1.05fr 1fr;
-  gap: clamp(32px, 5vw, 72px);
-  align-items: center;
-}
-
-.hm-eyebrow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 10px;
-  margin: 0 0 22px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--muted);
-}
-.hm-eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; margin-left: 6px; }
-.hm-eyebrow-dot:first-child { margin-left: 0; }
-.hm-eyebrow-dot--fleet { background: var(--fleet); }
-.hm-eyebrow-dot--safety { background: var(--safety); }
-.hm-eyebrow-dot--workplace { background: var(--workplace); }
-
-.hm-hero h1 {
-  margin: 0 0 22px;
-  font-size: clamp(2.3rem, 5.2vw, 4rem);
-  line-height: 1.04;
-  letter-spacing: -0.035em;
-  color: var(--ink);
-}
-.hm-line {
-  display: block;
-  animation: hmRise 0.8s var(--ease-out) both;
-}
-.hm-line:nth-child(2) { animation-delay: 0.1s; }
-.hm-line:nth-child(3) { animation-delay: 0.2s; }
-@keyframes hmRise { from { transform: translateY(14px); } to { transform: none; } }
-
-.hm-em {
-  font-style: normal;
-  position: relative;
-  white-space: nowrap;
-}
-.hm-em::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0.06em;
-  height: 0.16em;
-  border-radius: 999px;
-  background: currentColor;
-  opacity: 0.22;
-  transform-origin: left;
-  animation: hmUnderline 0.9s 0.5s var(--ease-out) both;
-}
-@keyframes hmUnderline { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-.hm-em--fleet { color: var(--fleet); }
-.hm-em--safety { color: var(--safety); }
-.hm-em--workplace { color: var(--workplace); }
-
-.hm-lead {
-  margin: 0 0 30px;
-  max-width: 560px;
-  font-size: 1.1rem;
-  line-height: 1.7;
-  color: #475569;
-}
-.hm-hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 26px; }
-.hm-trust { margin: 0; font-size: 0.9rem; color: var(--muted); }
-.hm-trust strong { color: var(--ink); }
-
 /* ── Live fleet map ── */
 .lfm {
   position: relative;
@@ -435,7 +346,6 @@
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {
-  .hm-hero-grid,
   .hm-savings-inner { grid-template-columns: 1fr; }
   .hm-doors { grid-template-columns: 1fr; max-width: 640px; margin: 0 auto; }
   .hm-door { display: grid; grid-template-columns: 1fr; }
@@ -450,7 +360,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hm-line, .hm-em::after, .lfm, .lfm-chip, .lfm-live i, .cm-track { animation: none !important; }
+  .lfm, .lfm-chip, .lfm-live i, .cm-track { animation: none !important; }
   .cm { overflow-x: auto; }
 }
 .hm-full { width: 100%; }

@@ -44,8 +44,8 @@ function WhyGps() {
         kicker="GPS & Fleet Tracking"
         title="Why GPS vehicle tracking?"
         lead="GPS tracking turns every vehicle into a live source of information, so you can cut waste, improve safety and serve customers faster."
-        media={asset('images/gps_img.webp')}
-        mediaAlt="Vehicle positions shown on a GPS map"
+        media={asset('images/gps/whygps-hero.webp')}
+        mediaAlt="GPS navigation map on a car dashboard"
       >
         <EnquiryButton />
         <Link to="/fleet-savings-calculator" className="btn btn--secondary">

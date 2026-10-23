@@ -3,7 +3,7 @@ import SolutionPage from '../components/SolutionPage'
 const securitySegments = [
   {
     title: 'Bank Mortgage Vehicles',
-    image: 'images/bank_mortgage_vehicles.webp',
+    image: 'images/gps/financed-cars.webp',
     points: [
       'Monitor real-time location and vehicle status.',
       'Set electronic fences to reduce fraud risk.',
@@ -12,7 +12,7 @@ const securitySegments = [
   },
   {
     title: 'Police Vehicles',
-    image: 'images/police_vehicles.webp',
+    image: 'images/gps/police.webp',
     points: [
       'Centralized monitoring for rapid coordination.',
       'Accurate incident location sharing.',
@@ -21,7 +21,7 @@ const securitySegments = [
   },
   {
     title: 'Rapid Response Vehicles',
-    image: 'images/rapid_response_vehicles.webp',
+    image: 'images/gps/ambulance.webp',
     points: [
       'Dynamic dispatch for emergency services.',
       'Live status updates for field teams.',
@@ -30,7 +30,7 @@ const securitySegments = [
   },
   {
     title: 'Financial Vehicles',
-    image: 'images/personal_tracker1.webp',
+    image: 'images/gps/cash-van.webp',
     points: [
       'Secure GSM/GPRS transmission for alarms.',
       'Supports active alerts and remote monitoring.',
@@ -39,7 +39,7 @@ const securitySegments = [
   },
   {
     title: 'Fire Fighters',
-    image: 'images/fire_fighters.webp',
+    image: 'images/gps/fire-engine.webp',
     points: [
       'Coordinate units with live location updates.',
       'Improve safety for high-risk deployments.',
@@ -54,8 +54,8 @@ function Security() {
       kicker="GPS & Fleet Tracking"
       title="Security and covert vehicle tracking"
       lead="Discreet, reliable tracking for police, emergency, fire-fighting, bank-mortgaged and cash-carrying vehicles, with instant alerts to your control room."
-      media="images/serives_img2.webp"
-      mediaAlt="Security vehicle being monitored from a control room"
+      media="images/gps/security-hero.webp"
+      mediaAlt="Police car with emergency lights on a city road at night"
       highlights={[
         { title: 'Command visibility', body: 'One dashboard for every high-priority vehicle and team.' },
         { title: 'Instant alerts', body: 'Notifications the moment a geofence or rule is broken.' },

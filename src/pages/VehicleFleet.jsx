@@ -3,7 +3,7 @@ import SolutionPage from '../components/SolutionPage'
 const fleetSegments = [
   {
     title: 'Taxis',
-    image: 'images/taxi_fleet.webp',
+    image: 'images/gps/taxi.webp',
     points: [
       'Track trips and routes for owners and vendors.',
       'Improve passenger safety and confidence.',
@@ -12,7 +12,7 @@ const fleetSegments = [
   },
   {
     title: 'JCB / Earth Movers',
-    image: 'images/jcb_earth_mover.webp',
+    image: 'images/gps/jcb.webp',
     points: [
       'Measure working hours and ignition time precisely.',
       'Reduce resource wastage and increase ROI.',
@@ -21,7 +21,7 @@ const fleetSegments = [
   },
   {
     title: 'Construction Vehicles',
-    image: 'images/construction_vehicle.webp',
+    image: 'images/gps/construction.webp',
     points: [
       'Monitor loading and unloading times.',
       'Reduce hidden delays and optimize dispatch.',
@@ -30,7 +30,7 @@ const fleetSegments = [
   },
   {
     title: 'Frozen / Food Vehicles',
-    image: 'images/frozen_food_vehicle.webp',
+    image: 'images/gps/refrigerated.webp',
     points: [
       'Integrate temperature sensors for cold chains.',
       'Identify problem areas during the journey.',
@@ -39,7 +39,7 @@ const fleetSegments = [
   },
   {
     title: 'Auto',
-    image: 'images/auto.webp',
+    image: 'images/gps/auto.webp',
     points: [
       'Improve passenger safety and owner visibility.',
       'Capture total running distance per day.',
@@ -48,7 +48,7 @@ const fleetSegments = [
   },
   {
     title: 'Cement Mixer',
-    image: 'images/cement_mixer.webp',
+    image: 'images/gps/cement-mixer.webp',
     points: [
       'Color-coded status from plant to site and back.',
       'Ensure on-time delivery and dispatch.',
@@ -57,7 +57,7 @@ const fleetSegments = [
   },
   {
     title: 'Logistics Vehicles',
-    image: 'images/logistic_vehicle.webp',
+    image: 'images/gps/logistics.webp',
     points: [
       'Reduce unnecessary trips and stoppages.',
       'Optimize allocation and support breakdowns.',
@@ -66,7 +66,7 @@ const fleetSegments = [
   },
   {
     title: 'Cargo Van',
-    image: 'images/cargo_van.webp',
+    image: 'images/gps/cargo-van.webp',
     points: [
       'Keep a tab on dispatches and deliveries.',
       'Enable immediate dispatch for urgent runs.',
@@ -75,7 +75,7 @@ const fleetSegments = [
   },
   {
     title: 'Bus',
-    image: 'images/bus.webp',
+    image: 'images/gps/bus.webp',
     points: [
       'Plan routes based on traffic conditions.',
       'Monitor vehicle status for safer operations.',
@@ -84,7 +84,7 @@ const fleetSegments = [
   },
   {
     title: 'Postal Truck',
-    image: 'images/postal_truck.webp',
+    image: 'images/gps/courier.webp',
     points: [
       'Improve operational efficiency of postal routes.',
       'Reduce costs with optimized dispatching.',
@@ -93,7 +93,7 @@ const fleetSegments = [
   },
   {
     title: 'Dangerous Goods Vehicles',
-    image: 'images/dangerous_good_vehicles.webp',
+    image: 'images/gps/tanker.webp',
     points: [
       'Real-time monitoring for high-risk cargo.',
       'Enhance safety of goods and the public.',
@@ -102,7 +102,7 @@ const fleetSegments = [
   },
   {
     title: 'Tow Truck',
-    image: 'images/tow_truck.webp',
+    image: 'images/gps/tow-truck.webp',
     points: [
       'Know exact positions of towed vehicles.',
       'Improve response and time management.',
@@ -117,8 +117,8 @@ function VehicleFleet() {
       kicker="GPS & Fleet Tracking"
       title="Fleet management with live GPS tracking"
       lead="See every truck, bus and van on one live map. Cut fuel and idle time, stop misuse, and keep drivers safe with instant alerts."
-      media="images/serives_img1.webp"
-      mediaAlt="Fleet manager viewing live vehicle locations"
+      media="images/gps/fleet-hero.webp"
+      mediaAlt="Decorated Indian goods truck on a highway"
       highlights={[
         { title: 'Real-time tracking', body: 'Live location, route history and driver behaviour, on PC, tablet or phone.' },
         { title: 'Lower running costs', body: 'Less fuel, idling and mileage, with tighter dispatch and better service times.' },

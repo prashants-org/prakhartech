@@ -8,6 +8,7 @@ import { faqSchema } from '../lib/structuredData'
 import '../styles/gifts.css'
 import '../styles/gifting.css'
 import CtaBand from '../components/ui/CtaBand'
+import LandingHero, { HeroCard } from '../components/ui/LandingHero'
 
 // Seasonal landing page. Update SEASON each year (and the route title/description).
 const SEASON = { name: 'Diwali 2026', date: '2026-11-08T00:00:00+05:30', label: '8 November 2026' }
@@ -86,7 +87,7 @@ function Curation({ curation }) {
             <li key={p.name}>{p.name}</li>
           ))}
         </ul>
-        <button type="button" className="cg-btn cg-btn--gold" onClick={addAll}>
+        <button type="button" className="btn btn--primary cg-curation-btn" onClick={addAll}>
           {added ? 'Added — view quote basket' : 'Add this set to my quote'}
         </button>
       </div>
@@ -103,43 +104,46 @@ function CorporateGifting() {
     <div className="cg">
       <JsonLd data={faqSchema(FAQS)} />
 
-      <section className="cg-hero">
-        <div className="cg-hero-glow" aria-hidden="true" />
-        <div className="cg-sparks" aria-hidden="true">
-          {Array.from({ length: 14 }, (_, i) => (
-            <i key={i} style={{ '--i': i }} />
-          ))}
-        </div>
-        <div className="container cg-hero-inner">
-          <p className="cg-eyebrow">
+      <LandingHero
+        eyebrow={
+          <>
             <span className="cg-countdown">{countdown}</span>
             {SEASON.name} · Corporate gifting
-          </p>
-          <h1>
-            Gifts your clients
-            <br />
-            will <em>actually keep.</em>
-          </h1>
-          <p className="cg-lead">
-            Premium brands, your logo, delivered across India. Tell us who you are gifting and your budget, and we
-            will send a curated shortlist with pricing within 24 business hours.
-          </p>
-          <div className="cg-actions">
+          </>
+        }
+        title={
+          <>
+            <span className="lh-line">Gifts your clients</span>{' '}
+            <span className="lh-line">will <em className="lh-em">actually keep.</em></span>
+          </>
+        }
+        lead="Premium brands, your logo, delivered across India. Tell us who you are gifting and your budget, and we will send a curated shortlist with pricing within 24 business hours."
+        actions={
+          <>
             <button
               type="button"
-              className="cg-btn cg-btn--gold"
+              className="btn btn--primary"
               onClick={() =>
                 openEnquiry({ interest: 'Corporate Gifts', message: `${SEASON.name} corporate gifting – number of recipients, budget per gift and delivery city:`, source: 'diwali-hero' })
               }
             >
               Plan my Diwali gifting
             </button>
-            <Link to="/gifts" className="cg-btn cg-btn--ghost">
+            <Link to="/gifts" className="btn btn--secondary">
               Browse all gifts
             </Link>
-          </div>
-        </div>
-      </section>
+          </>
+        }
+        visual={
+          <HeroCard caption="A few of the brands we supply">
+            <div className="lh-mosaic lh-mosaic--cover">
+              {['Diya', 'Gold Coins', 'Titan Watch', 'Skinn Festive'].map((n) => (
+                <img key={n} src={byName[n]?.img} alt="" />
+              ))}
+            </div>
+          </HeroCard>
+        }
+      />
 
       <section className="cg-section" aria-labelledby="cg-curations-title">
         <div className="container">

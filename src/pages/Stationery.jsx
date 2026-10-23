@@ -6,6 +6,7 @@ import AddToQuoteButton from '../components/quote/AddToQuoteButton'
 import { quoteId } from '../components/quote/quoteStore'
 import CtaBand from '../components/ui/CtaBand'
 import { asset } from '../lib/asset'
+import LandingHero, { HeroCard } from '../components/ui/LandingHero'
 
 const SERVICES = [
   {
@@ -136,58 +137,44 @@ function Stationery() {
     <div className="st-page">
 
       {/* ── Hero ── */}
-      <section className="st-hero">
-        <div className="st-hero-bg" aria-hidden="true" />
-        <div className="container st-hero-inner">
-          <span className="st-eyebrow">Stationers &amp; Printers · Pune</span>
-          <h1>
-            Your complete<br />
-            <span className="st-hero-accent">office supply partner</span>
-          </h1>
-          <p className="st-hero-lead">
-            Prakhar Technology delivers office stationery, housekeeping supplies, safety solutions,
-            and sustainable packaging to 20+ leading companies across Pune — from a single,
-            trusted supplier.
-          </p>
-          <div className="st-hero-actions">
-            <button
-              type="button"
-              className="btn btn--primary"
-              onClick={() => openEnquiry()}
-            >
+      <LandingHero
+        eyebrow="Office supplies · Pune"
+        title={
+          <>
+            <span className="lh-line">Your complete</span>{' '}
+            <span className="lh-line"><em className="lh-em">office supply partner</em></span>
+          </>
+        }
+        lead="Office stationery, housekeeping supplies, safety PPE, packaging and computer accessories, delivered to 20+ leading companies across Pune from one trusted supplier."
+        actions={
+          <>
+            <button type="button" className="btn btn--primary" onClick={() => openEnquiry()}>
               Request a quote
             </button>
             <a href="#products" className="btn btn--secondary">
               View products
             </a>
-          </div>
-        </div>
-      </section>
+          </>
+        }
+        trust={<>Trusted by <strong>20+ companies</strong> including KPMG, Mahindra and RBL Bank</>}
+        visual={
+          <HeroCard
+            stats={[
+              { value: '20+', label: 'Corporate clients' },
+              { value: '5', label: 'Product categories' },
+              { value: '12+', label: 'Trusted brands' },
+            ]}
+          >
+            <div className="lh-mosaic">
+              <img src={asset('stationery/products/office/camlin-notebook.webp')} alt="" />
+              <img src={asset('stationery/products/safety/helmet.webp')} alt="" />
+              <img src={asset('stationery/products/computer/logitech-mx-master.webp')} alt="" />
+              <img src={asset('stationery/products/housekeeping/scotchbrite-spin-mop.webp')} alt="" />
+            </div>
+          </HeroCard>
+        }
+      />
 
-      {/* ── Stats band ── */}
-      <section className="st-stats-band">
-        <div className="container st-stats-inner">
-          <div className="st-stat-item">
-            <span className="st-stat-num">20<span className="st-stat-plus">+</span></span>
-            <span className="st-stat-label">Corporate Clients</span>
-          </div>
-          <div className="st-stat-divider" aria-hidden="true" />
-          <div className="st-stat-item">
-            <span className="st-stat-num">5</span>
-            <span className="st-stat-label">Product Categories</span>
-          </div>
-          <div className="st-stat-divider" aria-hidden="true" />
-          <div className="st-stat-item">
-            <span className="st-stat-num">12<span className="st-stat-plus">+</span></span>
-            <span className="st-stat-label">Trusted Brands</span>
-          </div>
-          <div className="st-stat-divider" aria-hidden="true" />
-          <div className="st-stat-item">
-            <span className="st-stat-num">1</span>
-            <span className="st-stat-label">Vendor. All Needs.</span>
-          </div>
-        </div>
-      </section>
 
       {/* ── About + Mission/Vision ── */}
       <section className="st-section">

@@ -6,6 +6,7 @@ import { quoteId } from '../components/quote/quoteStore'
 import { contactInfo } from '../data/contactInfo'
 import { useEnquiryForm } from '../hooks/useEnquiryForm'
 import { GIFT_PRODUCTS as PRODUCTS } from '../data/gifts'
+import LandingHero, { HeroCard } from '../components/ui/LandingHero'
 
 function useInView(threshold = 0.08) {
   const ref = useRef(null)
@@ -88,50 +89,38 @@ function Gifts() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="gf-hero">
-        <div className="gf-hero-bg" aria-hidden="true" />
-        <div className="gf-hero-noise" aria-hidden="true" />
-        <div className="container">
-          <div className="gf-hero-layout">
-            <div className="gf-hero-text">
-              <p className="gf-overline gf-anim-overline">Corporate &amp; Festive Gifting</p>
-              <h1 className="gf-hero-h1 gf-anim-h1">
-                Gifts that<br /><em>leave a mark.</em>
-              </h1>
-              <p className="gf-hero-body gf-anim-body">
-                Premium branded gifts — curated for Diwali, weddings, corporate events, and every milestone worth celebrating.
-                Custom branded, bulk-ready, delivered across India.
-              </p>
-              <div className="gf-hero-cta gf-anim-cta">
-                <a href="#gf-products" className="gf-cta-primary">Browse gifts</a>
-                <a href="#gf-enquiry" className="gf-cta-text">Request a quote →</a>
-              </div>
-            </div>
-            <div className="gf-hero-aside gf-anim-aside">
-              <div className="gf-stat-stack">
-                {[
-                  { num: '10+',       label: 'Premium brands' },
-                  { num: 'Pan-India', label: 'Delivery'       },
-                  { num: 'Bulk',      label: 'Orders welcome' },
-                ].map((s, i) => (
-                  <div key={s.num} className="gf-stat" style={{ '--si': i }}>
-                    <span className="gf-stat-num">{s.num}</span>
-                    <span className="gf-stat-label">{s.label}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="gf-featured-img-wrap">
-                <img
-                  src="https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.36.45-AM.png"
-                  alt="Premium gift — Titan Watch"
-                  className="gf-featured-img"
-                />
-                <div className="gf-img-tag">Featured pick</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <LandingHero
+        eyebrow="Corporate & festive gifting"
+        title={
+          <>
+            <span className="lh-line">Gifts that</span>{' '}
+            <span className="lh-line"><em className="lh-em">leave a mark.</em></span>
+          </>
+        }
+        lead="Premium branded gifts for Diwali, weddings, corporate events and every milestone worth celebrating. Custom branded, bulk-ready and delivered across India."
+        actions={
+          <>
+            <a href="#gf-products" className="btn btn--primary">
+              Browse gifts
+            </a>
+            <a href="#gf-enquiry" className="btn btn--secondary">
+              Request a quote
+            </a>
+          </>
+        }
+        trust={<>Titan, Tanishq, Skinn, Carvaan and more · <strong>custom branding</strong> available</>}
+        visual={
+          <HeroCard
+            stats={[
+              { value: '10+', label: 'Premium brands' },
+              { value: 'Pan-India', label: 'Delivery' },
+              { value: 'Bulk', label: 'Orders welcome' },
+            ]}
+          >
+            <img src={PRODUCTS[0].img} alt="Premium gift: Titan watch" />
+          </HeroCard>
+        }
+      />
 
       {/* ── Mosaic catalog ── */}
       <section

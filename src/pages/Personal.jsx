@@ -3,7 +3,7 @@ import SolutionPage from '../components/SolutionPage'
 const personalSegments = [
   {
     title: 'Private Vehicles',
-    image: 'images/private_vehicle.webp',
+    image: 'images/gps/private-car.webp',
     points: [
       'Protect vehicles from theft with live tracking.',
       'Highlight security requirements with alerts.',
@@ -12,7 +12,7 @@ const personalSegments = [
   },
   {
     title: 'Bike',
-    image: 'images/bike.webp',
+    image: 'images/gps/motorbike.webp',
     points: [
       'Track routes and waypoints for riders.',
       'Use live location for urban mobility.',
@@ -21,7 +21,7 @@ const personalSegments = [
   },
   {
     title: 'Official Vehicles',
-    image: 'images/official_vehicles.webp',
+    image: 'images/gps/official-suv.webp',
     points: [
       'Improve reliability and security for official fleets.',
       'Enable information sharing across teams.',
@@ -30,7 +30,7 @@ const personalSegments = [
   },
   {
     title: 'Vintage Cars',
-    image: 'images/vintage_car.svg',
+    image: 'images/gps/vintage-car.webp',
     points: [
       'Keep limited-edition vehicles protected.',
       'Monitor location without intrusive systems.',
@@ -45,8 +45,8 @@ function Personal() {
       kicker="GPS & Fleet Tracking"
       title="GPS trackers for cars, bikes and personal vehicles"
       lead="Protect your own vehicles with live location, theft alerts and a simple dashboard, without changing how you drive."
-      media="images/serives_img3.webp"
-      mediaAlt="Person checking their vehicle location on a phone"
+      media="images/gps/personal-hero.webp"
+      mediaAlt="Driver with a phone showing live navigation in a car mount"
       highlights={[
         { title: 'Theft protection', body: 'Instant notifications and live location to help recover a stolen vehicle.' },
         { title: 'Simple dashboards', body: 'See journeys and locations from any device.' },

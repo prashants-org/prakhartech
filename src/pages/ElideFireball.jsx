@@ -7,6 +7,7 @@ import ElideRelated from '../components/ElideRelated'
 import ElideVideoGallery from '../components/ElideVideoGallery'
 import { FIRE_CLASSES } from '../data/elide'
 import { asset } from '../lib/asset'
+import LandingHero, { HeroCard } from '../components/ui/LandingHero'
 
 const USE_CASES = [
   { icon: '🏠', title: 'Homes & Kitchens', desc: 'Gas cylinders, cooking areas, electrical panels — protect your family automatically.' },
@@ -45,63 +46,37 @@ function ElideFireball() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="ef-hero">
-        <div className="ef-hero-glow" aria-hidden="true" />
-        <div className="container ef-hero-grid">
-          <div className="ef-hero-copy">
-            <span className="ef-eyebrow">Elide Fire Suppression · Certified in 100+ Countries</span>
-            <h1 className="ef-headline">
-              When fire strikes,<br />
-              <span className="ef-headline-accent">every second counts.</span>
-            </h1>
-            <p className="ef-lead">
-              The Elide Fire Ball is the world's first self-activating fire suppression ball.
-              Place it. Forget it. It activates automatically on flame contact — no human action required.
-            </p>
-            <div className="ef-hero-actions">
-              <a href="#ef-enquiry" className="btn btn--primary">
-                Get Elide pricing
-              </a>
-              <a
-                href={asset('elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf')}
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn--outline-light"
-              >
-                Download the user manual (PDF)
-              </a>
-            </div>
-            <div className="ef-trust-row">
-              <span className="ef-trust-badge">🏆 Award-Winning</span>
-              <span className="ef-trust-badge">✅ 5-Year Guarantee</span>
-              <span className="ef-trust-badge">🌍 Global Certified</span>
-            </div>
-          </div>
-          <div className="ef-hero-visual">
-            <div className="ef-product-frame">
-              <img
-                src={asset('elidefireball/assets/img/slide.webp')}
-                alt="Elide Fire Ball fire suppression ball"
-                className="ef-product-img"
-              />
-              <div className="ef-product-glow" aria-hidden="true" />
-            </div>
-            <div className="ef-hero-stat-strip">
-              {STATS.map((s) => (
-                <div key={s.value} className="ef-hero-stat">
-                  <strong>{s.value}</strong>
-                  <span>{s.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <LandingHero
+        eyebrow="Elide Fire Ball · Certified in 100+ countries"
+        title={
+          <>
+            <span className="lh-line">When fire strikes,</span>{' '}
+            <span className="lh-line"><em className="lh-em">every second counts.</em></span>
+          </>
+        }
+        lead="The Elide Fire Ball is a self-activating fire suppression ball. Place it, forget it: it activates automatically on contact with flame, with no human action needed."
+        actions={
+          <>
+            <a href="#ef-enquiry" className="btn btn--primary">
+              Get Elide pricing
+            </a>
+            <a href={asset('elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf')} target="_blank" rel="noreferrer" className="btn btn--secondary">
+              Download the user manual (PDF)
+            </a>
+          </>
+        }
+        trust={<><strong>5-year guarantee</strong> · award-winning · certified in 100+ countries</>}
+        visual={
+          <HeroCard stats={STATS}>
+            <img src={asset('elidefireball/assets/img/slide.webp')} alt="Elide Fire Ball surrounded by flames" className="ef-hero-photo" />
+          </HeroCard>
+        }
+      />
 
       {/* ── How it works ── */}
-      <section className="ef-section ef-section--dark">
+      <section className="ef-section ef-section--soft">
         <div className="container">
-          <div className="ef-section-head ef-section-head--light">
+          <div className="ef-section-head">
             <span className="ef-label">How It Works</span>
             <h2>Three steps. Zero action needed.</h2>
             <p>Elide Fire Ball requires no training, no pins, no pressure gauges. Just place it and let physics do the rest.</p>
@@ -243,10 +218,10 @@ function ElideFireball() {
       <ElideRelated label="Product Resources" title="Everything you need to know" />
 
       {/* ── Enquiry form ── */}
-      <section className="ef-section ef-section--fire" id="ef-enquiry">
+      <section className="ef-section ef-section--soft ef-section--enquiry" id="ef-enquiry">
         <div className="container ef-enquiry-grid">
           <div className="ef-enquiry-copy">
-            <span className="ef-label ef-label--light">Get In Touch</span>
+            <span className="ef-label">Get in touch</span>
             <h2 className="ef-enquiry-heading">Ready to protect your space?</h2>
             <p>Fill in the form and our team will get back to you with pricing, deployment advice, and support for your specific requirements.</p>
             <div className="ef-enquiry-points">

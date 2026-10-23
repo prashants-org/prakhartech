@@ -8,6 +8,7 @@ import '../styles/home.css'
 import CtaBand from '../components/ui/CtaBand'
 import SectionHead from '../components/ui/SectionHead'
 import { asset } from '../lib/asset'
+import LandingHero from '../components/ui/LandingHero'
 
 const DOORS = [
   {
@@ -16,8 +17,8 @@ const DOORS = [
     title: 'See every vehicle, live.',
     body: 'GPS trackers and a web & mobile dashboard for trucks, buses, vans, bikes and cars — with alerts the moment something goes wrong.',
     points: ['Live location & trip history', 'Idle, overspeed & geofence alerts', 'Installed and supported locally'],
-    img: 'images/1.webp',
-    imgAlt: 'Truck with GPS tracking dashboard',
+    img: 'images/gps/home-fleet.webp',
+    imgAlt: 'White truck driving on a highway',
     primary: { to: '/vehicle-fleet', label: 'Explore fleet tracking' },
     secondary: { to: '/fleet-savings-calculator', label: 'Estimate your savings' },
   },
@@ -106,41 +107,36 @@ function Home() {
   return (
     <div className="hm">
       {/* ── Hero ── */}
-      <section className="hm-hero">
-        <div className="hm-hero-bg" aria-hidden="true" />
-        <div className="container hm-hero-grid">
-          <div className="hm-hero-copy">
-            <p className="hm-eyebrow">
-              <span className="hm-eyebrow-dot hm-eyebrow-dot--fleet" />GPS Tracking
-              <span className="hm-eyebrow-dot hm-eyebrow-dot--safety" />Fire Safety
-              <span className="hm-eyebrow-dot hm-eyebrow-dot--workplace" />Workplace Supplies
-            </p>
-            <h1>
-              <span className="hm-line">Track every <em className="hm-em hm-em--fleet">vehicle</em>.</span>{' '}
-              <span className="hm-line">Protect every <em className="hm-em hm-em--safety">space</em>.</span>{' '}
-              <span className="hm-line">Supply every <em className="hm-em hm-em--workplace">desk</em>.</span>
-            </h1>
-            <p className="hm-lead">
-              Prakhar Technology is one Pune partner for live GPS fleet tracking, the Elide Fire Ball automatic
-              fire extinguisher, and everything your workplace runs on, from stationery to corporate gifts.
-            </p>
-            <div className="hm-hero-actions">
-              <button type="button" className="btn btn--primary" onClick={() => openEnquiry({ source: 'home-hero' })}>
-                Send an enquiry
-              </button>
-              <a href="#solutions" className="btn btn--secondary">
-                Explore solutions ↓
-              </a>
-            </div>
-            <p className="hm-trust">
-              Trusted by <strong>20+ companies</strong> including KPMG, Mahindra and RBL Bank
-            </p>
-          </div>
-          <div className="hm-hero-visual">
-            <LiveFleetMap />
-          </div>
-        </div>
-      </section>
+      <LandingHero
+        multi
+        eyebrow={
+          <>
+            <span className="lh-dot lh-dot--fleet" />GPS Tracking
+            <span className="lh-dot lh-dot--safety" />Fire Safety
+            <span className="lh-dot lh-dot--workplace" />Workplace Supplies
+          </>
+        }
+        title={
+          <>
+            <span className="lh-line">Track every <em className="lh-em lh-em--fleet">vehicle</em>.</span>{' '}
+            <span className="lh-line">Protect every <em className="lh-em lh-em--safety">space</em>.</span>{' '}
+            <span className="lh-line">Supply every <em className="lh-em lh-em--workplace">desk</em>.</span>
+          </>
+        }
+        lead="Prakhar Technology is one Pune partner for live GPS fleet tracking, the Elide Fire Ball automatic fire extinguisher, and everything your workplace runs on, from stationery to corporate gifts."
+        actions={
+          <>
+            <button type="button" className="btn btn--primary" onClick={() => openEnquiry({ source: 'home-hero' })}>
+              Send an enquiry
+            </button>
+            <a href="#solutions" className="btn btn--secondary">
+              Explore solutions ↓
+            </a>
+          </>
+        }
+        trust={<>Trusted by <strong>20+ companies</strong> including KPMG, Mahindra and RBL Bank</>}
+        visual={<LiveFleetMap />}
+      />
 
       {/* ── Three doors ── */}
       <section id="solutions" className="hm-doors-section" aria-labelledby="hm-doors-title">
