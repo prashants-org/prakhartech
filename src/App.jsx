@@ -1,6 +1,7 @@
 import { lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
+import './styles/components.css'
 import Layout from './components/Layout'
 import { notFoundRoute, routes } from './routes'
 

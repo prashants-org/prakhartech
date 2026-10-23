@@ -1,3 +1,4 @@
+import '../styles/elide.css'
 import { Link } from 'react-router-dom'
 import ElideSubnav from '../components/ElideSubnav'
 import { openEnquiry } from '../lib/enquiry'

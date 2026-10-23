@@ -61,9 +61,11 @@ function SiteNav({ activeSection, onEnquiry }) {
           aria-controls="primary-navigation"
           aria-label={isNavOpen ? 'Close menu' : 'Open menu'}
         >
-          <span className="nav-toggle-bar" aria-hidden="true" />
-          <span className="nav-toggle-bar" aria-hidden="true" />
-          <span className="nav-toggle-bar" aria-hidden="true" />
+          <span className="nav-toggle-icon" aria-hidden="true">
+            <span className="nav-toggle-bar" />
+            <span className="nav-toggle-bar" />
+            <span className="nav-toggle-bar" />
+          </span>
           <span className="nav-toggle-label">Menu</span>
         </button>
 

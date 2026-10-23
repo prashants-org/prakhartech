@@ -1,224 +1,240 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import ClientMarquee from '../components/ClientMarquee'
+import LiveFleetMap from '../components/home/LiveFleetMap'
+import { DEFAULT_INPUTS, estimateSavings, formatINRCompact } from '../lib/fleetSavings'
 import { openEnquiry } from '../lib/enquiry'
+import '../styles/home.css'
 
-function Home() {
-  const baseUrl = import.meta.env.BASE_URL
+const asset = (p) => `${import.meta.env.BASE_URL}${p}`
+
+const DOORS = [
+  {
+    id: 'fleet',
+    kicker: 'GPS & Fleet Tracking',
+    title: 'See every vehicle, live.',
+    body: 'GPS trackers and a web & mobile dashboard for trucks, buses, vans, bikes and cars — with alerts the moment something goes wrong.',
+    points: ['Live location & trip history', 'Idle, overspeed & geofence alerts', 'Installed and supported locally'],
+    img: 'images/1.jpg',
+    imgAlt: 'Truck with GPS tracking dashboard',
+    primary: { to: '/vehicle-fleet', label: 'Explore fleet tracking' },
+    secondary: { to: '/fleet-savings-calculator', label: 'Estimate your savings' },
+  },
+  {
+    id: 'safety',
+    kicker: 'Fire Safety',
+    title: 'Stop a fire before anyone sees it.',
+    body: 'The Elide Fire Ball activates by itself within seconds of touching flame — no training, no servicing, five years of protection.',
+    points: ['3–10 second self-activation', '120 dB alarm on activation', 'Homes, vehicles, kitchens, server rooms'],
+    img: 'elidefireball/assets/img/slide.png',
+    imgAlt: 'Elide Fire Ball surrounded by flames',
+    primary: { to: '/elidefireball', label: 'Meet the Elide Fire Ball' },
+    secondary: { to: '/elidefireball/product-overview', label: 'Specs & fire classes' },
+  },
+  {
+    id: 'workplace',
+    kicker: 'Workplace Supplies',
+    title: 'One supplier for every desk.',
+    body: 'Stationery, housekeeping, safety PPE, packaging, computer accessories and premium corporate gifts — on one account, delivered on time.',
+    points: ['5 supply categories, leading brands', 'Build a quote basket, get one price', 'Corporate & festive gifting'],
+    tiles: [
+      'stationery/products/office/camlin-notebook.jpg',
+      'stationery/products/safety/helmet.jpg',
+      'stationery/products/computer/logitech-mx-master.jpg',
+      'stationery/products/housekeeping/scotchbrite-spin-mop.jpg',
+    ],
+    primary: { to: '/stationery', label: 'Browse office supplies' },
+    secondary: { to: '/corporate-gifting', label: 'Diwali gifting 2026' },
+  },
+]
+
+const STEPS = [
+  { n: '01', title: 'Tell us what you need', body: 'A fleet to track, a building to protect or an office to stock — send an enquiry, WhatsApp or call.' },
+  { n: '02', title: 'Get a clear recommendation', body: 'We reply within 24 business hours with the right products and a transparent quote.' },
+  { n: '03', title: 'We deliver and stay with you', body: 'Installation, delivery and after-sales support from our team in Pune.' },
+]
+
+function SavingsTeaser() {
+  const [vehicles, setVehicles] = useState(DEFAULT_INPUTS.vehicles)
+  const [kmPerDay, setKmPerDay] = useState(DEFAULT_INPUTS.kmPerDay)
+  const result = estimateSavings({ ...DEFAULT_INPUTS, vehicles, kmPerDay })
 
   return (
-    <>
-      <section className="hero hero--creative">
-        <div className="container hero-grid">
-          <div className="hero-copy">
-            <span className="eyebrow">GPS Vehicle Tracking Systems Provider</span>
-            <h1>
-              Keep every vehicle visible, every trip optimized, and every asset secure.
-            </h1>
-            <p className="lead">
-              Prakhar Technology delivers industry-leading GPS vehicle tracking systems to businesses
-              worldwide. Track fleets on PC, tablet, or mobile with reliable, scalable solutions.
-            </p>
-            <div className="hero-actions">
-              <button
-                type="button"
-                className="primary-btn"
-                onClick={() => openEnquiry()}
-              >
-                Request Online Demo
-              </button>
-              <Link to="/contact" className="secondary-btn">
-                Talk to Us
-              </Link>
-            </div>
-            <div className="hero-badges">
-              <span className="pill">Real-time Alerts</span>
-              <span className="pill">Fleet Insights</span>
-              <span className="pill">Secure Devices</span>
-            </div>
-          </div>
-          <div className="hero-visual">
-            <div className="glow-card">
-              <img src={`${baseUrl}images/1.jpg`} alt="GPS Tracking dashboard" width="600" height="400" />
-            </div>
-            <div className="stat-cards">
-              <div>
-                <h3>24/7</h3>
-                <p>Fleet visibility</p>
-              </div>
-              <div>
-                <h3>Real-time</h3>
-                <p>Navigation & alerts</p>
-              </div>
-              <div>
-                <h3>Secure</h3>
-                <p>Reliable GPS devices</p>
-              </div>
-            </div>
-          </div>
+    <section className="hm-savings" aria-labelledby="hm-savings-title">
+      <div className="container hm-savings-inner">
+        <div className="hm-savings-copy">
+          <span className="hm-kicker hm-kicker--fleet">Fleet savings calculator</span>
+          <h2 id="hm-savings-title">How much fuel money is your fleet leaving on the road?</h2>
+          <p>
+            Move the sliders for a quick estimate at a 10% fuel saving on diesel. The full calculator lets you
+            set your own fuel price, mileage and assumptions.
+          </p>
         </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="section-title">
-            <h2>Why teams choose Prakhar Technology</h2>
-            <p className="muted">
-              Cost-effective GPS vehicle tracking with high ROI, trusted by smart companies.
-            </p>
+        <div className="hm-savings-card">
+          <label className="hm-range">
+            <span>
+              Vehicles <output>{vehicles}</output>
+            </span>
+            <input type="range" min="1" max="200" value={vehicles} onChange={(e) => setVehicles(Number(e.target.value))} />
+          </label>
+          <label className="hm-range">
+            <span>
+              Km per vehicle per day <output>{kmPerDay}</output>
+            </span>
+            <input type="range" min="10" max="600" step="10" value={kmPerDay} onChange={(e) => setKmPerDay(Number(e.target.value))} />
+          </label>
+          <div className="hm-savings-result" aria-live="polite">
+            <span>Estimated fuel savings</span>
+            <strong>{formatINRCompact(result.savingsPerYear)}</strong>
+            <span>per year</span>
           </div>
-          <div className="feature-grid">
-            <div className="feature-card">
-              <h4>Personalized Solutions</h4>
-              <p>Flexible tracking systems tailored to your specific requirements.</p>
-            </div>
-            <div className="feature-card">
-              <h4>Proven Reliability</h4>
-              <p>Tested hardware with trusted performance for modern fleets.</p>
-            </div>
-            <div className="feature-card">
-              <h4>Cost Effective</h4>
-              <p>Reduce costs and improve productivity with real-time insights.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="split">
-            <div>
-              <h2>Built for growth-ready fleets</h2>
-              <p className="muted">
-                Track, monitor, and optimize every vehicle with configurable alerts, easy dashboards,
-                and rapid deployment. The system scales with your fleet and delivers clear action.
-              </p>
-              <div className="timeline">
-                <div>
-                  <span>01</span>
-                  <div>
-                    <h4>Deploy devices</h4>
-                    <p>Install in minutes with on-site support.</p>
-                  </div>
-                </div>
-                <div>
-                  <span>02</span>
-                  <div>
-                    <h4>Monitor live</h4>
-                    <p>View routes, driver behavior, and alerts in real time.</p>
-                  </div>
-                </div>
-                <div>
-                  <span>03</span>
-                  <div>
-                    <h4>Optimize outcomes</h4>
-                    <p>Reduce cost, improve safety, and boost compliance.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="glow-card">
-              <img src={`${baseUrl}images/whychoose.jpg`} alt="Fleet insights dashboard" loading="lazy" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section alt">
-        <div className="container">
-          <div className="section-title">
-            <h2>Solutions</h2>
-            <p className="muted">
-              Three focus areas to improve visibility, safety, and efficiency.
-            </p>
-          </div>
-          <div className="card-grid">
-            <div className="card">
-              <img src={`${baseUrl}images/serives_img1.png`} alt="Vehicle Fleet Management" loading="lazy" />
-              <div>
-                <h4>Vehicle Fleet Management</h4>
-                <p>Improve safety and productivity with always-on tracking.</p>
-                <Link to="/vehicle-fleet" className="text-link">
-                  Read More →
-                </Link>
-              </div>
-            </div>
-            <div className="card">
-              <img src={`${baseUrl}images/serives_img2.png`} alt="Security Enforcement" loading="lazy" />
-              <div>
-                <h4>Security Enforcement</h4>
-                <p>Track vehicle activity for secure and covert surveillance.</p>
-                <Link to="/security" className="text-link">
-                  Read More →
-                </Link>
-              </div>
-            </div>
-            <div className="card">
-              <img src={`${baseUrl}images/serives_img3.png`} alt="Personal GPS Tracking" loading="lazy" />
-              <div>
-                <h4>Personal GPS Tracking</h4>
-                <p>Safe, convenient, and easy-to-use GPS tracking tools.</p>
-                <Link to="/personal" className="text-link">
-                  Read More →
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container">
-          <div className="section-title">
-            <h2>Explore More</h2>
-            <p className="muted">
-              Learn how GPS tracking transforms operations across industries.
-            </p>
-          </div>
-          <div className="image-grid">
-            <Link to="/whygps" className="image-card">
-              <img src={`${baseUrl}images/GPS.jpg`} alt="Why GPS Tracking" loading="lazy" />
-              <div>
-                <h4>Why GPS Tracking</h4>
-                <p>Increase productivity, improve management, and enable live navigation.</p>
-              </div>
-            </Link>
-            <Link to="/whychoose" className="image-card">
-              <img src={`${baseUrl}images/whychoose.jpg`} alt="Why Choose Prakhar Technology" loading="lazy" />
-              <div>
-                <h4>Why Choose Us</h4>
-                <p>Certified operations across the country with trusted expertise.</p>
-              </div>
-            </Link>
-            <button
-              type="button"
-              className="image-card"
-              onClick={() => openEnquiry()}
-            >
-              <img src={`${baseUrl}images/demo.png`} alt="Online Demo" loading="lazy" />
-              <div>
-                <h4>Online Demo</h4>
-                <p>Request a demo and our team will get back to you.</p>
-              </div>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section className="cta-band">
-        <div className="container cta-inner">
-          <div>
-            <h2>Ready to modernize your fleet?</h2>
-            <p>Schedule a demo and see live tracking in action.</p>
-          </div>
-          <button
-            type="button"
-            className="primary-btn"
-            onClick={() => openEnquiry()}
+          <Link
+            to="/fleet-savings-calculator"
+            state={{ vehicles, kmPerDay }}
+            className="hm-btn hm-btn--fleet"
           >
-            Book a Demo
-          </button>
+            Open the full calculator →
+          </Link>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function Home() {
+  return (
+    <div className="hm">
+      {/* ── Hero ── */}
+      <section className="hm-hero">
+        <div className="hm-hero-bg" aria-hidden="true" />
+        <div className="container hm-hero-grid">
+          <div className="hm-hero-copy">
+            <p className="hm-eyebrow">
+              <span className="hm-eyebrow-dot hm-eyebrow-dot--fleet" />GPS Tracking
+              <span className="hm-eyebrow-dot hm-eyebrow-dot--safety" />Fire Safety
+              <span className="hm-eyebrow-dot hm-eyebrow-dot--workplace" />Workplace Supplies
+            </p>
+            <h1>
+              <span className="hm-line">Track every <em className="hm-em hm-em--fleet">vehicle</em>.</span>{' '}
+              <span className="hm-line">Protect every <em className="hm-em hm-em--safety">space</em>.</span>{' '}
+              <span className="hm-line">Supply every <em className="hm-em hm-em--workplace">desk</em>.</span>
+            </h1>
+            <p className="hm-lead">
+              Prakhar Technology is one Pune partner for live GPS fleet tracking, the Elide Fire Ball automatic
+              fire extinguisher, and everything your workplace runs on, from stationery to corporate gifts.
+            </p>
+            <div className="hm-hero-actions">
+              <button type="button" className="hm-btn hm-btn--primary" onClick={() => openEnquiry({ source: 'home-hero' })}>
+                Get a free consultation
+              </button>
+              <a href="#solutions" className="hm-btn hm-btn--ghost">
+                Explore solutions ↓
+              </a>
+            </div>
+            <p className="hm-trust">
+              Trusted by <strong>20+ companies</strong> including KPMG, Mahindra and RBL Bank
+            </p>
+          </div>
+          <div className="hm-hero-visual">
+            <LiveFleetMap />
+          </div>
         </div>
       </section>
-    </>
+
+      {/* ── Three doors ── */}
+      <section id="solutions" className="hm-doors-section" aria-labelledby="hm-doors-title">
+        <div className="container">
+          <div className="hm-section-head">
+            <span className="hm-kicker">What we do</span>
+            <h2 id="hm-doors-title">Three businesses. One accountable partner.</h2>
+            <p>Pick where you want to start. Every enquiry reaches the same team, and we reply within 24 business hours.</p>
+          </div>
+          <div className="hm-doors">
+            {DOORS.map((door) => (
+              <article key={door.id} className={`hm-door hm-door--${door.id}`}>
+                <div className="hm-door-visual" aria-hidden={door.tiles ? true : undefined}>
+                  {door.img ? (
+                    <img src={asset(door.img)} alt={door.imgAlt} loading="lazy" />
+                  ) : (
+                    <div className="hm-door-tiles">
+                      {door.tiles.map((t) => (
+                        <img key={t} src={asset(t)} alt="" loading="lazy" />
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="hm-door-body">
+                  <span className="hm-door-kicker">{door.kicker}</span>
+                  <h3>{door.title}</h3>
+                  <p>{door.body}</p>
+                  <ul>
+                    {door.points.map((p) => (
+                      <li key={p}>{p}</li>
+                    ))}
+                  </ul>
+                  <div className="hm-door-actions">
+                    <Link to={door.primary.to} className="hm-door-primary">
+                      {door.primary.label} <span aria-hidden="true">→</span>
+                    </Link>
+                    <Link to={door.secondary.to} className="hm-door-secondary">
+                      {door.secondary.label}
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Clients ── */}
+      <section className="hm-clients" aria-labelledby="hm-clients-title">
+        <div className="container hm-clients-head">
+          <h2 id="hm-clients-title">Companies we work with</h2>
+          <p>From global consultancies to Pune’s manufacturing leaders.</p>
+        </div>
+        <ClientMarquee />
+      </section>
+
+      <SavingsTeaser />
+
+      {/* ── How we work ── */}
+      <section className="hm-steps-section" aria-labelledby="hm-steps-title">
+        <div className="container">
+          <div className="hm-section-head">
+            <span className="hm-kicker">How we work</span>
+            <h2 id="hm-steps-title">From first message to full support</h2>
+          </div>
+          <ol className="hm-steps">
+            {STEPS.map((s) => (
+              <li key={s.n} className="hm-step">
+                <span className="hm-step-n">{s.n}</span>
+                <h3>{s.title}</h3>
+                <p>{s.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ── Final CTA ── */}
+      <section className="hm-cta">
+        <div className="container hm-cta-inner">
+          <div>
+            <h2>Not sure where to start?</h2>
+            <p>Tell us about your fleet, building or office. We’ll recommend what fits, with no obligation.</p>
+          </div>
+          <div className="hm-cta-actions">
+            <button type="button" className="hm-btn hm-btn--light" onClick={() => openEnquiry({ source: 'home-cta' })}>
+              Send an enquiry
+            </button>
+            <Link to="/contact" className="hm-btn hm-btn--outline-light">
+              Visit or call us
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
   )
 }
 

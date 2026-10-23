@@ -1,3 +1,4 @@
+import '../styles/stationery.css'
 import { openEnquiry } from '../lib/enquiry'
 import { CLIENTS } from '../data/clients'
 import { contactInfo } from '../data/contactInfo'

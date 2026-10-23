@@ -1,3 +1,4 @@
+import '../styles/elide.css'
 import { NavLink } from 'react-router-dom'
 
 function ElideSubnav() {

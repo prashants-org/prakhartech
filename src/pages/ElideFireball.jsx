@@ -1,3 +1,4 @@
+import '../styles/elide.css'
 import { Link, NavLink } from 'react-router-dom'
 import FieldError from '../components/FieldError'
 import { contactInfo } from '../data/contactInfo'
