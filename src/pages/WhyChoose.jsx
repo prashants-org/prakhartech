@@ -1,3 +1,9 @@
+import CtaBand from '../components/ui/CtaBand'
+import EnquiryButton from '../components/ui/EnquiryButton'
+import PageHero from '../components/ui/PageHero'
+import SectionHead from '../components/ui/SectionHead'
+import { asset } from '../lib/asset'
+
 const highlights = [
   'Branded and robust trackers which last for over 2 years.',
   'Dedicated servers with an uptime record of 99.94%.',
@@ -16,56 +22,41 @@ const differentiators = [
 ]
 
 function WhyChoose() {
-  const baseUrl = import.meta.env.BASE_URL
-
   return (
     <>
-      <section className="page-header">
-        <div className="container">
-          <h1>Why Choose Prakhar Technology</h1>
-          <p>Trusted GPS tracking expertise with nationwide coverage and proven reliability.</p>
-        </div>
-      </section>
+      <PageHero
+        kicker="Why Prakhar"
+        title="Why choose Prakhar Technology"
+        lead="Robust trackers, dependable servers and a team that answers the phone. Here is what our customers get."
+        media={asset('images/why_manyatech_img.webp')}
+        mediaAlt="Prakhar Technology team supporting a customer"
+      >
+        <EnquiryButton />
+      </PageHero>
 
       <section className="section">
-        <div className="container whychoose-hero">
-          <div>
-            <h2>Why Us</h2>
-            <p className="muted">
-              We deliver robust tracking solutions, fast support, and enterprise-grade reliability for
-              fleets of any size.
-            </p>
-            <div className="whychoose-list">
-              {highlights.map((item) => (
-                <div className="whychoose-item" key={item}>
-                  <span>★</span>
-                  <p>{item}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="glow-card">
-            <img loading="lazy" src={`${baseUrl}images/why_manyatech_img.webp`} alt="Why Prakhar Technology" />
-          </div>
+        <div className="container">
+          <SectionHead kicker="What you get" title="Reliability you can count on" />
+          <ul className="check-grid">
+            {highlights.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
         </div>
       </section>
 
       <section className="section alt">
         <div className="container">
-          <div className="section-title">
-            <h2>What makes us different</h2>
-            <p className="muted">Customer-first systems, support, and customization.</p>
-          </div>
-          <div className="differentiator-grid">
+          <SectionHead kicker="What sets us apart" title="What makes us different" />
+          <ul className="check-grid check-grid--cards">
             {differentiators.map((item) => (
-              <div className="differentiator-card" key={item}>
-                <h4>✔</h4>
-                <p>{item}</p>
-              </div>
+              <li key={item}>{item}</li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
+
+      <CtaBand />
     </>
   )
 }

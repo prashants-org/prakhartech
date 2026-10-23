@@ -1,6 +1,9 @@
 import '../styles/elide.css'
-import { openEnquiry } from '../lib/enquiry'
 import ElideRelated from '../components/ElideRelated'
+import { Link } from 'react-router-dom'
+import CtaBand from '../components/ui/CtaBand'
+import EnquiryButton from '../components/ui/EnquiryButton'
+import PageHero from '../components/ui/PageHero'
 
 const GUIDELINES = [
   {
@@ -31,7 +34,7 @@ const GUIDELINES = [
   {
     icon: '📋',
     title: 'Comply with local regulations',
-    detail: 'Use the Elide Fireball as a supplement to — not a replacement for — required fire safety equipment such as fire alarms, sprinklers, and fire extinguishers per local codes.',
+    detail: 'Use the Elide Fire Ball as a supplement to — not a replacement for — required fire safety equipment such as fire alarms, sprinklers, and fire extinguishers per local codes.',
   },
 ]
 
@@ -47,35 +50,16 @@ const CHECKLIST = [
 function ElideHealthSafety() {
   return (
     <>
-      <section className="ef-subpage-hero">
-        <div className="ef-hero-glow" aria-hidden="true" />
-        <div className="container ef-subpage-inner">
-          <div className="ef-breadcrumb">
-            <a href="/elidefireball">← Elide Fireball</a>
-            <span>/</span>
-            <span>Health &amp; Safety</span>
-          </div>
-          <span className="ef-label">Health &amp; Safety</span>
-          <h1>Safe deployment. Every environment. Every time.</h1>
-          <p className="ef-subpage-lead">
-            Follow these evidence-based guidelines to maximise protection, ensure compliance,
-            and guarantee safe handling across residential, commercial, and industrial locations.
-          </p>
-          <div className="ef-hero-actions">
-            <button
-              type="button"
-              className="ef-btn-primary"
-              onClick={() => openEnquiry()}
-            >
-              Request Site Assessment
-            </button>
-            <a href="/elidefireball/product-overview" className="ef-btn-ghost">
-              Product Overview →
-            </a>
-          </div>
-        </div>
-      </section>
-
+      <PageHero
+        kicker="Health & Safety"
+        title="Safe deployment. Every environment. Every time."
+        lead="Follow these evidence-based guidelines to maximise protection, ensure compliance, and guarantee safe handling across residential, commercial, and industrial locations."
+      >
+        <EnquiryButton label="Request a site assessment" />
+        <Link to="/elidefireball/product-overview" className="btn btn--secondary">
+          Specs &amp; fire classes
+        </Link>
+      </PageHero>
 
       {/* Safety guidelines */}
       <section className="ef-section">
@@ -83,13 +67,13 @@ function ElideHealthSafety() {
           <div className="ef-section-head">
             <span className="ef-label">Guidelines</span>
             <h2>Core safety guidelines</h2>
-            <p>Six principles that ensure the Elide Fireball performs exactly when you need it.</p>
+            <p>Six principles that ensure the Elide Fire Ball performs exactly when you need it.</p>
           </div>
           <div className="ef-safety-grid">
             {GUIDELINES.map((g) => (
               <div key={g.title} className="ef-safety-card">
                 <div className="ef-safety-icon" aria-hidden="true">{g.icon}</div>
-                <h4>{g.title}</h4>
+                <h3>{g.title}</h3>
                 <p>{g.desc || g.detail}</p>
               </div>
             ))}
@@ -123,7 +107,7 @@ function ElideHealthSafety() {
           <div>
             <h3>Important: supplement, do not replace</h3>
             <p>
-              The Elide Fireball is designed to be an <strong>additional layer of protection</strong> alongside
+              The Elide Fire Ball is designed to be an <strong>additional layer of protection</strong> alongside
               existing fire safety systems. It is not a replacement for mandatory fire alarms, sprinkler systems,
               or fire extinguishers required by local building codes and safety regulations.
               Always consult a qualified fire safety professional for full compliance advice.
@@ -134,21 +118,7 @@ function ElideHealthSafety() {
 
       <ElideRelated />
 
-      <section className="ef-cta-band">
-        <div className="container ef-cta-band-inner">
-          <div>
-            <h2>Need a compliance review for your facility?</h2>
-            <p>We can help align Elide Fireball placement with local fire safety codes.</p>
-          </div>
-          <button
-            type="button"
-            className="ef-btn-primary"
-            onClick={() => openEnquiry()}
-          >
-            Talk to Our Team →
-          </button>
-        </div>
-      </section>
+      <CtaBand title="Need a placement review for your facility?" text="We can help align Elide Fire Ball placement with your fire safety plan." label="Request a site assessment" />
     </>
   )
 }

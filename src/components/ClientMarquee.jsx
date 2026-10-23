@@ -1,12 +1,12 @@
 import { CLIENTS } from '../data/clients'
+import { asset } from '../lib/asset'
 
 // Infinite logo strip. The list is duplicated so the CSS loop is seamless;
 // the copy is hidden from assistive tech. Pauses on hover and for reduced motion.
 function ClientMarquee({ clients = CLIENTS }) {
-  const base = import.meta.env.BASE_URL
   const logo = (c, hidden) => (
     <li key={`${c.name}-${hidden ? 'b' : 'a'}`} className="cm-item" aria-hidden={hidden || undefined}>
-      <img src={`${base}${c.logo.replace(/^\//, '')}`} alt={hidden ? '' : c.name} loading="lazy" height="40" />
+      <img src={asset(c.logo)} alt={hidden ? '' : c.name} loading="lazy" height="40" />
     </li>
   )
   return (

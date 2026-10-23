@@ -1,3 +1,10 @@
+import { Link } from 'react-router-dom'
+import CtaBand from '../components/ui/CtaBand'
+import EnquiryButton from '../components/ui/EnquiryButton'
+import PageHero from '../components/ui/PageHero'
+import SectionHead from '../components/ui/SectionHead'
+import { asset } from '../lib/asset'
+
 const reasonsPrimary = [
   'Monitor inputs from other equipment in the vehicle, including alarms and refrigeration.',
   'Extremely easy to use system with no software purchase or maintenance.',
@@ -31,65 +38,44 @@ const reasonsRight = [
 ]
 
 function WhyGps() {
-  const baseUrl = import.meta.env.BASE_URL
-
   return (
     <>
-      <section className="page-header">
-        <div className="container">
-          <h1>Why GPS Tracking</h1>
-          <p>Turn every vehicle into a real-time source of insight.</p>
-        </div>
-      </section>
+      <PageHero
+        kicker="GPS & Fleet Tracking"
+        title="Why GPS vehicle tracking?"
+        lead="GPS tracking turns every vehicle into a live source of information, so you can cut waste, improve safety and serve customers faster."
+        media={asset('images/gps_img.webp')}
+        mediaAlt="Vehicle positions shown on a GPS map"
+      >
+        <EnquiryButton />
+        <Link to="/fleet-savings-calculator" className="btn btn--secondary">
+          Estimate your savings
+        </Link>
+      </PageHero>
 
       <section className="section">
-        <div className="container whygps-hero">
-          <div>
-            <h2>Why go GPS?</h2>
-            <p className="muted">
-              GPS tracking gives you full visibility into fleet operations, reduces waste, and
-              increases safety. It’s the fastest path to operational clarity.
-            </p>
-            <div className="why-badges">
-              {reasonsPrimary.map((reason) => (
-                <div className="why-pill" key={reason}>
-                  {reason}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="glow-card">
-            <img loading="lazy" src={`${baseUrl}images/gps_img.webp`} alt="GPS Tracking" />
-          </div>
+        <div className="container">
+          <SectionHead kicker="Top reasons" title="What GPS tracking does for you" />
+          <ul className="check-grid check-grid--cards">
+            {reasonsPrimary.map((reason) => (
+              <li key={reason}>{reason}</li>
+            ))}
+          </ul>
         </div>
       </section>
 
       <section className="section alt">
         <div className="container">
-          <div className="section-title">
-            <h2>Benefits at a glance</h2>
-            <p className="muted">Every mile becomes measurable and manageable.</p>
-          </div>
-          <div className="benefit-grid">
-            <div className="benefit-column">
-              {reasonsLeft.map((item) => (
-                <div className="benefit-item" key={item}>
-                  <span>✔</span>
-                  <p>{item}</p>
-                </div>
-              ))}
-            </div>
-            <div className="benefit-column">
-              {reasonsRight.map((item) => (
-                <div className="benefit-item" key={item}>
-                  <span>✔</span>
-                  <p>{item}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <SectionHead kicker="Benefits" title="Benefits at a glance" lead="Every kilometre becomes measurable and manageable." />
+          <ul className="check-grid">
+            {[...reasonsLeft, ...reasonsRight].map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
         </div>
       </section>
+
+      <CtaBand />
     </>
   )
 }

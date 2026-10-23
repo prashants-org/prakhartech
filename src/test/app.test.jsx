@@ -22,7 +22,7 @@ describe('App routing and key flows', () => {
       }),
     ).toBeInTheDocument()
 
-    await userEvent.click(screen.getByRole('button', { name: /get a free consultation/i }))
+    await userEvent.click(screen.getAllByRole('button', { name: /send an enquiry/i })[0])
     expect(await screen.findByRole('heading', { name: /get in touch/i })).toBeInTheDocument()
   })
 

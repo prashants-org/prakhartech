@@ -60,12 +60,6 @@
 }
 
 /* ── Header CTA adopts the accent of the business line you are in ── */
-.app-shell--safety .topbar .primary-btn {
-  background: linear-gradient(135deg, #ea580c, #f59e0b);
-}
-.app-shell--workplace .topbar .primary-btn {
-  background: linear-gradient(135deg, #0d9488, #14b8a6);
-}
 
 /* ═══ Grouped navigation ═══ */
 .nav--grouped {
@@ -409,21 +403,21 @@
 
 /* ═══ Footer: brand + four business columns ═══ */
 .footer-grid { grid-template-columns: 1.6fr repeat(4, 1fr); }
-.footer-col h5 {
+.footer-col .footer-col-title {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.footer-col h5::before {
+.footer-col .footer-col-title::before {
   content: "";
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: var(--company);
 }
-.footer-col--fleet h5::before { background: var(--fleet); }
-.footer-col--safety h5::before { background: var(--safety); }
-.footer-col--workplace h5::before { background: var(--workplace); }
+.footer-col--fleet .footer-col-title::before { background: var(--fleet); }
+.footer-col--safety .footer-col-title::before { background: var(--safety); }
+.footer-col--workplace .footer-col-title::before { background: var(--workplace); }
 .footer-brand .footer-contact-block { margin-top: 16px; }
 
 @media (max-width: 1024px) {
@@ -441,16 +435,6 @@
 .nav--open .nav-toggle-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
 /* Contact quick actions */
-.contact-quick { display: flex; flex-wrap: wrap; gap: 10px; }
-.contact-quick-btn {
-  padding: 11px 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  background: #fff;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-.contact-quick-btn--wa { background: #25d366; border-color: #25d366; color: #fff; }
 
 /* ── Compact header on tablets and phones ── */
 @media (max-width: 980px) {

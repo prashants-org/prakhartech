@@ -1,6 +1,9 @@
 import '../styles/elide.css'
-import { openEnquiry } from '../lib/enquiry'
 import ElideRelated from '../components/ElideRelated'
+import CtaBand from '../components/ui/CtaBand'
+import EnquiryButton from '../components/ui/EnquiryButton'
+import PageHero from '../components/ui/PageHero'
+import { asset } from '../lib/asset'
 
 const COVERAGE = [
   {
@@ -49,44 +52,19 @@ const EXCLUSIONS = [
 ]
 
 function ElideWarranty() {
-  const baseUrl = import.meta.env.BASE_URL
 
   return (
     <>
-      <section className="ef-subpage-hero">
-        <div className="ef-hero-glow" aria-hidden="true" />
-        <div className="container ef-subpage-inner">
-          <div className="ef-breadcrumb">
-            <a href="/elidefireball">← Elide Fireball</a>
-            <span>/</span>
-            <span>Warranty</span>
-          </div>
-          <span className="ef-label">Product Warranty</span>
-          <h1>Five-year guarantee. Zero compromise.</h1>
-          <p className="ef-subpage-lead">
-            Every Elide Fireball is backed by a five-year product guarantee covering manufacturing
-            defects under normal use. Clear terms, straightforward support.
-          </p>
-          <div className="ef-hero-actions">
-            <a
-              href={`${baseUrl}elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf`}
-              target="_blank"
-              rel="noreferrer"
-              className="ef-btn-primary"
-            >
-              View User Manual
-            </a>
-            <button
-              type="button"
-              className="ef-btn-ghost"
-              onClick={() => openEnquiry()}
-            >
-              Warranty Support
-            </button>
-          </div>
-        </div>
-      </section>
-
+      <PageHero
+        kicker="Product Warranty"
+        title="Five-year guarantee. Zero compromise."
+        lead="Every Elide Fire Ball is backed by a five-year product guarantee covering manufacturing defects under normal use. Clear terms, straightforward support."
+      >
+        <EnquiryButton label="Make a warranty claim" />
+        <a href={asset('elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf')} target="_blank" rel="noreferrer" className="btn btn--secondary">
+          Download the user manual (PDF)
+        </a>
+      </PageHero>
 
       {/* Warranty summary card */}
       <section className="ef-section">
@@ -124,7 +102,7 @@ function ElideWarranty() {
             {COVERAGE.map((item) => (
               <div key={item.title} className="ef-safety-card">
                 <div className="ef-safety-icon" aria-hidden="true">{item.icon}</div>
-                <h4>{item.title}</h4>
+                <h3>{item.title}</h3>
                 <p>{item.detail}</p>
               </div>
             ))}
@@ -144,7 +122,7 @@ function ElideWarranty() {
             {EXCLUSIONS.map((item) => (
               <div key={item.title} className="ef-safety-card ef-safety-card--dark">
                 <div className="ef-safety-icon" aria-hidden="true">{item.icon}</div>
-                <h4>{item.title}</h4>
+                <h3>{item.title}</h3>
                 <p>{item.detail}</p>
               </div>
             ))}
@@ -154,21 +132,7 @@ function ElideWarranty() {
 
       <ElideRelated />
 
-      <section className="ef-cta-band">
-        <div className="container ef-cta-band-inner">
-          <div>
-            <h2>Have a warranty question or claim?</h2>
-            <p>Contact our team and we will guide you through the next steps.</p>
-          </div>
-          <button
-            type="button"
-            className="ef-btn-primary"
-            onClick={() => openEnquiry()}
-          >
-            Contact Warranty Team →
-          </button>
-        </div>
-      </section>
+      <CtaBand title="Have a warranty question or claim?" text="Contact our team and we will guide you through the next steps." label="Make a warranty claim" />
     </>
   )
 }

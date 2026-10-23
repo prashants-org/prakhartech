@@ -1,5 +1,9 @@
 import { Link } from 'react-router-dom'
 import JsonLd from '../components/JsonLd'
+import CtaBand from '../components/ui/CtaBand'
+import PageHero from '../components/ui/PageHero'
+import SectionHead from '../components/ui/SectionHead'
+import { contactInfo } from '../data/contactInfo'
 import { faqSchema } from '../lib/structuredData'
 
 const faqs = [
@@ -97,55 +101,44 @@ function Faq() {
   return (
     <>
       <JsonLd data={faqSchema(faqs.map((f) => ({ q: f.question, a: f.answer })))} />
-      <section className="page-header faq-hero">
-        <div className="container faq-hero-inner">
-          <div>
-            <h1>FAQ</h1>
-            <p>Quick answers to help you get started with GPS tracking.</p>
-            <div className="faq-chips">
-              {categories.map((category) => (
-                <span key={category} className="faq-chip">
-                  {category}
-                </span>
-              ))}
-            </div>
-          </div>
+      <PageHero
+        kicker="GPS & Fleet Tracking"
+        title="GPS tracking FAQ"
+        lead="Quick answers about how vehicle tracking works, installation, data and costs."
+        aside={
           <div className="faq-stats">
             <div>
-              <h3>24/7</h3>
-              <p>System access</p>
+              <strong>24/7</strong>
+              <span>System access</span>
             </div>
             <div>
-              <h3>15 min</h3>
-              <p>Typical install</p>
+              <strong>15 min</strong>
+              <span>Typical install</span>
             </div>
             <div>
-              <h3>1 year</h3>
-              <p>Device warranty</p>
+              <strong>1 year</strong>
+              <span>Device warranty</span>
             </div>
           </div>
-        </div>
-      </section>
+        }
+      />
 
       <section className="section">
         <div className="container">
-          <div className="section-title">
-            <h2>Frequently Asked Questions</h2>
-            <p className="muted">Everything you need to know about our GPS tracking system.</p>
-          </div>
+          <SectionHead kicker="Answers" title="Frequently asked questions" />
           <div className="faq-layout">
             <aside className="faq-side">
-              <h3>Topics</h3>
+              <h2 className="hl-title">Topics</h2>
               <ul>
                 {categories.map((category) => (
                   <li key={category}>{category}</li>
                 ))}
               </ul>
               <div className="faq-help">
-                <h4>Still need help?</h4>
-                <p className="muted">We respond within 1 business day.</p>
-                <Link to="/contact" className="secondary-btn">
-                  Contact Support
+                <h3>Still need help?</h3>
+                <p className="muted">We reply {contactInfo.responseTime}.</p>
+                <Link to="/contact" className="btn btn--secondary">
+                  Contact us
                 </Link>
               </div>
             </aside>
@@ -161,19 +154,7 @@ function Faq() {
         </div>
       </section>
 
-      <section className="section alt">
-        <div className="container">
-          <div className="cta-panel">
-            <div>
-              <h2>Need more details?</h2>
-              <p className="muted">Our team is ready to answer any questions.</p>
-            </div>
-            <Link to="/contact" className="primary-btn">
-              Contact Support
-            </Link>
-          </div>
-        </div>
-      </section>
+      <CtaBand title="Have a question we haven't answered?" text="Ask us anything about GPS tracking for your vehicles." label="Ask a question" />
     </>
   )
 }

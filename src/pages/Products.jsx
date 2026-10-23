@@ -1,76 +1,60 @@
 import { Link } from 'react-router-dom'
-import { openEnquiry } from '../lib/enquiry'
+import CtaBand from '../components/ui/CtaBand'
+import EnquiryButton from '../components/ui/EnquiryButton'
+import PageHero from '../components/ui/PageHero'
+import SectionHead from '../components/ui/SectionHead'
+import { asset } from '../lib/asset'
 
-const products = (baseUrl) => [
+const products = [
   {
     title: 'GPS Tracker (TK103)',
-    image: `${baseUrl}images/gps_tracker_img.webp`,
+    image: 'images/gps_tracker_img.webp',
     description:
-      'A multi-functional GPS satellite positioning tracker for cars, e-cars, special vehicles, and motorcycles. Wide voltage support (9V–24V), compact design, and high-sensitivity GPS/GSM modules for real-time monitoring via SMS or GPRS.'
+      'A multi-functional GPS tracker for cars, e-cars, special vehicles and motorcycles. Wide 9V–24V voltage support, a compact design and high-sensitivity GPS/GSM modules for real-time monitoring by SMS or GPRS.',
   },
   {
     title: 'Camera Tracker (KS668)',
-    image: `${baseUrl}images/camera_tracker.webp`,
+    image: 'images/camera_tracker.webp',
     description:
-      'Real-time vehicle monitoring with omni-directional image capture. Uploads images through multiple cameras to the control center, deterring illegal activity and monitoring passenger safety.'
+      'Real-time vehicle monitoring with image capture from multiple cameras, uploaded to your control centre to deter misuse and keep passengers safe.',
   },
   {
     title: 'Bike Tracker (TK118)',
-    image: `${baseUrl}images/bike_tracker.webp`,
+    image: 'images/bike_tracker.webp',
     description:
-      'Wireless tracking for trucks, buses, containers, ambulances, and more. A hardware/software solution designed for commercial and security vehicles requiring reliable GPS + GPRS tracking.'
+      'A compact GPS tracker for motorcycles and scooters, with live location and theft alerts over GPS and GPRS.',
   },
   {
     title: 'Personal Tracker',
-    image: `${baseUrl}images/personal_tracker1.webp`,
+    image: 'images/personal_tracker1.webp',
     description:
-      'Track family members, employees, or valuable assets. Choose real-time tracking devices or GPS data loggers, all in compact, portable designs.'
-  }
+      'Track family members, employees or valuable assets with portable real-time trackers or GPS data loggers.',
+  },
 ]
 
 function Products() {
-  const baseUrl = import.meta.env.BASE_URL
-
   return (
     <>
-      <section className="page-header">
-        <div className="container">
-          <h1>Products</h1>
-          <p>Powerful GPS tracking hardware built for reliability and performance.</p>
-        </div>
-      </section>
+      <PageHero
+        kicker="GPS & Fleet Tracking"
+        title="GPS trackers and devices"
+        lead="Reliable tracking hardware for fleets, bikes, cameras and people, supplied, installed and supported by our team in Pune."
+        media={asset('images/product1.webp')}
+        mediaAlt="GPS tracking device"
+      >
+        <EnquiryButton />
+        <Link to="/downloads" className="btn btn--secondary">
+          Download specifications
+        </Link>
+      </PageHero>
 
       <section className="section">
         <div className="container">
-          <div className="product-hero">
-            <div>
-              <h2>Hardware built to perform in the real world</h2>
-              <p className="muted">
-                From fleet trackers to personal safety devices, every product is designed for accuracy,
-                endurance, and seamless integration with our tracking platform.
-              </p>
-              <div className="hero-actions">
-                <button
-                  type="button"
-                  className="primary-btn"
-                  onClick={() => openEnquiry()}
-                >
-                  Request a Demo
-                </button>
-                <Link to="/contact" className="secondary-btn">
-                  Talk to Sales
-                </Link>
-              </div>
-            </div>
-            <div className="glow-card">
-              <img loading="lazy" src={`${baseUrl}images/product1.webp`} alt="GPS Tracking Device" />
-            </div>
-          </div>
-
+          <SectionHead kicker="Our range" title="Choose the right tracker" lead="Every device works with the same tracking software and dashboard." />
           <div className="product-grid">
-            {products(baseUrl).map((product) => (
+            {products.map((product) => (
               <div className="product-card" key={product.title}>
-                <img loading="lazy" src={product.image} alt={product.title} />
+                <img loading="lazy" decoding="async" src={asset(product.image)} alt={product.title} />
                 <div>
                   <h3>{product.title}</h3>
                   <p>{product.description}</p>
@@ -81,23 +65,7 @@ function Products() {
         </div>
       </section>
 
-      <section className="section alt">
-        <div className="container">
-          <div className="cta-panel">
-            <div>
-              <h2>Need help choosing the right tracker?</h2>
-              <p className="muted">We’ll help you find the best fit for your fleet and use case.</p>
-            </div>
-            <button
-              type="button"
-              className="primary-btn"
-              onClick={() => openEnquiry()}
-            >
-              Start an Enquiry
-            </button>
-          </div>
-        </div>
-      </section>
+      <CtaBand title="Not sure which tracker fits?" text="Tell us about your vehicles and we will recommend the right device." />
     </>
   )
 }

@@ -29,7 +29,7 @@ afterEach(() => {
 describe('Enquiry form', () => {
   it('blocks an empty submission and shows field errors', async () => {
     renderAt('/')
-    await userEvent.click(await screen.findByRole('button', { name: /get a free consultation/i }))
+    await userEvent.click((await screen.findAllByRole('button', { name: /send an enquiry/i }))[0])
     const dialog = await screen.findByRole('dialog', { name: /enquiry form/i })
 
     await userEvent.click(within(dialog).getByRole('button', { name: /send enquiry/i }))
@@ -41,7 +41,7 @@ describe('Enquiry form', () => {
 
   it('sends a valid enquiry to the single enquiry inbox', async () => {
     renderAt('/')
-    await userEvent.click(await screen.findByRole('button', { name: /get a free consultation/i }))
+    await userEvent.click((await screen.findAllByRole('button', { name: /send an enquiry/i }))[0])
     const dialog = await screen.findByRole('dialog', { name: /enquiry form/i })
 
     await userEvent.type(within(dialog).getByLabelText(/full name/i), 'Asha Patil')
@@ -57,7 +57,7 @@ describe('Enquiry form', () => {
 
   it('closes on Escape', async () => {
     renderAt('/')
-    await userEvent.click(await screen.findByRole('button', { name: /get a free consultation/i }))
+    await userEvent.click((await screen.findAllByRole('button', { name: /send an enquiry/i }))[0])
     await screen.findByRole('dialog', { name: /enquiry form/i })
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())

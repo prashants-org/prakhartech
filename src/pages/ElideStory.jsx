@@ -1,6 +1,9 @@
 import '../styles/elide.css'
-import { openEnquiry } from '../lib/enquiry'
 import ElideRelated from '../components/ElideRelated'
+import { Link } from 'react-router-dom'
+import CtaBand from '../components/ui/CtaBand'
+import EnquiryButton from '../components/ui/EnquiryButton'
+import PageHero from '../components/ui/PageHero'
 
 const TIMELINE = [
   {
@@ -11,7 +14,7 @@ const TIMELINE = [
   {
     year: 'Mid 2000s',
     title: 'The concept developed',
-    detail: 'The Elide Fireball concept was developed as a passive, self-activating alternative. The core innovation: a sphere containing dry chemical powder that reacts on flame contact — no electricity, no human action required.',
+    detail: 'The Elide Fire Ball concept was developed as a passive, self-activating alternative. The core innovation: a sphere containing dry chemical powder that reacts on flame contact — no electricity, no human action required.',
   },
   {
     year: '2009–2012',
@@ -21,7 +24,7 @@ const TIMELINE = [
   {
     year: '2013+',
     title: 'Global launch and adoption',
-    detail: 'The Elide Fireball launched internationally and was rapidly adopted across 100+ countries. Fire departments, governments, and businesses recognised its unique value as an early-stage suppression tool.',
+    detail: 'The Elide Fire Ball launched internationally and was rapidly adopted across 100+ countries. Fire departments, governments, and businesses recognised its unique value as an early-stage suppression tool.',
   },
   {
     year: 'Today',
@@ -40,35 +43,16 @@ const IMPACT = [
 function ElideStory() {
   return (
     <>
-      <section className="ef-subpage-hero">
-        <div className="ef-hero-glow" aria-hidden="true" />
-        <div className="container ef-subpage-inner">
-          <div className="ef-breadcrumb">
-            <a href="/elidefireball">← Elide Fireball</a>
-            <span>/</span>
-            <span>Our Story</span>
-          </div>
-          <span className="ef-label">The Elide Fireball Story</span>
-          <h1>From a bold idea to a global fire safety innovation.</h1>
-          <p className="ef-subpage-lead">
-            A breakthrough concept evolved into one of the most trusted passive fire suppression
-            devices in the world — protecting people and property in over 100 countries.
-          </p>
-          <div className="ef-hero-actions">
-            <button
-              type="button"
-              className="ef-btn-primary"
-              onClick={() => openEnquiry()}
-            >
-              Get in Touch
-            </button>
-            <a href="/elidefireball/patents" className="ef-btn-ghost">
-              Patents &amp; Trademarks →
-            </a>
-          </div>
-        </div>
-      </section>
-
+      <PageHero
+        kicker="The Elide Fire Ball Story"
+        title="From a bold idea to a global fire safety innovation."
+        lead="A breakthrough concept evolved into one of the most trusted passive fire suppression devices in the world — protecting people and property in over 100 countries."
+      >
+        <EnquiryButton />
+        <Link to="/elidefireball/patents" className="btn btn--secondary">
+          Patents &amp; certifications
+        </Link>
+      </PageHero>
 
       {/* Impact stats */}
       <section className="ef-section ef-section--dark">
@@ -91,7 +75,7 @@ function ElideStory() {
         <div className="container">
           <div className="ef-section-head">
             <span className="ef-label">The Journey</span>
-            <h2>Milestones that made Elide Fireball</h2>
+            <h2>Milestones that made Elide Fire Ball</h2>
             <p>From concept to global fire safety standard — a timeline of the key moments.</p>
           </div>
           <div className="ef-story-timeline">
@@ -102,7 +86,7 @@ function ElideStory() {
                   {i < TIMELINE.length - 1 && <div className="ef-story-line" aria-hidden="true" />}
                 </div>
                 <div className="ef-story-content">
-                  <h4>{item.title}</h4>
+                  <h3>{item.title}</h3>
                   <p>{item.detail}</p>
                 </div>
               </div>
@@ -116,30 +100,30 @@ function ElideStory() {
         <div className="container">
           <div className="ef-section-head ef-section-head--light">
             <span className="ef-label">Our Mission</span>
-            <h2>Why Elide Fireball matters</h2>
+            <h2>Why Elide Fire Ball matters</h2>
             <p>Most fire deaths occur not from large blazes, but from small fires that were never caught early enough.</p>
           </div>
           <div className="ef-mission-grid">
             <div className="ef-mission-card">
-              <h4>Early detection saves lives</h4>
+              <h3>Early detection saves lives</h3>
               <p>
-                The Elide Fireball is designed to intervene at the earliest possible stage — when a fire
+                The Elide Fire Ball is designed to intervene at the earliest possible stage — when a fire
                 is still containable. This window, often just seconds, is when automatic suppression
                 makes the greatest difference to outcomes.
               </p>
             </div>
             <div className="ef-mission-card">
-              <h4>Accessible to everyone</h4>
+              <h3>Accessible to everyone</h3>
               <p>
                 Unlike conventional fire suppression systems that require training or installation by
-                specialists, the Elide Fireball can be deployed by anyone. This democratises access to
+                specialists, the Elide Fire Ball can be deployed by anyone. This democratises access to
                 effective fire protection for homes, small businesses, and remote facilities.
               </p>
             </div>
             <div className="ef-mission-card">
-              <h4>The last line of defence</h4>
+              <h3>The last line of defence</h3>
               <p>
-                Even in facilities with sprinklers, alarms, and extinguishers, the Elide Fireball fills
+                Even in facilities with sprinklers, alarms, and extinguishers, the Elide Fire Ball fills
                 the gap — protecting specific high-risk points automatically, without depending on power,
                 water pressure, or a human responder.
               </p>
@@ -150,21 +134,7 @@ function ElideStory() {
 
       <ElideRelated />
 
-      <section className="ef-cta-band">
-        <div className="container ef-cta-band-inner">
-          <div>
-            <h2>Bring Elide Fireball protection to your facility</h2>
-            <p>Our team will help you plan coverage and choose the right quantity for your space.</p>
-          </div>
-          <button
-            type="button"
-            className="ef-btn-primary"
-            onClick={() => openEnquiry()}
-          >
-            Request a Quote →
-          </button>
-        </div>
-      </section>
+      <CtaBand title="Bring Elide Fire Ball protection to your facility" text="We will help you plan coverage and choose the right quantity for your space." />
     </>
   )
 }

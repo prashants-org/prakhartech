@@ -1,9 +1,9 @@
-import { openEnquiry } from '../lib/enquiry'
+import SolutionPage from '../components/SolutionPage'
 
-const fleetSegments = (baseUrl) => [
+const fleetSegments = [
   {
     title: 'Taxis',
-    image: `${baseUrl}images/taxi_fleet.webp`,
+    image: 'images/taxi_fleet.webp',
     points: [
       'Track trips and routes for owners and vendors.',
       'Improve passenger safety and confidence.',
@@ -12,7 +12,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'JCB / Earth Movers',
-    image: `${baseUrl}images/jcb_earth_mover.webp`,
+    image: 'images/jcb_earth_mover.webp',
     points: [
       'Measure working hours and ignition time precisely.',
       'Reduce resource wastage and increase ROI.',
@@ -21,7 +21,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Construction Vehicles',
-    image: `${baseUrl}images/construction_vehicle.webp`,
+    image: 'images/construction_vehicle.webp',
     points: [
       'Monitor loading and unloading times.',
       'Reduce hidden delays and optimize dispatch.',
@@ -30,7 +30,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Frozen / Food Vehicles',
-    image: `${baseUrl}images/frozen_food_vehicle.webp`,
+    image: 'images/frozen_food_vehicle.webp',
     points: [
       'Integrate temperature sensors for cold chains.',
       'Identify problem areas during the journey.',
@@ -39,7 +39,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Auto',
-    image: `${baseUrl}images/auto.webp`,
+    image: 'images/auto.webp',
     points: [
       'Improve passenger safety and owner visibility.',
       'Capture total running distance per day.',
@@ -48,7 +48,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Cement Mixer',
-    image: `${baseUrl}images/cement_mixer.webp`,
+    image: 'images/cement_mixer.webp',
     points: [
       'Color-coded status from plant to site and back.',
       'Ensure on-time delivery and dispatch.',
@@ -57,7 +57,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Logistics Vehicles',
-    image: `${baseUrl}images/logistic_vehicle.webp`,
+    image: 'images/logistic_vehicle.webp',
     points: [
       'Reduce unnecessary trips and stoppages.',
       'Optimize allocation and support breakdowns.',
@@ -66,7 +66,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Cargo Van',
-    image: `${baseUrl}images/cargo_van.webp`,
+    image: 'images/cargo_van.webp',
     points: [
       'Keep a tab on dispatches and deliveries.',
       'Enable immediate dispatch for urgent runs.',
@@ -75,7 +75,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Bus',
-    image: `${baseUrl}images/bus.webp`,
+    image: 'images/bus.webp',
     points: [
       'Plan routes based on traffic conditions.',
       'Monitor vehicle status for safer operations.',
@@ -84,7 +84,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Postal Truck',
-    image: `${baseUrl}images/postal_truck.webp`,
+    image: 'images/postal_truck.webp',
     points: [
       'Improve operational efficiency of postal routes.',
       'Reduce costs with optimized dispatching.',
@@ -93,7 +93,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Dangerous Goods Vehicles',
-    image: `${baseUrl}images/dangerous_good_vehicles.webp`,
+    image: 'images/dangerous_good_vehicles.webp',
     points: [
       'Real-time monitoring for high-risk cargo.',
       'Enhance safety of goods and the public.',
@@ -102,7 +102,7 @@ const fleetSegments = (baseUrl) => [
   },
   {
     title: 'Tow Truck',
-    image: `${baseUrl}images/tow_truck.webp`,
+    image: 'images/tow_truck.webp',
     points: [
       'Know exact positions of towed vehicles.',
       'Improve response and time management.',
@@ -112,88 +112,23 @@ const fleetSegments = (baseUrl) => [
 ]
 
 function VehicleFleet() {
-  const baseUrl = import.meta.env.BASE_URL
-
   return (
-    <>
-      <section className="page-header">
-        <div className="container">
-          <h1>Vehicle Fleet Management</h1>
-          <p>Reduce risk, improve safety, and optimize operations with real-time fleet visibility.</p>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container service-hero">
-          <div>
-            <h2>Smarter fleet operations</h2>
-            <p className="muted">
-              Reduce operating expenses and increase profits with telemetric-supported tracking. Move
-              to a cloud-first, cost-effective platform that minimizes idle time and total mileage.
-            </p>
-            <div className="service-highlights">
-              <div>
-                <h4>Real-time tracking</h4>
-                <p>Live location, route history, and driver behavior insights.</p>
-              </div>
-              <div>
-                <h4>Operational efficiency</h4>
-                <p>Reduce fuel usage, optimize dispatch, and improve service SLAs.</p>
-              </div>
-              <div>
-                <h4>Safety & compliance</h4>
-                <p>Alerts, geofencing, and audit-ready reporting.</p>
-              </div>
-            </div>
-          </div>
-          <div className="glow-card">
-            <img loading="lazy" src={`${baseUrl}images/serives_img1.webp`} alt="Fleet management" />
-          </div>
-        </div>
-      </section>
-
-      <section className="section alt">
-        <div className="container">
-          <div className="section-title">
-            <h2>Fleet segments we support</h2>
-            <p className="muted">Tailored tracking solutions across industries and vehicle types.</p>
-          </div>
-          <div className="service-grid">
-            {fleetSegments(baseUrl).map((segment) => (
-              <article className="service-card" key={segment.title}>
-                <div className="service-card__media">
-                  <img loading="lazy" src={segment.image} alt={segment.title} />
-                </div>
-                <div className="service-card__body">
-                  <h3>{segment.title}</h3>
-                  <ul>
-                    {segment.points.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="cta-band">
-        <div className="container cta-inner">
-          <div>
-            <h2>Need visibility across your fleet?</h2>
-            <p>Book a demo and see live tracking on your vehicles.</p>
-          </div>
-          <button
-            type="button"
-            className="primary-btn"
-            onClick={() => openEnquiry()}
-          >
-            Book a Demo
-          </button>
-        </div>
-      </section>
-    </>
+    <SolutionPage
+      kicker="GPS & Fleet Tracking"
+      title="Fleet management with live GPS tracking"
+      lead="See every truck, bus and van on one live map. Cut fuel and idle time, stop misuse, and keep drivers safe with instant alerts."
+      media="images/serives_img1.webp"
+      mediaAlt="Fleet manager viewing live vehicle locations"
+      highlights={[
+        { title: 'Real-time tracking', body: 'Live location, route history and driver behaviour, on PC, tablet or phone.' },
+        { title: 'Lower running costs', body: 'Less fuel, idling and mileage, with tighter dispatch and better service times.' },
+        { title: 'Safety & compliance', body: 'Overspeed and geofence alerts, plus audit-ready trip reports.' },
+      ]}
+      segmentsKicker="Vehicle types"
+      segmentsTitle="Built for every kind of fleet"
+      segmentsLead="Tracking set up for how each vehicle type actually works."
+      segments={fleetSegments}
+    />
   )
 }
 

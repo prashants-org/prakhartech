@@ -12,6 +12,8 @@ import {
   summaryForEnquiry,
 } from '../lib/fleetSavings'
 import '../styles/calculator.css'
+import CtaBand from '../components/ui/CtaBand'
+import PageHero from '../components/ui/PageHero'
 
 const FIELDS = [
   { name: 'vehicles', label: 'Number of vehicles', min: 1, max: 500, step: 1, suffix: '' },
@@ -98,19 +100,11 @@ function FleetCalculator() {
 
   return (
     <div className="fc">
-      <section className="fc-hero">
-        <div className="container">
-          <nav className="fc-crumbs" aria-label="Breadcrumb">
-            <Link to="/">Home</Link> <span aria-hidden="true">/</span> <Link to="/vehicle-fleet">Fleet tracking</Link>{' '}
-            <span aria-hidden="true">/</span> <span aria-current="page">Savings calculator</span>
-          </nav>
-          <h1>How much could GPS tracking save your fleet?</h1>
-          <p>
-            Enter your fleet’s numbers for an instant estimate of the fuel money GPS tracking could save each year.
-            Every assumption is yours to change.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        kicker="Fleet savings calculator"
+        title="How much could GPS tracking save your fleet?"
+        lead="Enter your fleet's numbers for an instant estimate of the fuel money GPS tracking could save each year. Every assumption is yours to change."
+      />
 
       <section className="container fc-grid">
         <div className="fc-panel">
@@ -192,8 +186,8 @@ function FleetCalculator() {
             <span><i className="fc-dot fc-dot--save" />Potential saving</span>
           </p>
 
-          <button type="button" className="fc-cta" onClick={requestProposal}>
-            Get a proposal for this fleet →
+          <button type="button" className="btn btn--light fc-cta" onClick={requestProposal}>
+            Get a proposal for this fleet
           </button>
           <p className="fc-disclaimer">
             Estimate only, based on the figures above ({formatNumber(result.kmPerYear)} km a year across your fleet).
@@ -217,6 +211,7 @@ function FleetCalculator() {
           <Link to="/products">browse GPS devices</Link>.
         </p>
       </section>
+      <CtaBand />
     </div>
   )
 }

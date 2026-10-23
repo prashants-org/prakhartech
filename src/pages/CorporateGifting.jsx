@@ -7,6 +7,7 @@ import { openEnquiry } from '../lib/enquiry'
 import { faqSchema } from '../lib/structuredData'
 import '../styles/gifts.css'
 import '../styles/gifting.css'
+import CtaBand from '../components/ui/CtaBand'
 
 // Seasonal landing page. Update SEASON each year (and the route title/description).
 const SEASON = { name: 'Diwali 2026', date: '2026-11-08T00:00:00+05:30', label: '8 November 2026' }
@@ -190,6 +191,7 @@ function CorporateGifting() {
           </div>
         </div>
       </section>
+      <CtaBand title="Plan your Diwali gifting with us" text="Tell us who you are gifting and your budget per gift, and we will send a curated shortlist with prices." interest="Corporate Gifts" />
     </div>
   )
 }

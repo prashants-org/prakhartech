@@ -45,7 +45,7 @@ test("home to contact and map location", async ({ page }) => {
 
 test("opens enquiry modal from home", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Get a free consultation" }).click();
+  await page.getByRole("button", { name: "Send an enquiry" }).first().click();
   await expect(
     page.getByRole("heading", { name: "Get in Touch" }),
   ).toBeVisible();

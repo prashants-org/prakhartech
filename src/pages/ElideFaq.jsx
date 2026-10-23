@@ -3,15 +3,19 @@ import JsonLd from '../components/JsonLd'
 import { faqSchema } from '../lib/structuredData'
 import { openEnquiry } from '../lib/enquiry'
 import ElideRelated from '../components/ElideRelated'
+import { Link } from 'react-router-dom'
+import CtaBand from '../components/ui/CtaBand'
+import EnquiryButton from '../components/ui/EnquiryButton'
+import PageHero from '../components/ui/PageHero'
 
 const FAQS = [
   {
-    q: 'How does the Elide Fireball activate?',
+    q: 'How does the Elide Fire Ball activate?',
     a: 'The ball activates automatically within 3–10 seconds of direct flame contact. A chemical reaction inside the shell disperses dry chemical powder throughout the fire, suppressing it immediately. It also emits a 120 dB sound burst to alert nearby occupants.',
   },
   {
     q: 'What size area can it cover?',
-    a: 'The Elide Fireball has an effective coverage range of up to 9 m² under standard conditions, and has been tested to cover up to 18 m². It is designed for early-stage fires in enclosed or semi-enclosed spaces such as rooms, panels, and machinery enclosures.',
+    a: 'The Elide Fire Ball has an effective coverage range of up to 9 m² under standard conditions, and has been tested to cover up to 18 m². It is designed for early-stage fires in enclosed or semi-enclosed spaces such as rooms, panels, and machinery enclosures.',
   },
   {
     q: 'Is it safe for people and equipment?',
@@ -31,7 +35,7 @@ const FAQS = [
   },
   {
     q: 'Which types of fire can it put out?',
-    a: 'The Elide Fireball is rated for five fire classes: A (solids such as wood, paper and plastic), B (flammable liquids), C (combustible gases), E (energised electrical equipment) and F (cooking oils and fats). It is not intended for class D metal fires. This makes it effective against the most common fire types found in homes, offices, kitchens, and industrial settings.',
+    a: 'The Elide Fire Ball is rated for five fire classes: A (solids such as wood, paper and plastic), B (flammable liquids), C (combustible gases), E (energised electrical equipment) and F (cooking oils and fats). It is not intended for class D metal fires. This makes it effective against the most common fire types found in homes, offices, kitchens, and industrial settings.',
   },
   {
     q: 'What happens after it activates?',
@@ -47,49 +51,30 @@ function ElideFaq() {
   return (
     <>
       <JsonLd data={faqSchema(FAQS)} />
-      <section className="ef-subpage-hero">
-        <div className="ef-hero-glow" aria-hidden="true" />
-        <div className="container ef-subpage-inner">
-          <div className="ef-breadcrumb">
-            <a href="/elidefireball">← Elide Fireball</a>
-            <span>/</span>
-            <span>FAQ</span>
-          </div>
-          <span className="ef-label">FAQ</span>
-          <h1>Answers to your questions about Elide Fireball.</h1>
-          <p className="ef-subpage-lead">
-            Everything you need to know about activation, placement, safety, and ordering —
-            answered clearly so you can deploy with confidence.
-          </p>
-          <div className="ef-hero-actions">
-            <button
-              type="button"
-              className="ef-btn-primary"
-              onClick={() => openEnquiry()}
-            >
-              Ask a Specialist
-            </button>
-            <a href="/elidefireball/health-and-safety" className="ef-btn-ghost">
-              Health &amp; Safety →
-            </a>
-          </div>
-        </div>
-      </section>
-
+      <PageHero
+        kicker="FAQ"
+        title="Answers to your questions about Elide Fire Ball."
+        lead="Everything you need to know about activation, placement, safety, and ordering — answered clearly so you can deploy with confidence."
+      >
+        <EnquiryButton label="Ask a question" />
+        <Link to="/elidefireball/health-and-safety" className="btn btn--secondary">
+          Health &amp; safety
+        </Link>
+      </PageHero>
 
       <section className="ef-section">
         <div className="container ef-faq-layout">
           <div className="ef-faq-sidebar">
             <div className="ef-faq-sidebar-card">
-              <h4>Still have questions?</h4>
+              <h2 className="hl-title">Still have questions?</h2>
               <p>Our specialists can advise on the best placement and coverage plan for your specific facility.</p>
               <button
                 type="button"
-                className="ef-btn-primary"
+                className="btn btn--primary"
                 style={{ width: '100%', justifyContent: 'center' }}
                 onClick={() => openEnquiry()}
               >
-                Contact Us
+                Ask a question
               </button>
               <div className="ef-faq-contact">
                 <a href="mailto:info@prakhartech.com">✉ info@prakhartech.com</a>
@@ -110,21 +95,7 @@ function ElideFaq() {
 
       <ElideRelated />
 
-      <section className="ef-cta-band">
-        <div className="container ef-cta-band-inner">
-          <div>
-            <h2>Couldn't find your answer?</h2>
-            <p>Our team is happy to walk you through any aspect of the product.</p>
-          </div>
-          <button
-            type="button"
-            className="ef-btn-primary"
-            onClick={() => openEnquiry()}
-          >
-            Send us a message →
-          </button>
-        </div>
-      </section>
+      <CtaBand title="Couldn't find your answer?" text="Our team is happy to walk you through any part of the product." label="Ask a question" />
     </>
   )
 }

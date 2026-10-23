@@ -71,8 +71,8 @@ function EnquiryForm({ defaultInterest = '', defaultMessage = '', source = 'enqu
             <option value="Fleet Management System">Fleet Management System</option>
           </optgroup>
           <optgroup label="Fire Safety">
-            <option value="Elide Fireball">Elide Fireball</option>
-            <option value="GPS Tracking + Elide Fireball">GPS Tracking + Elide Fireball</option>
+            <option value="Elide Fire Ball">Elide Fire Ball</option>
+            <option value="GPS Tracking + Elide Fire Ball">GPS Tracking + Elide Fire Ball</option>
           </optgroup>
           <optgroup label="Workplace Supplies">
             <option value="Office Stationery & Supplies">Office Stationery &amp; Supplies</option>
@@ -100,7 +100,7 @@ function EnquiryForm({ defaultInterest = '', defaultMessage = '', source = 'enqu
         </p>
       )}
       <button type="submit" className="enq-submit" disabled={form.status === 'sending'}>
-        {form.status === 'sending' ? 'Sending…' : 'Send Enquiry →'}
+        {form.status === 'sending' ? 'Sending…' : 'Send enquiry'}
       </button>
       <p className="enq-note">Sent directly to our team · Never shared with third parties</p>
     </form>

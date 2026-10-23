@@ -1,54 +1,68 @@
-import { Link } from 'react-router-dom'
+import CtaBand from '../components/ui/CtaBand'
+import PageHero from '../components/ui/PageHero'
+import SectionHead from '../components/ui/SectionHead'
+import { asset } from '../lib/asset'
 
-const downloads = (baseUrl) => [
+// format/size shown on the button so people know what they are downloading.
+const downloads = [
   {
-    title: 'GPS Tracking System',
-    code: 'KS668',
-    image: `${baseUrl}images/product1.webp`,
-    file: `${baseUrl}images/Camera-Tracker-Specifications.doc`
+    group: 'GPS trackers',
+    title: 'Camera Tracker specifications',
+    model: 'KS668',
+    image: 'images/product1.webp',
+    file: 'images/Camera-Tracker-Specifications.doc',
+    format: 'Word document · 338 KB',
   },
   {
-    title: 'GPS-TK118 User’s Manual',
-    code: 'TK103',
-    image: `${baseUrl}images/product2.webp`,
-    file: `${baseUrl}images/TK-118.doc`
+    group: 'GPS trackers',
+    title: 'Bike Tracker user manual',
+    model: 'TK118',
+    image: 'images/product2.webp',
+    file: 'images/TK-118.doc',
+    format: 'Word document · 1.3 MB',
   },
   {
-    title: 'Vehicle Tracking System',
-    code: 'TK118',
-    image: `${baseUrl}images/product3.webp`,
-    file: `${baseUrl}images/Vehicle-Tracking-Systems.doc`
-  }
+    group: 'GPS trackers',
+    title: 'Vehicle Tracking System brochure',
+    model: 'Overview',
+    image: 'images/product3.webp',
+    file: 'images/Vehicle-Tracking-Systems.doc',
+    format: 'Word document · 1.5 MB',
+  },
+  {
+    group: 'Fire safety',
+    title: 'Elide Fire Ball user manual',
+    model: 'Elide Fire Ball',
+    image: 'elidefireball/assets/img/bt2.webp',
+    file: 'elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf',
+    format: 'PDF · 1.4 MB',
+  },
 ]
 
 function Downloads() {
-  const baseUrl = import.meta.env.BASE_URL
-
   return (
     <>
-      <section className="page-header">
-        <div className="container">
-          <h1>Downloads</h1>
-          <p>Get brochures, manuals, and product documentation.</p>
-        </div>
-      </section>
+      <PageHero
+        kicker="Resources"
+        title="Downloads"
+        lead="Specifications, user manuals and brochures for our GPS trackers and the Elide Fire Ball."
+      />
 
       <section className="section">
         <div className="container">
-          <div className="section-title">
-            <h2>Product Documents</h2>
-            <p className="muted">Quick access to the latest manuals and specifications.</p>
-          </div>
+          <SectionHead kicker="Product documents" title="Manuals and specifications" />
           <div className="download-grid">
-            {downloads(baseUrl).map((item) => (
+            {downloads.map((item) => (
               <div className="download-card" key={item.title}>
-                <img loading="lazy" src={item.image} alt={item.title} />
+                <img loading="lazy" decoding="async" src={asset(item.image)} alt="" />
                 <div>
+                  <span className="download-group">{item.group}</span>
                   <h3>{item.title}</h3>
-                  <p className="muted">Model: {item.code}</p>
-                  <a className="primary-btn" href={item.file} target="_blank" rel="noreferrer">
-                    Download Brochure
+                  <p className="muted">Model: {item.model}</p>
+                  <a className="btn btn--primary" href={asset(item.file)} download>
+                    Download
                   </a>
+                  <p className="download-format">{item.format}</p>
                 </div>
               </div>
             ))}
@@ -56,19 +70,7 @@ function Downloads() {
         </div>
       </section>
 
-      <section className="section alt">
-        <div className="container">
-          <div className="cta-panel">
-            <div>
-              <h2>Need additional documentation?</h2>
-              <p className="muted">Reach out and we’ll send the right files for your fleet.</p>
-            </div>
-            <Link to="/contact" className="primary-btn">
-              Contact Support
-            </Link>
-          </div>
-        </div>
-      </section>
+      <CtaBand title="Need another document?" text="Tell us your model and we will send the right manual or specification." label="Request a document" />
     </>
   )
 }

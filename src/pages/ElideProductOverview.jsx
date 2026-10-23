@@ -3,6 +3,10 @@ import { openEnquiry } from '../lib/enquiry'
 import ElideRelated from '../components/ElideRelated'
 import LiteYouTube from '../components/LiteYouTube'
 import { ELIDE_PRODUCT_VIDEO, FIRE_CLASSES } from '../data/elide'
+import CtaBand from '../components/ui/CtaBand'
+import EnquiryButton from '../components/ui/EnquiryButton'
+import PageHero from '../components/ui/PageHero'
+import { asset } from '../lib/asset'
 
 const QUICK_FACTS = [
   { icon: '⚖️', label: '1.3 kg', desc: 'Lightweight enough for anyone to carry and throw' },
@@ -29,44 +33,18 @@ const INSTALL_LOCATIONS = [
 ]
 
 function ElideProductOverview() {
-  const baseUrl = import.meta.env.BASE_URL
-
   return (
     <>
-      <section className="ef-subpage-hero">
-        <div className="ef-hero-glow" aria-hidden="true" />
-        <div className="container ef-subpage-inner">
-          <div className="ef-breadcrumb">
-            <a href="/elidefireball">← Elide Fireball</a>
-            <span>/</span>
-            <span>Product Overview</span>
-          </div>
-          <span className="ef-label">Product Overview</span>
-          <h1>The world's first self-activating fire extinguishing ball.</h1>
-          <p className="ef-subpage-lead">
-            Scientifically proven to suppress early-stage fires within seconds of flame contact —
-            no training, no pins, no pressure gauges. Just place it and let it protect you.
-          </p>
-          <div className="ef-hero-actions">
-            <a
-              href={`${baseUrl}elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf`}
-              target="_blank"
-              rel="noreferrer"
-              className="ef-btn-primary"
-            >
-              Download User Manual
-            </a>
-            <button
-              type="button"
-              className="ef-btn-ghost"
-              onClick={() => openEnquiry()}
-            >
-              Talk to a Specialist
-            </button>
-          </div>
-        </div>
-      </section>
-
+      <PageHero
+        kicker="Product Overview"
+        title="The world's first self-activating fire extinguishing ball."
+        lead="Scientifically proven to suppress early-stage fires within seconds of flame contact — no training, no pins, no pressure gauges. Just place it and let it protect you."
+      >
+        <EnquiryButton />
+        <a href={asset('elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf')} target="_blank" rel="noreferrer" className="btn btn--secondary">
+          Download the user manual (PDF)
+        </a>
+      </PageHero>
 
       {/* Quick facts strip */}
       <section className="ef-section">
@@ -74,7 +52,7 @@ function ElideProductOverview() {
           <div className="ef-section-head">
             <span className="ef-label">At a Glance</span>
             <h2>Key specifications</h2>
-            <p>Everything you need to know about the Elide Fireball in one view.</p>
+            <p>Everything you need to know about the Elide Fire Ball in one view.</p>
           </div>
           <div className="ef-facts-grid">
             {QUICK_FACTS.map((f) => (
@@ -93,7 +71,7 @@ function ElideProductOverview() {
         <div className="container">
           <div className="ef-section-head">
             <span className="ef-label">See It In Action</span>
-            <h2>Watch the Elide Fireball suppress a fire</h2>
+            <h2>Watch the Elide Fire Ball suppress a fire</h2>
           </div>
           <div className="ef-video-split">
             <div className="ef-video-wrap">
@@ -103,21 +81,21 @@ function ElideProductOverview() {
               <div className="ef-fact-card">
                 <div className="ef-fact-icon">🚀</div>
                 <div>
-                  <h4>Automatic or manual</h4>
+                  <h3>Automatic or manual</h3>
                   <p>Mount near ignition points for hands-free activation, or roll and throw it manually into any fire.</p>
                 </div>
               </div>
               <div className="ef-fact-card">
                 <div className="ef-fact-icon">🌍</div>
                 <div>
-                  <h4>100+ countries</h4>
+                  <h3>100+ countries</h3>
                   <p>Internationally certified and adopted across home, commercial, and industrial sectors globally.</p>
                 </div>
               </div>
               <div className="ef-fact-card">
                 <div className="ef-fact-icon">🏆</div>
                 <div>
-                  <h4>Award-winning technology</h4>
+                  <h3>Award-winning technology</h3>
                   <p>Multiple international safety awards recognising its unique approach to fire suppression.</p>
                 </div>
               </div>
@@ -137,7 +115,7 @@ function ElideProductOverview() {
           <div className="ef-deploy-grid">
             <div className="ef-deploy-card">
               <div className="ef-deploy-num">01</div>
-              <h4>Manual operation</h4>
+              <h3>Manual operation</h3>
               <p>
                 Roll or throw the ball directly into the source of the fire from a safe distance.
                 It activates on contact with flame in 3–10 seconds and extinguishes immediately.
@@ -151,7 +129,7 @@ function ElideProductOverview() {
             </div>
             <div className="ef-deploy-card">
               <div className="ef-deploy-num">02</div>
-              <h4>Automatic operation</h4>
+              <h3>Automatic operation</h3>
               <p>
                 Install 10–30 cm directly above the most likely ignition point. The ball detects
                 heat and flame automatically, triggering suppression without any human intervention —
@@ -178,7 +156,7 @@ function ElideProductOverview() {
           <div className="ef-install-grid">
             {INSTALL_LOCATIONS.map((loc) => (
               <div key={loc.place} className="ef-install-card">
-                <h4>{loc.place}</h4>
+                <h3>{loc.place}</h3>
                 <ul>
                   {loc.items.map((item) => (
                     <li key={item}>{item}</li>
@@ -202,7 +180,7 @@ function ElideProductOverview() {
             {FIRE_CLASSES.map((fc) => (
               <div key={fc.cls} className="ef-class-card">
                 <div className="ef-class-badge">Class {fc.cls}</div>
-                <h4>{fc.label}</h4>
+                <h3>{fc.label}</h3>
                 <p>{fc.desc}</p>
               </div>
             ))}
@@ -215,14 +193,14 @@ function ElideProductOverview() {
         <div className="container ef-overview-cta-inner">
           <div className="ef-overview-cta-visual">
             <img
-              src={`${baseUrl}elidefireball/assets/img/bt2.webp`}
-              alt="Elide Fireball product"
+              src={asset('elidefireball/assets/img/bt2.webp')}
+              alt="Elide Fire Ball product"
               loading="lazy"
             />
           </div>
           <div className="ef-overview-cta-copy">
             <span className="ef-label">Get Started</span>
-            <h2>Ready to deploy Elide Fireball?</h2>
+            <h2>Ready to deploy Elide Fire Ball?</h2>
             <p>
               Our team will help you choose the right quantity, placement strategy, and installation
               support for your specific facility or vehicle fleet.
@@ -230,24 +208,25 @@ function ElideProductOverview() {
             <div className="ef-hero-actions" style={{ marginTop: '24px' }}>
               <button
                 type="button"
-                className="ef-btn-primary"
+                className="btn btn--primary"
                 onClick={() => openEnquiry()}
               >
-                Request a Quote
+                Get Elide pricing
               </button>
               <a
-                href={`${baseUrl}elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf`}
+                href={asset('elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf')}
                 target="_blank"
                 rel="noreferrer"
-                className="ef-btn-outline"
+                className="btn btn--secondary"
               >
-                View User Manual ↗
+                Download the user manual (PDF)
               </a>
             </div>
           </div>
         </div>
       </section>
       <ElideRelated />
+      <CtaBand />
     </>
   )
 }

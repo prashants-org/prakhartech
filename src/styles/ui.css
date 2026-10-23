@@ -1,0 +1,268 @@
+/* ═══════════════════════════════════════════════════════════════
+   UI primitives shared by every page (components/ui/*):
+   accent colour, buttons, page hero, breadcrumbs, section heads, CTA band.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Each business line sets its accent; everything below reads --accent. */
+.app-shell { --accent: var(--brand-navy); --accent-2: #3b5a8a; --accent-soft: rgba(37, 61, 97, 0.1); }
+.app-shell--fleet { --accent: var(--fleet); --accent-2: #0ea5e9; --accent-soft: var(--fleet-soft); }
+.app-shell--safety { --accent: var(--safety); --accent-2: #f59e0b; --accent-soft: var(--safety-soft); }
+.app-shell--workplace { --accent: var(--workplace); --accent-2: #14b8a6; --accent-soft: var(--workplace-soft); }
+
+/* ── Buttons ──
+   .btn--primary   solid accent (main action)
+   .btn--secondary outline (second action)
+   .btn--light / .btn--outline-light  on dark bands
+   .primary-btn / .secondary-btn are kept as aliases for older markup. */
+.btn,
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 22px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s, background 0.2s, border-color 0.2s;
+}
+.btn:hover,
+.primary-btn:hover { transform: translateY(-2px); }
+
+.btn--primary,
+.primary-btn {
+  color: #fff;
+  background: var(--accent);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.btn--primary:hover,
+.primary-btn:hover { box-shadow: 0 14px 32px color-mix(in srgb, var(--accent) 38%, transparent); }
+
+.btn--secondary {
+  color: var(--ink);
+  background: #fff;
+  border-color: rgba(148, 163, 184, 0.45);
+}
+.btn--secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+.btn--light { color: var(--ink); background: #fff; }
+.btn--outline-light { color: #fff; border-color: rgba(255, 255, 255, 0.45); background: transparent; }
+.btn--outline-light:hover { background: rgba(255, 255, 255, 0.08); }
+
+/* The header CTA follows the same rule as every other primary button. */
+.topbar .primary-btn { padding: 11px 20px; font-size: 0.9rem; }
+
+/* ── Breadcrumbs ── */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.crumbs a { color: var(--accent); font-weight: 500; }
+.crumbs a:hover { text-decoration: underline; }
+.crumbs [aria-current] { color: var(--ink); font-weight: 500; }
+
+/* ── Page hero ── */
+.ph {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(36px, 5vw, 64px) 0 clamp(44px, 6vw, 80px);
+  background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
+  border-bottom: 1px solid #eef2f7;
+}
+.ph-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(560px 280px at 88% 8%, var(--accent-soft), transparent 70%),
+    radial-gradient(420px 220px at 0% 100%, color-mix(in srgb, var(--accent-2) 8%, transparent), transparent 70%);
+}
+.ph-grid { position: relative; display: grid; gap: clamp(28px, 5vw, 64px); align-items: center; }
+.ph--split .ph-grid { grid-template-columns: 1.1fr 1fr; }
+.ph-copy { max-width: 720px; }
+.ph-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.ph-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.ph h1 {
+  margin: 0 0 16px;
+  font-size: clamp(2rem, 4.2vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.ph-lead { margin: 0; font-size: 1.08rem; line-height: 1.7; color: #475569; max-width: 620px; }
+.ph-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.ph-media {
+  border-radius: 22px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.12);
+}
+.ph-media img { width: 100%; height: 100%; max-height: 380px; object-fit: cover; display: block; }
+.ph-aside { display: grid; gap: 14px; }
+
+/* ── Section head ── */
+.sh { max-width: 680px; margin: 0 auto 40px; }
+.sh--center { text-align: center; }
+.sh--left { margin-left: 0; }
+.sh-kicker {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.sh h2 { margin: 0 0 10px; font-size: clamp(1.6rem, 3vw, 2.3rem); letter-spacing: -0.02em; line-height: 1.15; color: var(--ink); }
+.sh p { margin: 0; color: var(--muted); line-height: 1.7; }
+
+/* ── CTA band ── */
+.cta2 {
+  padding: clamp(48px, 6vw, 72px) 0;
+  color: #fff;
+  background:
+    radial-gradient(600px 260px at 100% 0%, color-mix(in srgb, var(--accent-2) 45%, transparent), transparent 70%),
+    linear-gradient(120deg, var(--accent) 0%, #0f172a 70%);
+}
+.cta2-inner { display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap; }
+.cta2-copy { max-width: 640px; }
+.cta2 h2 { margin: 0 0 8px; font-size: clamp(1.5rem, 2.8vw, 2.1rem); letter-spacing: -0.02em; color: #fff; }
+.cta2 p { margin: 0; color: rgba(255, 255, 255, 0.78); line-height: 1.6; }
+.cta2-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* ── Card titles that used to be <h4> keep their compact size ── */
+.faq-help h3 { font-size: 1rem; margin: 0 0 6px; }
+
+@media (max-width: 900px) {
+  .ph--split .ph-grid { grid-template-columns: 1fr; }
+  .ph-media img { max-height: 260px; }
+}
+@media (max-width: 560px) {
+  .ph-actions .btn,
+  .cta2-actions .btn { flex: 1 1 100%; }
+}
+
+/* ── Highlight row (three key benefits under a hero) ── */
+.hl-row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.hl-card {
+  padding: 24px;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid #eef2f7;
+  border-top: 3px solid var(--accent);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+.hl-title { margin: 0 0 8px; font-size: 1.05rem; letter-spacing: -0.01em; color: var(--ink); }
+.section .hl-title { font-size: 1.05rem; margin-bottom: 8px; }
+.hl-card p { margin: 0; color: #475569; line-height: 1.6; font-size: 0.95rem; }
+@media (max-width: 760px) { .hl-row { grid-template-columns: 1fr; } }
+
+/* ── Stat tiles in a hero aside (FAQ) ── */
+.faq-stats div { display: grid; gap: 4px; padding: 18px 14px; }
+.faq-stats strong { font-size: 1.5rem; letter-spacing: -0.02em; color: var(--accent); }
+.faq-stats span { font-size: 0.8rem; color: var(--muted); }
+
+/* ── About: business cards + story ── */
+.biz-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.biz-card {
+  --biz: var(--company);
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 26px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid #eef2f7;
+  border-top: 4px solid var(--biz);
+  transition: transform 0.25s var(--ease-out), box-shadow 0.25s;
+}
+.biz-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08); }
+.biz-card--fleet { --biz: var(--fleet); }
+.biz-card--safety { --biz: var(--safety); }
+.biz-card--workplace { --biz: var(--workplace); }
+.biz-card h3 { margin: 0; font-size: 1.2rem; color: var(--ink); }
+.biz-card p { margin: 0; color: #475569; line-height: 1.6; }
+.biz-link { margin-top: 6px; font-weight: 600; color: var(--biz); }
+.about-story { display: grid; grid-template-columns: 1fr 1.4fr; gap: 40px; align-items: start; }
+.about-story .sh { margin-bottom: 0; }
+.about-story-copy p { margin: 0 0 14px; color: #475569; line-height: 1.75; }
+.text-cta { font-weight: 600; color: var(--accent); }
+.ph-aside .about-card { padding: 26px; border-radius: 20px; background: #fff; border: 1px solid #eef2f7; box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08); border-left: 4px solid var(--accent); }
+.ph-aside .about-card p { margin: 0; color: #475569; line-height: 1.7; }
+
+/* ── Downloads ── */
+.download-group { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.download-format { margin: 8px 0 0; font-size: 0.78rem; color: var(--muted); }
+
+@media (max-width: 900px) {
+  .biz-grid, .about-story { grid-template-columns: 1fr; }
+}
+
+/* ── Check lists (Why choose / Why GPS) ── */
+.check-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px 28px;
+}
+.check-grid li {
+  position: relative;
+  padding-left: 32px;
+  color: #334155;
+  line-height: 1.6;
+}
+.check-grid li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent-soft) no-repeat center / 12px
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23334155' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+}
+.check-grid--cards { gap: 16px; }
+.check-grid--cards li {
+  padding: 20px 20px 20px 54px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid #eef2f7;
+}
+.check-grid--cards li::before { left: 20px; top: 21px; }
+
+/* ── 404 quick links ── */
+.nf-links { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 8px; }
+.nf-links a { color: var(--biz); font-weight: 600; }
+.nf-links a:hover { text-decoration: underline; }

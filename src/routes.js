@@ -2,6 +2,7 @@
 // Drives the router (App.jsx), per-page <head> tags (lib/seo.js),
 // the build-time prerender and sitemap (scripts/prerender.mjs).
 //
+// name:      short page name (breadcrumbs)
 // page:      file name in src/pages (without .jsx)
 // section:   'fleet' | 'safety' | 'workplace' | 'company' — used for nav state,
 //            the default enquiry interest and the WhatsApp message
@@ -11,16 +12,52 @@ export const SITE_URL = 'https://www.prakhartech.com'
 export const SITE_NAME = 'Prakhar Technology'
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/brand/og-image.png`
 
+// The three business lines + company pages. One source for the accent colour,
+// the default enquiry interest, the call-to-action wording and breadcrumbs.
 export const SECTIONS = {
-  fleet: { label: 'GPS & Fleet Tracking', interest: 'GPS Vehicle Tracking' },
-  safety: { label: 'Elide Fire Ball', interest: 'Elide Fireball' },
-  workplace: { label: 'Workplace Supplies', interest: 'Office Stationery & Supplies' },
-  company: { label: 'Prakhar Technology', interest: '' },
+  fleet: {
+    label: 'GPS & Fleet Tracking',
+    crumb: 'GPS & Fleet',
+    hub: '/vehicle-fleet',
+    interest: 'GPS Vehicle Tracking',
+    cta: 'Book a free demo',
+    ctaTitle: 'See live tracking on your own vehicles',
+    ctaText: 'Book a free demo and we will show you the dashboard, alerts and reports for your fleet.',
+  },
+  safety: {
+    label: 'Elide Fire Ball',
+    crumb: 'Fire Safety',
+    hub: '/elidefireball',
+    interest: 'Elide Fire Ball',
+    cta: 'Get Elide pricing',
+    ctaTitle: 'Protect your space with Elide Fire Ball',
+    ctaText: 'Tell us where you want protection and how many units you need. We will send pricing and placement advice.',
+  },
+  workplace: {
+    label: 'Workplace Supplies',
+    crumb: 'Workplace',
+    hub: '/stationery',
+    interest: 'Office Stationery & Supplies',
+    cta: 'Request a quote',
+    ctaTitle: 'One supplier for everything your workplace needs',
+    ctaText: 'Send your list or add products to your quote basket. We will reply with prices and delivery dates.',
+  },
+  company: {
+    label: 'Prakhar Technology',
+    crumb: 'Company',
+    hub: null,
+    interest: '',
+    cta: 'Send an enquiry',
+    ctaTitle: 'Not sure where to start?',
+    ctaText: 'Tell us about your fleet, building or office. We will recommend what fits, with no obligation.',
+  },
 }
+
 
 export const routes = [
   {
     path: '/',
+    name: 'Home',
     page: 'Home',
     section: 'company',
     title: 'Prakhar Technology | GPS Tracking, Fire Safety & Workplace Supplies – Pune',
@@ -31,6 +68,7 @@ export const routes = [
   },
   {
     path: '/about',
+    name: 'About us',
     page: 'About',
     section: 'company',
     title: 'About Us | Prakhar Technology, Pune',
@@ -40,6 +78,7 @@ export const routes = [
   },
   {
     path: '/contact',
+    name: 'Contact',
     page: 'Contact',
     section: 'company',
     title: 'Contact Prakhar Technology | Viman Nagar, Pune',
@@ -49,6 +88,7 @@ export const routes = [
   },
   {
     path: '/products',
+    name: 'GPS devices',
     page: 'Products',
     section: 'fleet',
     title: 'GPS Vehicle Trackers & Devices | Prakhar Technology',
@@ -58,6 +98,7 @@ export const routes = [
   },
   {
     path: '/software',
+    name: 'Tracking software',
     page: 'Software',
     section: 'fleet',
     title: 'Fleet Tracking Software | Web & Mobile Dashboard – Prakhar Technology',
@@ -68,6 +109,7 @@ export const routes = [
   { path: '/softwares', redirect: '/software' },
   {
     path: '/vehicle-fleet',
+    name: 'Fleet management',
     page: 'VehicleFleet',
     section: 'fleet',
     title: 'Vehicle Fleet Management with GPS | Prakhar Technology',
@@ -77,6 +119,7 @@ export const routes = [
   },
   {
     path: '/security',
+    name: 'Security tracking',
     page: 'Security',
     section: 'fleet',
     title: 'Security & Covert Vehicle Tracking | Prakhar Technology',
@@ -86,6 +129,7 @@ export const routes = [
   },
   {
     path: '/personal',
+    name: 'Personal vehicles',
     page: 'Personal',
     section: 'fleet',
     title: 'GPS Trackers for Cars, Bikes & Personal Vehicles | Prakhar Technology',
@@ -95,6 +139,7 @@ export const routes = [
   },
   {
     path: '/whygps',
+    name: 'Why GPS tracking',
     page: 'WhyGps',
     section: 'fleet',
     title: 'Why GPS Vehicle Tracking? Benefits for Your Business',
@@ -104,6 +149,7 @@ export const routes = [
   },
   {
     path: '/whychoose',
+    name: 'Why choose us',
     page: 'WhyChoose',
     section: 'company',
     title: 'Why Choose Prakhar Technology',
@@ -113,6 +159,7 @@ export const routes = [
   },
   {
     path: '/fleet-savings-calculator',
+    name: 'Savings calculator',
     page: 'FleetCalculator',
     section: 'fleet',
     title: 'Fleet Fuel Savings Calculator | How Much Can GPS Tracking Save?',
@@ -122,6 +169,7 @@ export const routes = [
   },
   {
     path: '/downloads',
+    name: 'Downloads',
     page: 'Downloads',
     section: 'company',
     title: 'Downloads – Brochures & Specifications | Prakhar Technology',
@@ -130,6 +178,7 @@ export const routes = [
   },
   {
     path: '/faq',
+    name: 'GPS FAQ',
     page: 'Faq',
     section: 'fleet',
     title: 'GPS Vehicle Tracking FAQ | Prakhar Technology',
@@ -139,6 +188,7 @@ export const routes = [
   },
   {
     path: '/elidefireball',
+    name: 'Elide Fire Ball',
     page: 'ElideFireball',
     section: 'safety',
     title: 'Elide Fire Ball – Automatic Fire Extinguisher Ball | Buy in Pune',
@@ -149,6 +199,7 @@ export const routes = [
   },
   {
     path: '/elidefireball/product-overview',
+    name: 'Specs & fire classes',
     page: 'ElideProductOverview',
     section: 'safety',
     title: 'Elide Fire Ball Product Overview – Specs, Fire Classes & Installation',
@@ -158,6 +209,7 @@ export const routes = [
   },
   {
     path: '/elidefireball/faq',
+    name: 'Elide FAQ',
     page: 'ElideFaq',
     section: 'safety',
     title: 'Elide Fire Ball FAQ – How It Works, Safety & Pricing',
@@ -167,6 +219,7 @@ export const routes = [
   },
   {
     path: '/elidefireball/health-and-safety',
+    name: 'Health & safety',
     page: 'ElideHealthSafety',
     section: 'safety',
     title: 'Elide Fire Ball Health & Safety Guidelines',
@@ -175,6 +228,7 @@ export const routes = [
   },
   {
     path: '/elidefireball/disposal',
+    name: 'Returns & disposal',
     page: 'ElideDisposal',
     section: 'safety',
     title: 'Elide Fire Ball Returns & Disposal',
@@ -183,6 +237,7 @@ export const routes = [
   },
   {
     path: '/elidefireball/product-warranty',
+    name: 'Warranty',
     page: 'ElideWarranty',
     section: 'safety',
     title: 'Elide Fire Ball Warranty – Coverage & Claims',
@@ -192,6 +247,7 @@ export const routes = [
   { path: '/elidefireball/product-warrantee', redirect: '/elidefireball/product-warranty' },
   {
     path: '/elidefireball/patents',
+    name: 'Patents',
     page: 'ElidePatents',
     section: 'safety',
     title: 'Elide Fire Ball Patents & Certifications',
@@ -200,6 +256,7 @@ export const routes = [
   },
   {
     path: '/elidefireball/the-elide-fire-ball-story',
+    name: 'Our story',
     page: 'ElideStory',
     section: 'safety',
     title: 'The Elide Fire Ball Story',
@@ -208,6 +265,7 @@ export const routes = [
   },
   {
     path: '/stationery',
+    name: 'Office supplies',
     page: 'Stationery',
     section: 'workplace',
     title: 'Office Stationery, Housekeeping, PPE & Packaging Supplier in Pune',
@@ -217,6 +275,7 @@ export const routes = [
   },
   {
     path: '/gifts',
+    name: 'Corporate gifts',
     page: 'Gifts',
     section: 'workplace',
     title: 'Premium Corporate Gifts – Titan, Tanishq & More | Prakhar Technology',
@@ -226,6 +285,7 @@ export const routes = [
   },
   {
     path: '/corporate-gifting',
+    name: 'Diwali gifting 2026',
     page: 'CorporateGifting',
     section: 'workplace',
     title: 'Diwali Corporate Gifting 2026 | Branded Gifts for Clients & Employees',
@@ -233,8 +293,8 @@ export const routes = [
       'Plan Diwali corporate gifts for clients and employees: curated premium brands at every budget, custom branding, bulk orders and delivery across India.',
     priority: 0.8,
   },
-  { path: '/enquiry', page: 'OpenEnquiry', section: 'company', title: 'Send an Enquiry | Prakhar Technology', noindex: true },
-  { path: '/demo', page: 'OpenEnquiry', section: 'fleet', title: 'Book a GPS Tracking Demo | Prakhar Technology', noindex: true },
+  { path: '/enquiry', name: 'Enquiry', page: 'OpenEnquiry', section: 'company', title: 'Send an Enquiry | Prakhar Technology', noindex: true },
+  { path: '/demo', name: 'Demo', page: 'OpenEnquiry', section: 'fleet', title: 'Book a GPS Tracking Demo | Prakhar Technology', noindex: true },
 ]
 
 export const notFoundRoute = {

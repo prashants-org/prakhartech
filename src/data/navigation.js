@@ -49,10 +49,3 @@ export const navGroups = [
     ],
   },
 ]
-
-export const CTA_BY_SECTION = {
-  fleet: 'Book a Demo',
-  safety: 'Get Elide Pricing',
-  workplace: 'Request a Quote',
-  company: 'Get in Touch',
-}

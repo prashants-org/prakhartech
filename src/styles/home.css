@@ -15,40 +15,7 @@
 }
 .hm-kicker--fleet { color: var(--fleet); }
 
-.hm-section-head { max-width: 680px; margin: 0 auto 48px; text-align: center; }
-.hm-section-head h2 {
-  margin: 0 0 12px;
-  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-}
-.hm-section-head p { margin: 0; color: var(--muted); line-height: 1.7; }
-
 /* ── Buttons ── */
-.hm-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 24px;
-  border-radius: 999px;
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: transform 0.2s var(--ease-out), box-shadow 0.2s, background 0.2s;
-}
-.hm-btn:hover { transform: translateY(-2px); }
-.hm-btn--primary {
-  color: #fff;
-  background: var(--ink);
-  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.25);
-}
-.hm-btn--primary:hover { box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3); }
-.hm-btn--ghost { background: #fff; border-color: rgba(148, 163, 184, 0.45); color: var(--ink); }
-.hm-btn--fleet { background: var(--fleet); color: #fff; width: 100%; }
-.hm-btn--light { background: #fff; color: var(--ink); }
-.hm-btn--outline-light { border-color: rgba(255, 255, 255, 0.4); color: #fff; }
 
 /* ── Hero ── */
 .hm-hero {
@@ -465,15 +432,6 @@
 .hm-step p { margin: 0; color: #475569; line-height: 1.65; }
 
 /* ── CTA ── */
-.hm-cta {
-  padding: 64px 0;
-  background: linear-gradient(120deg, #1d4ed8 0%, #0f172a 45%, #0f172a 60%, #c2410c 100%);
-  color: #fff;
-}
-.hm-cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
-.hm-cta h2 { margin: 0 0 8px; font-size: clamp(1.6rem, 3vw, 2.2rem); }
-.hm-cta p { margin: 0; color: #cbd5e1; max-width: 520px; line-height: 1.6; }
-.hm-cta-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {
@@ -486,7 +444,6 @@
   .lfm-chip--b { right: 8px; }
 }
 @media (max-width: 560px) {
-  .hm-hero-actions .hm-btn { flex: 1 1 100%; }
   .lfm-chip { font-size: 0.7rem; padding: 7px 10px; }
   .lfm-chip--c { display: none; }
   .hm-door-body { padding: 22px; }
@@ -496,3 +453,4 @@
   .hm-line, .hm-em::after, .lfm, .lfm-chip, .lfm-live i, .cm-track { animation: none !important; }
   .cm { overflow-x: auto; }
 }
+.hm-full { width: 100%; }

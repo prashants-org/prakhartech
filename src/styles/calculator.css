@@ -2,23 +2,6 @@
 
 .fc { background: #fff; padding-bottom: 80px; }
 
-.fc-hero {
-  padding: clamp(40px, 6vw, 72px) 0 40px;
-  background:
-    radial-gradient(600px 260px at 90% 0%, rgba(37, 99, 235, 0.14), transparent 70%),
-    linear-gradient(180deg, #f8fafc, #fff);
-}
-.fc-crumbs { font-size: 0.85rem; color: var(--muted); margin-bottom: 18px; display: flex; gap: 8px; flex-wrap: wrap; }
-.fc-crumbs a { color: var(--fleet); font-weight: 500; }
-.fc-hero h1 {
-  margin: 0 0 14px;
-  font-size: clamp(2rem, 4.4vw, 3.2rem);
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  max-width: 780px;
-}
-.fc-hero p { margin: 0; max-width: 640px; color: #475569; font-size: 1.08rem; line-height: 1.7; }
-
 .fc-grid {
   display: grid;
   grid-template-columns: 1.2fr 1fr;

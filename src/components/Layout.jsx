@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { contactInfo } from '../data/contactInfo'
-import { CTA_BY_SECTION, navGroups } from '../data/navigation'
+import { navGroups } from '../data/navigation'
 import { trackPageview, track } from '../lib/analytics'
 import { applyHead, headFor } from '../lib/seo'
 import { findRoute, SECTIONS } from '../routes'
@@ -11,6 +11,7 @@ import ScrollToTop from './ScrollToTop'
 import SiteNav from './SiteNav'
 import { QuoteProvider } from './quote/QuoteContext'
 import QuoteDrawer, { QuoteBasketButton } from './quote/QuoteDrawer'
+import { asset } from '../lib/asset'
 
 const PhoneIcon = ({ size = 15 }) => (
   <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.01 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.13 1 .36 1.97.71 2.91a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.17-1.17a2 2 0 012.11-.45c.94.35 1.91.58 2.91.71A2 2 0 0122 14.92z"/></svg>
@@ -28,7 +29,6 @@ function Layout() {
   const [enquiry, setEnquiry] = useState(null) // null = closed, else { interest, message, source }
   const route = findRoute(location.pathname)
   const section = SECTIONS[route.section] ?? SECTIONS.company
-  const baseUrl = import.meta.env.BASE_URL
   // Animate page changes, but not the first paint (keeps LCP fast).
   const [firstPath] = useState(location.pathname)
   const hasNavigated = location.pathname !== firstPath
@@ -65,7 +65,7 @@ function Layout() {
     }
   }, [location.hash, location.pathname, section.interest])
 
-  const ctaLabel = CTA_BY_SECTION[route.section] ?? CTA_BY_SECTION.company
+  const ctaLabel = section.cta
 
   return (
     <QuoteProvider>
@@ -74,7 +74,7 @@ function Layout() {
         <header className="topbar">
           <div className="container topbar-inner">
             <Link to="/" className="brand">
-              <img src={`${baseUrl}brand/prakhar-icon.svg`} alt="" width="43" height="48" />
+              <img src={asset('brand/prakhar-icon.svg')} alt="" width="43" height="48" />
               <div>
                 <span className="brand-title">Prakhar Technology</span>
                 <span className="brand-subtitle">Fleet · Safety · Workplace Solutions</span>
@@ -110,8 +110,8 @@ function Layout() {
         <footer className="footer-modern" aria-label="Site footer">
           <div className="container footer-grid">
             <div className="footer-brand">
-              <img src={`${baseUrl}brand/prakhar-icon-reversed.svg`} alt="" width="38" height="42" className="footer-logo" />
-              <h4>Prakhar Technology</h4>
+              <img src={asset('brand/prakhar-icon-reversed.svg')} alt="" width="38" height="42" className="footer-logo" />
+              <p className="footer-brand-name">Prakhar Technology</p>
               <p>GPS fleet tracking, Elide Fire Ball fire safety and workplace supplies for businesses across India.</p>
               <address className="footer-address">
                 <p>LG 03, Phoenix Market City,<br />East Court, Viman Nagar,<br />Pune – 411014, Maharashtra</p>
@@ -127,7 +127,7 @@ function Layout() {
             </div>
             {navGroups.map((group) => (
               <div key={group.id} className={`footer-col footer-col--${group.accent}`}>
-                <h5>{group.label}</h5>
+                <h2 className="footer-col-title">{group.label}</h2>
                 <ul>
                   {group.links.map((link) => (
                     <li key={link.to}><Link to={link.to}>{link.label}</Link></li>
@@ -135,7 +135,7 @@ function Layout() {
                   {group.id === 'company' && (
                     <>
                       <li><Link to="/contact">Contact Us</Link></li>
-                      <li><button type="button" className="footer-link" onClick={() => openEnquiry({ source: 'footer' })}>Send an Enquiry</button></li>
+                      <li><button type="button" className="footer-link" onClick={() => openEnquiry({ source: 'footer' })}>Send an enquiry</button></li>
                     </>
                   )}
                 </ul>

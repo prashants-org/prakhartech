@@ -13,6 +13,12 @@ function useInView(threshold = 0.08) {
   useEffect(() => {
     const el = ref.current
     if (!el) return
+    if (typeof IntersectionObserver === 'undefined') {
+      // no observer support: just show the content
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time fallback
+      setInView(true)
+      return
+    }
     const obs = new IntersectionObserver(
       ([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect() } },
       { threshold }
@@ -22,7 +28,6 @@ function useInView(threshold = 0.08) {
   }, [threshold])
   return [ref, inView]
 }
-
 
 const CATEGORIES = ['All', ...Array.from(new Set(PRODUCTS.map((p) => p.category)))]
 const EMPTY_FORM = { name: '', email: '', phone: '', company: '', occasion: '', message: '' }
@@ -98,7 +103,7 @@ function Gifts() {
                 Custom branded, bulk-ready, delivered across India.
               </p>
               <div className="gf-hero-cta gf-anim-cta">
-                <a href="#gf-products" className="gf-cta-primary">Browse Products</a>
+                <a href="#gf-products" className="gf-cta-primary">Browse gifts</a>
                 <a href="#gf-enquiry" className="gf-cta-text">Request a quote →</a>
               </div>
             </div>
@@ -194,12 +199,12 @@ function Gifts() {
             <div className="gf-process-steps">
               {[
                 { num: '01', h: 'Share your requirements', p: "Tell us the occasion, quantity, budget, and any branding needs. We'll take it from there." },
-                { num: '02', h: 'We curate & quote',       p: 'Our team handpicks the best options and sends you a detailed quote within 24 hours.' },
+                { num: '02', h: 'We curate & quote',       p: 'Our team handpicks the best options and sends you a detailed quote within 24 business hours.' },
                 { num: '03', h: 'Branded & delivered',     p: 'Your gifts are packaged with your branding and delivered pan-India on schedule.' },
               ].map((s, i) => (
                 <div key={s.num} className="gf-step gf-reveal" style={{ '--ri': i }}>
                   <span className="gf-step-num">{s.num}</span>
-                  <div><h4>{s.h}</h4><p>{s.p}</p></div>
+                  <div><h3>{s.h}</h3><p>{s.p}</p></div>
                 </div>
               ))}
             </div>
@@ -219,7 +224,7 @@ function Gifts() {
               <p className="gf-overline gf-overline--gold">Get In Touch</p>
               <h2 className="gf-enquiry-h2">Let's plan<br />your gifting.</h2>
               <p className="gf-enquiry-body">
-                Fill in the form — our team will come back to you within 24 hours with a personalised quote, branding options, and delivery timelines.
+                Fill in the form — our team will come back to you within 24 business hours with a personalised quote, branding options, and delivery timelines.
               </p>
               <div className="gf-contact-links">
                 <a href={`mailto:${contactInfo.enquiryEmail}`} className="gf-contact-item">
@@ -292,7 +297,7 @@ function Gifts() {
                     <p className="gf-error" role="alert">Something went wrong — please email us at {contactInfo.enquiryEmail}</p>
                   )}
                   <button type="submit" className="gf-submit" disabled={form.status === 'sending'}>
-                    {form.status === 'sending' ? 'Sending…' : 'Send Enquiry'}
+                    {form.status === 'sending' ? 'Sending…' : 'Send enquiry'}
                   </button>
                   <p className="gf-form-note">Your details go directly to our team. Never shared.</p>
                 </form>

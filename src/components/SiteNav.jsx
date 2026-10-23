@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { navGroups } from '../data/navigation'
+import { asset } from '../lib/asset'
 
 // Grouped primary navigation. Desktop: click/hover opens a mega-menu panel.
 // Mobile: groups become an accordion inside the slide-down menu.
@@ -118,11 +119,11 @@ function SiteNav({ activeSection, onEnquiry }) {
             <NavLink to="/contact" className="nav-link">Contact</NavLink>
           </li>
           <li className="nav-mobile-cta">
-            <button type="button" className="primary-btn" onClick={onEnquiry}>Send an Enquiry</button>
+            <button type="button" className="primary-btn" onClick={onEnquiry}>Send an enquiry</button>
           </li>
           <li className="nav-elide-logo">
             <Link to="/elidefireball" className="nav-logo" aria-label="Elide Fire Ball">
-              <img src={`${import.meta.env.BASE_URL}images/logo2.webp`} alt="" height="28" width="84" />
+              <img src={asset('images/logo2.webp')} alt="" height="28" width="84" />
             </Link>
           </li>
         </ul>

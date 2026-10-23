@@ -6,6 +6,7 @@ import { useEnquiryForm } from '../hooks/useEnquiryForm'
 import ElideRelated from '../components/ElideRelated'
 import ElideVideoGallery from '../components/ElideVideoGallery'
 import { FIRE_CLASSES } from '../data/elide'
+import { asset } from '../lib/asset'
 
 const USE_CASES = [
   { icon: '🏠', title: 'Homes & Kitchens', desc: 'Gas cylinders, cooking areas, electrical panels — protect your family automatically.' },
@@ -32,12 +33,11 @@ const STEPS = [
 const EMPTY_FORM = { name: '', email: '', phone: '', company: '', interest: '', message: '' }
 
 function ElideFireball() {
-  const baseUrl = import.meta.env.BASE_URL
   const form = useEnquiryForm({
     initial: EMPTY_FORM,
     source: 'elide-page',
     toPayload: (v) => ({
-      subject: `Elide Fireball Enquiry – ${v.name}`,
+      subject: `Elide Fire Ball Enquiry – ${v.name}`,
       fields: { Name: v.name, Email: v.email, Phone: v.phone, Company: v.company, Interest: v.interest, Message: v.message },
     }),
   })
@@ -55,20 +55,20 @@ function ElideFireball() {
               <span className="ef-headline-accent">every second counts.</span>
             </h1>
             <p className="ef-lead">
-              The Elide Fireball is the world's first self-activating fire suppression ball.
+              The Elide Fire Ball is the world's first self-activating fire suppression ball.
               Place it. Forget it. It activates automatically on flame contact — no human action required.
             </p>
             <div className="ef-hero-actions">
-              <a href="#ef-enquiry" className="ef-btn-primary">
-                Get a Quote
+              <a href="#ef-enquiry" className="btn btn--primary">
+                Get Elide pricing
               </a>
               <a
-                href={`${baseUrl}elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf`}
+                href={asset('elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf')}
                 target="_blank"
                 rel="noreferrer"
-                className="ef-btn-ghost"
+                className="btn btn--outline-light"
               >
-                Download Manual ↗
+                Download the user manual (PDF)
               </a>
             </div>
             <div className="ef-trust-row">
@@ -80,8 +80,8 @@ function ElideFireball() {
           <div className="ef-hero-visual">
             <div className="ef-product-frame">
               <img
-                src={`${baseUrl}elidefireball/assets/img/slide.webp`}
-                alt="Elide Fireball fire suppression ball"
+                src={asset('elidefireball/assets/img/slide.webp')}
+                alt="Elide Fire Ball fire suppression ball"
                 className="ef-product-img"
               />
               <div className="ef-product-glow" aria-hidden="true" />
@@ -98,20 +98,19 @@ function ElideFireball() {
         </div>
       </section>
 
-
       {/* ── How it works ── */}
       <section className="ef-section ef-section--dark">
         <div className="container">
           <div className="ef-section-head ef-section-head--light">
             <span className="ef-label">How It Works</span>
             <h2>Three steps. Zero action needed.</h2>
-            <p>Elide Fireball requires no training, no pins, no pressure gauges. Just place it and let physics do the rest.</p>
+            <p>Elide Fire Ball requires no training, no pins, no pressure gauges. Just place it and let physics do the rest.</p>
           </div>
           <div className="ef-steps">
             {STEPS.map((step) => (
               <div key={step.num} className="ef-step-card">
                 <div className="ef-step-num">{step.num}</div>
-                <h4>{step.title}</h4>
+                <h3>{step.title}</h3>
                 <p>{step.body}</p>
               </div>
             ))}
@@ -132,28 +131,28 @@ function ElideFireball() {
               <div className="ef-fact-card">
                 <div className="ef-fact-icon">🔥</div>
                 <div>
-                  <h4>3–10 second activation</h4>
+                  <h3>3–10 second activation</h3>
                   <p>From flame contact to full suppression — faster than any manual response.</p>
                 </div>
               </div>
               <div className="ef-fact-card">
                 <div className="ef-fact-icon">📢</div>
                 <div>
-                  <h4>120 dB alert burst</h4>
+                  <h3>120 dB alert burst</h3>
                   <p>Instantly wakes occupants and nearby personnel when it activates.</p>
                 </div>
               </div>
               <div className="ef-fact-card">
                 <div className="ef-fact-icon">📐</div>
                 <div>
-                  <h4>Up to 9 m² coverage</h4>
+                  <h3>Up to 9 m² coverage</h3>
                   <p>Effective suppression radius tested and certified internationally.</p>
                 </div>
               </div>
               <div className="ef-fact-card">
                 <div className="ef-fact-icon">🔋</div>
                 <div>
-                  <h4>Zero maintenance for 5 years</h4>
+                  <h3>Zero maintenance for 5 years</h3>
                   <p>No refills, no service, no checks. Just replace after use or after 5 years.</p>
                 </div>
               </div>
@@ -168,13 +167,13 @@ function ElideFireball() {
           <div className="ef-section-head">
             <span className="ef-label">Where To Use It</span>
             <h2>Protects any space at risk</h2>
-            <p>From domestic kitchens to industrial machinery — Elide Fireball fits wherever fire risk exists.</p>
+            <p>From domestic kitchens to industrial machinery — Elide Fire Ball fits wherever fire risk exists.</p>
           </div>
           <div className="ef-usecase-grid">
             {USE_CASES.map((u) => (
               <div key={u.title} className="ef-usecase-card">
                 <span className="ef-usecase-icon" aria-hidden="true">{u.icon}</span>
-                <h4>{u.title}</h4>
+                <h3>{u.title}</h3>
                 <p>{u.desc}</p>
               </div>
             ))}
@@ -194,7 +193,7 @@ function ElideFireball() {
             {FIRE_CLASSES.map((fc) => (
               <div key={fc.cls} className="ef-class-card">
                 <div className="ef-class-badge">Class {fc.cls}</div>
-                <h4>{fc.label}</h4>
+                <h3>{fc.label}</h3>
                 <p>{fc.desc}</p>
               </div>
             ))}
@@ -207,8 +206,8 @@ function ElideFireball() {
         <div className="container ef-spec-split">
           <div className="ef-spec-visual">
             <img
-              src={`${baseUrl}elidefireball/assets/img/bt2.webp`}
-              alt="Elide Fireball product detail"
+              src={asset('elidefireball/assets/img/bt2.webp')}
+              alt="Elide Fire Ball product detail"
               loading="lazy"
               className="ef-spec-img"
             />
@@ -230,16 +229,18 @@ function ElideFireball() {
               <div className="ef-spec-row"><span>Fire classes</span><strong>A, B, C, E, F</strong></div>
             </div>
             <a
-              href={`${baseUrl}elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf`}
+              href={asset('elidefireball/assets/img/3-User-Manual-of-Elide-Fire-Ball.pdf')}
               target="_blank"
               rel="noreferrer"
-              className="ef-btn-outline"
+              className="btn btn--secondary"
             >
-              Full User Manual (PDF) ↗
+              Download the user manual (PDF)
             </a>
           </div>
         </div>
       </section>
+
+      <ElideRelated label="Product Resources" title="Everything you need to know" />
 
       {/* ── Enquiry form ── */}
       <section className="ef-section ef-section--fire" id="ef-enquiry">
@@ -282,14 +283,14 @@ function ElideFireball() {
                 <div className="ef-success-icon">✓</div>
                 <h3>Enquiry sent!</h3>
                 <p>Thank you. We'll reply to <strong>{form.submittedEmail}</strong> within 24 business hours.</p>
-                <button type="button" className="ef-btn-primary" onClick={() => form.setStatus('idle')}>
+                <button type="button" className="btn btn--primary" onClick={() => form.setStatus('idle')}>
                   Send another
                 </button>
               </div>
             ) : (
               <form className="ef-form" onSubmit={form.handleSubmit} noValidate>
                 <input {...form.honeypotProps} />
-                <h3 className="ef-form-title">Elide Fireball Enquiry</h3>
+                <h3 className="ef-form-title">Elide Fire Ball Enquiry</h3>
                 <div className="ef-form-row">
                   <div className="ef-field">
                     <label htmlFor="ef-name">Full name *</label>
@@ -336,7 +337,7 @@ function ElideFireball() {
                 )}
 
                 <button type="submit" className="ef-btn-submit" disabled={form.status === 'sending'}>
-                  {form.status === 'sending' ? 'Sending…' : 'Send Enquiry →'}
+                  {form.status === 'sending' ? 'Sending…' : 'Send enquiry'}
                 </button>
                 <p className="ef-form-note">
                   Your details are sent directly to our team and never shared with third parties.
@@ -347,7 +348,6 @@ function ElideFireball() {
         </div>
       </section>
 
-      <ElideRelated label="Product Resources" title="Everything you need to know" />
     </>
   )
 }

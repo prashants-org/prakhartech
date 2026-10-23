@@ -1,110 +1,93 @@
 import { Link } from 'react-router-dom'
-import { openEnquiry } from '../lib/enquiry'
+import CtaBand from '../components/ui/CtaBand'
+import EnquiryButton from '../components/ui/EnquiryButton'
+import PageHero from '../components/ui/PageHero'
+import SectionHead from '../components/ui/SectionHead'
+
+const BUSINESSES = [
+  {
+    accent: 'fleet',
+    title: 'GPS & fleet tracking',
+    body: 'GPS trackers, live tracking software and installation for trucks, buses, cars, bikes and specialist vehicles.',
+    to: '/vehicle-fleet',
+    link: 'Explore fleet tracking',
+  },
+  {
+    accent: 'safety',
+    title: 'Fire safety',
+    body: 'The Elide Fire Ball, an automatic fire extinguisher that needs no training and no maintenance for five years.',
+    to: '/elidefireball',
+    link: 'Meet the Elide Fire Ball',
+  },
+  {
+    accent: 'workplace',
+    title: 'Workplace supplies',
+    body: 'Office stationery, housekeeping, safety PPE, packaging, computer accessories and corporate gifts.',
+    to: '/stationery',
+    link: 'Browse office supplies',
+  },
+]
 
 function About() {
-  const baseUrl = import.meta.env.BASE_URL
-
   return (
     <>
-      <section className="page-header">
-        <div className="container">
-          <h1>About Us</h1>
-          <p>Supplier and Distributor of GPS Vehicle Tracker</p>
-        </div>
-      </section>
+      <PageHero
+        kicker="About us"
+        title="One accountable partner for fleets, fire safety and workplaces"
+        lead="Prakhar Technology began as a supplier and distributor of GPS vehicle trackers. Today the same team also brings businesses the Elide Fire Ball and a complete range of workplace supplies."
+        aside={
+          <div className="about-card">
+            <h2 className="hl-title">Our mission</h2>
+            <p>
+              To be the most trusted service and distribution partner for our customers, by delivering quality
+              products on time and at a fair price.
+            </p>
+          </div>
+        }
+      >
+        <EnquiryButton />
+        <Link to="/contact" className="btn btn--secondary">
+          Visit or call us
+        </Link>
+      </PageHero>
 
       <section className="section">
-        <div className="container about-grid">
-          <div className="about-copy">
-            <h2>Prakhar Technology</h2>
-            <p className="muted">
-              Prakhar Technology is one of India’s most reputed suppliers and distributors of GPS
-              vehicle trackers. Headquartered in Pune with regional offices in Delhi and Bangalore, we
-              specialize in GPS-based fleet automation & management and tracking software services—for
-              people, heavy vehicles, cars, or battery-operated vehicles.
-            </p>
-            <p className="muted">
-              We help businesses reduce costs, improve competitive positioning, and increase customer
-              satisfaction through reliable, scalable tracking systems.
-            </p>
-            <div className="about-actions">
-              <button
-                type="button"
-                className="primary-btn"
-                onClick={() => openEnquiry()}
-              >
-                Request a Demo
-              </button>
-              <Link to="/contact" className="secondary-btn">
-                Contact Us
+        <div className="container">
+          <SectionHead kicker="What we do" title="Three businesses, one team" lead="Every enquiry reaches the same people, whichever business it is about." />
+          <div className="biz-grid">
+            {BUSINESSES.map((b) => (
+              <Link key={b.to} to={b.to} className={`biz-card biz-card--${b.accent}`}>
+                <h3>{b.title}</h3>
+                <p>{b.body}</p>
+                <span className="biz-link">{b.link} →</span>
               </Link>
-            </div>
-          </div>
-          <div className="about-visual">
-            <img loading="lazy" src={`${baseUrl}images/whychoose.webp`} alt="Prakhar Technology" />
-            <div className="about-card">
-              <h3>Our Mission</h3>
-              <p>
-                To be the best service and distribution brand by building trust with customers while
-                providing on-time, cost effective, and quality services.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       <section className="section alt">
-        <div className="container">
-          <div className="section-title">
-            <h2>Solutions We Deliver</h2>
-            <p className="muted">Focused capabilities that serve fleets of every size.</p>
-          </div>
-          <div className="about-solutions">
-            <Link to="/vehicle-fleet" className="solution-card">
-              <img loading="lazy" src={`${baseUrl}images/icon1.webp`} alt="Fleet Solutions" />
-              <div>
-                <h4>Fleet Solutions</h4>
-                <p>Optimize routes, monitor assets, and improve productivity.</p>
-              </div>
-            </Link>
-            <Link to="/security" className="solution-card">
-              <img loading="lazy" src={`${baseUrl}images/icon2.webp`} alt="Corporate Solutions" />
-              <div>
-                <h4>Corporate Solutions</h4>
-                <p>Secure tracking for sensitive and high-value operations.</p>
-              </div>
-            </Link>
-            <Link to="/personal" className="solution-card">
-              <img loading="lazy" src={`${baseUrl}images/icon3.webp`} alt="Individual Solutions" />
-              <div>
-                <h4>Individual Solutions</h4>
-                <p>Personal GPS tracking for safety and peace of mind.</p>
-              </div>
-            </Link>
-            <Link to="/whygps" className="solution-card">
-              <img loading="lazy" src={`${baseUrl}images/icon4.webp`} alt="Why GPS" />
-              <div>
-                <h4>Why Go GPS</h4>
-                <p>Discover the advantages of live tracking and insights.</p>
-              </div>
-            </Link>
-            <Link to="/whychoose" className="solution-card">
-              <img loading="lazy" src={`${baseUrl}images/icon5.webp`} alt="Why Prakhar" />
-              <div>
-                <h4>Why Prakhar</h4>
-                <p>Trusted partner with nationwide operations and expertise.</p>
-              </div>
-            </Link>
-            <div className="solution-card">
-              <img loading="lazy" src={`${baseUrl}images/icon6.webp`} alt="Validation Approval" />
-              <div>
-                <h4>Validation Approval</h4>
-                <p>Quality-checked systems built to comply and perform.</p>
-              </div>
-            </div>
+        <div className="container about-story">
+          <SectionHead align="left" kicker="Our story" title="Built on GPS tracking" />
+          <div className="about-story-copy">
+            <p>
+              Prakhar Technology is a supplier and distributor of GPS vehicle trackers, headquartered in Pune with
+              regional offices in Delhi and Bangalore. We specialise in GPS-based fleet automation, fleet management
+              and tracking software for people, heavy vehicles, cars and battery-operated vehicles.
+            </p>
+            <p>
+              Founded by Mr Prashant Srivastava, the company has grown into a one-stop partner for the businesses
+              we serve, adding fire safety and workplace supplies so customers can rely on one team for more of
+              what they need.
+            </p>
+            <p>
+              <Link to="/whychoose" className="text-cta">Why customers choose us →</Link>
+            </p>
           </div>
         </div>
       </section>
+
+      <CtaBand />
     </>
   )
 }

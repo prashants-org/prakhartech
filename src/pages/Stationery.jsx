@@ -4,6 +4,8 @@ import { CLIENTS } from '../data/clients'
 import { contactInfo } from '../data/contactInfo'
 import AddToQuoteButton from '../components/quote/AddToQuoteButton'
 import { quoteId } from '../components/quote/quoteStore'
+import CtaBand from '../components/ui/CtaBand'
+import { asset } from '../lib/asset'
 
 const SERVICES = [
   {
@@ -129,10 +131,7 @@ const PRODUCT_SHOWCASE = [
   },
 ]
 
-
-
 function Stationery() {
-  const baseUrl = import.meta.env.BASE_URL
   return (
     <div className="st-page">
 
@@ -153,13 +152,13 @@ function Stationery() {
           <div className="st-hero-actions">
             <button
               type="button"
-              className="st-btn-primary"
+              className="btn btn--primary"
               onClick={() => openEnquiry()}
             >
-              Request a Quote
+              Request a quote
             </button>
-            <a href="#products" className="st-btn-outline">
-              View Products
+            <a href="#products" className="btn btn--secondary">
+              View products
             </a>
           </div>
         </div>
@@ -277,7 +276,7 @@ function Stationery() {
             {DIFFERENTIATORS.map((d) => (
               <div key={d.num} className="st-diff-card">
                 <span className="st-diff-num">{d.num}</span>
-                <h4>{d.title}</h4>
+                <h3>{d.title}</h3>
                 <p>{d.desc}</p>
               </div>
             ))}
@@ -310,7 +309,7 @@ function Stationery() {
                   <div key={p.name} className="st-product-card">
                     <div className="st-product-img-wrap">
                       <img
-                        src={`${baseUrl}${p.img.replace(/^\//, '')}`}
+                        src={asset(p.img)}
                         alt={p.name}
                         loading="lazy"
                       />
@@ -344,7 +343,7 @@ function Stationery() {
                 <div key={`${c.name}-${i}`} className="st-marquee-card">
                   {c.logo ? (
                     <img
-                      src={`${baseUrl}${c.logo.replace(/^\//, '')}`}
+                      src={asset(c.logo)}
                       alt={c.name}
                       className="st-marquee-logo"
                       loading="lazy"
@@ -369,29 +368,10 @@ function Stationery() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="st-cta-band">
-        <div className="st-cta-glow" aria-hidden="true" />
-        <div className="container st-cta-inner">
-          <div className="st-cta-text">
-            <span className="st-label st-label--light">Get Started</span>
-            <h2>Ready to simplify your office procurement?</h2>
-            <p>
-              Reach Mr.&nbsp;Prashant Srivastava directly at{' '}
-              <a href={`tel:${contactInfo.salesContact.phone}`}>{contactInfo.salesContact.phone}</a> or{' '}
-              <a href={`mailto:${contactInfo.salesEmail}`}>{contactInfo.salesEmail}</a> — or add
-              products to your quote basket and send one request. We reply within 24 hours.
-            </p>
-          </div>
-          <button
-            type="button"
-            className="st-cta-btn"
-            onClick={() => openEnquiry()}
-          >
-            Send an Enquiry
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </button>
-        </div>
-      </section>
+      <CtaBand
+        title="Ready to simplify your office procurement?"
+        text={`Call ${contactInfo.salesContact.name} on ${contactInfo.salesContact.phoneDisplay}, or add products to your quote basket and send one request.`}
+      />
 
     </div>
   )

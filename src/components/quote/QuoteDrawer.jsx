@@ -2,10 +2,9 @@ import { useEnquiryForm } from '../../hooks/useEnquiryForm'
 import FieldError from '../FieldError'
 import Modal from '../Modal'
 import { useQuote } from './quoteStore'
+import { asset } from '../../lib/asset'
 
 const EMPTY = { name: '', company: '', email: '', phone: '', deliverBy: '', message: '' }
-const asset = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`
-const imgSrc = (img) => (/^https?:/.test(img) ? img : asset(img))
 
 export function QuoteBasketButton() {
   const { count, open } = useQuote()
@@ -84,7 +83,7 @@ function QuoteDrawer() {
           <ul className="quote-items">
             {items.map((item) => (
               <li key={item.id} className="quote-item">
-                {item.img ? <img src={imgSrc(item.img)} alt="" loading="lazy" /> : <span className="quote-item-ph" aria-hidden="true" />}
+                {item.img ? <img src={asset(item.img)} alt="" loading="lazy" /> : <span className="quote-item-ph" aria-hidden="true" />}
                 <div className="quote-item-info">
                   <span className="quote-item-cat">{item.category}</span>
                   <span className="quote-item-name">{item.name}</span>
@@ -143,7 +142,7 @@ function QuoteDrawer() {
               <p className="enq-error">Something went wrong. Please try again or call us.</p>
             )}
             <button type="submit" className="enq-submit" disabled={form.status === 'sending'}>
-              {form.status === 'sending' ? 'Sending…' : `Request quote for ${items.length} product${items.length > 1 ? 's' : ''} →`}
+              {form.status === 'sending' ? 'Sending…' : `Request quote for ${items.length} product${items.length > 1 ? 's' : ''}`}
             </button>
           </form>
         </div>

@@ -5,8 +5,9 @@ import LiveFleetMap from '../components/home/LiveFleetMap'
 import { DEFAULT_INPUTS, estimateSavings, formatINRCompact } from '../lib/fleetSavings'
 import { openEnquiry } from '../lib/enquiry'
 import '../styles/home.css'
-
-const asset = (p) => `${import.meta.env.BASE_URL}${p}`
+import CtaBand from '../components/ui/CtaBand'
+import SectionHead from '../components/ui/SectionHead'
+import { asset } from '../lib/asset'
 
 const DOORS = [
   {
@@ -91,7 +92,7 @@ function SavingsTeaser() {
           <Link
             to="/fleet-savings-calculator"
             state={{ vehicles, kmPerDay }}
-            className="hm-btn hm-btn--fleet"
+            className="btn btn--primary hm-full"
           >
             Open the full calculator →
           </Link>
@@ -124,10 +125,10 @@ function Home() {
               fire extinguisher, and everything your workplace runs on, from stationery to corporate gifts.
             </p>
             <div className="hm-hero-actions">
-              <button type="button" className="hm-btn hm-btn--primary" onClick={() => openEnquiry({ source: 'home-hero' })}>
-                Get a free consultation
+              <button type="button" className="btn btn--primary" onClick={() => openEnquiry({ source: 'home-hero' })}>
+                Send an enquiry
               </button>
-              <a href="#solutions" className="hm-btn hm-btn--ghost">
+              <a href="#solutions" className="btn btn--secondary">
                 Explore solutions ↓
               </a>
             </div>
@@ -144,11 +145,7 @@ function Home() {
       {/* ── Three doors ── */}
       <section id="solutions" className="hm-doors-section" aria-labelledby="hm-doors-title">
         <div className="container">
-          <div className="hm-section-head">
-            <span className="hm-kicker">What we do</span>
-            <h2 id="hm-doors-title">Three businesses. One accountable partner.</h2>
-            <p>Pick where you want to start. Every enquiry reaches the same team, and we reply within 24 business hours.</p>
-          </div>
+          <SectionHead id="hm-doors-title" kicker="What we do" title="Three businesses. One accountable partner." lead="Pick where you want to start. Every enquiry reaches the same team, and we reply within 24 business hours." />
           <div className="hm-doors">
             {DOORS.map((door) => (
               <article key={door.id} className={`hm-door hm-door--${door.id}`}>
@@ -201,10 +198,7 @@ function Home() {
       {/* ── How we work ── */}
       <section className="hm-steps-section" aria-labelledby="hm-steps-title">
         <div className="container">
-          <div className="hm-section-head">
-            <span className="hm-kicker">How we work</span>
-            <h2 id="hm-steps-title">From first message to full support</h2>
-          </div>
+          <SectionHead id="hm-steps-title" kicker="How we work" title="From first message to full support" />
           <ol className="hm-steps">
             {STEPS.map((s) => (
               <li key={s.n} className="hm-step">
@@ -217,23 +211,7 @@ function Home() {
         </div>
       </section>
 
-      {/* ── Final CTA ── */}
-      <section className="hm-cta">
-        <div className="container hm-cta-inner">
-          <div>
-            <h2>Not sure where to start?</h2>
-            <p>Tell us about your fleet, building or office. We’ll recommend what fits, with no obligation.</p>
-          </div>
-          <div className="hm-cta-actions">
-            <button type="button" className="hm-btn hm-btn--light" onClick={() => openEnquiry({ source: 'home-cta' })}>
-              Send an enquiry
-            </button>
-            <Link to="/contact" className="hm-btn hm-btn--outline-light">
-              Visit or call us
-            </Link>
-          </div>
-        </div>
-      </section>
+      <CtaBand />
     </div>
   )
 }

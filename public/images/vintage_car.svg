@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" role="img" aria-label="Vintage car illustration">
+  <rect width="400" height="260" fill="#eff6ff"/>
+  <path d="M0 214h400" stroke="#bfdbfe" stroke-width="4"/>
+  <g fill="none" stroke="#1d4ed8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M58 182h-12c-6 0-10-4-10-10v-18c0-8 6-14 14-15l46-6 34-38c6-7 14-10 23-10h70c10 0 19 4 25 12l28 36 46 8c10 2 16 9 16 18v15c0 5-4 8-8 8h-10"/>
+    <path d="M134 182h134"/>
+    <path d="M154 95l-24 37h86V95z"/>
+    <path d="M236 95v37h58l-26-31c-3-4-8-6-13-6z"/>
+    <circle cx="96" cy="184" r="27"/>
+    <circle cx="306" cy="184" r="27"/>
+  </g>
+  <circle cx="96" cy="184" r="8" fill="#1d4ed8"/>
+  <circle cx="306" cy="184" r="8" fill="#1d4ed8"/>
+</svg>
