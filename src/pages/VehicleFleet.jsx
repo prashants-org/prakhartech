@@ -1,3 +1,5 @@
+import { openEnquiry } from '../lib/enquiry'
+
 const fleetSegments = (baseUrl) => [
   {
     title: 'Taxis',
@@ -185,7 +187,7 @@ function VehicleFleet() {
           <button
             type="button"
             className="primary-btn"
-            onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+            onClick={() => openEnquiry()}
           >
             Book a Demo
           </button>

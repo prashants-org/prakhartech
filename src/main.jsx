@@ -1,13 +1,22 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
+import { initAnalytics } from './lib/analytics'
 
-createRoot(document.getElementById('root')).render(
+const container = document.getElementById('root')
+const app = (
   <StrictMode>
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <App />
     </BrowserRouter>
-  </StrictMode>,
+  </StrictMode>
 )
+
+// Production pages are prerendered to static HTML (scripts/prerender.mjs),
+// so React hydrates that markup. The dev server serves an empty root.
+if (container.hasChildNodes()) hydrateRoot(container, app)
+else createRoot(container).render(app)
+
+initAnalytics()

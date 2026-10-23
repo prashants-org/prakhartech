@@ -1,4 +1,5 @@
 import ElideSubnav from '../components/ElideSubnav'
+import { openEnquiry } from '../lib/enquiry'
 
 const QUICK_FACTS = [
   { icon: '⚖️', label: '1.3 kg', desc: 'Lightweight enough for anyone to carry and throw' },
@@ -64,7 +65,7 @@ function ElideProductOverview() {
             <button
               type="button"
               className="ef-btn-ghost"
-              onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+              onClick={() => openEnquiry()}
             >
               Talk to a Specialist
             </button>
@@ -243,7 +244,7 @@ function ElideProductOverview() {
               <button
                 type="button"
                 className="ef-btn-primary"
-                onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+                onClick={() => openEnquiry()}
               >
                 Request a Quote
               </button>

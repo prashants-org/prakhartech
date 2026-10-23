@@ -8,7 +8,7 @@ function ElideSubnav() {
         <NavLink to="/elidefireball/product-overview">Product Overview</NavLink>
         <NavLink to="/elidefireball/faq">FAQ</NavLink>
         <NavLink to="/elidefireball/health-and-safety">Health &amp; Safety</NavLink>
-        <NavLink to="/elidefireball/product-warrantee">Warranty</NavLink>
+        <NavLink to="/elidefireball/product-warranty">Warranty</NavLink>
         <NavLink to="/elidefireball/patents">Patents</NavLink>
         <NavLink to="/elidefireball/the-elide-fire-ball-story">Our Story</NavLink>
       </div>

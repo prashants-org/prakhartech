@@ -1,4 +1,7 @@
+import JsonLd from '../components/JsonLd'
+import { faqSchema } from '../lib/structuredData'
 import ElideSubnav from '../components/ElideSubnav'
+import { openEnquiry } from '../lib/enquiry'
 
 const FAQS = [
   {
@@ -35,13 +38,14 @@ const FAQS = [
   },
   {
     q: 'How do I purchase or order in bulk?',
-    a: 'Contact our team via the enquiry form or email Info@prakhartech.com with your requirements. We offer competitive pricing for bulk orders, fleet deployments, and facility installations across India.',
+    a: 'Contact our team via the enquiry form or email info@prakhartech.com with your requirements. We offer competitive pricing for bulk orders, fleet deployments, and facility installations across India.',
   },
 ]
 
 function ElideFaq() {
   return (
     <>
+      <JsonLd data={faqSchema(FAQS)} />
       <section className="ef-subpage-hero">
         <div className="ef-hero-glow" aria-hidden="true" />
         <div className="container ef-subpage-inner">
@@ -60,7 +64,7 @@ function ElideFaq() {
             <button
               type="button"
               className="ef-btn-primary"
-              onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+              onClick={() => openEnquiry()}
             >
               Ask a Specialist
             </button>
@@ -83,12 +87,12 @@ function ElideFaq() {
                 type="button"
                 className="ef-btn-primary"
                 style={{ width: '100%', justifyContent: 'center' }}
-                onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+                onClick={() => openEnquiry()}
               >
                 Contact Us
               </button>
               <div className="ef-faq-contact">
-                <a href="mailto:Info@prakhartech.com">✉ Info@prakhartech.com</a>
+                <a href="mailto:info@prakhartech.com">✉ info@prakhartech.com</a>
                 <a href="tel:+919309847652">📞 +91-9309847652</a>
               </div>
             </div>
@@ -113,7 +117,7 @@ function ElideFaq() {
           <button
             type="button"
             className="ef-btn-primary"
-            onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+            onClick={() => openEnquiry()}
           >
             Send us a message →
           </button>

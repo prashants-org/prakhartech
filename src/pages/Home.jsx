@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { openEnquiry } from '../lib/enquiry'
 
 function Home() {
   const baseUrl = import.meta.env.BASE_URL
@@ -20,7 +21,7 @@ function Home() {
               <button
                 type="button"
                 className="primary-btn"
-                onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+                onClick={() => openEnquiry()}
               >
                 Request Online Demo
               </button>
@@ -190,7 +191,7 @@ function Home() {
             <button
               type="button"
               className="image-card"
-              onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+              onClick={() => openEnquiry()}
             >
               <img src={`${baseUrl}images/demo.png`} alt="Online Demo" loading="lazy" />
               <div>
@@ -211,7 +212,7 @@ function Home() {
           <button
             type="button"
             className="primary-btn"
-            onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+            onClick={() => openEnquiry()}
           >
             Book a Demo
           </button>

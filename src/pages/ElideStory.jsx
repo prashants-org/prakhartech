@@ -1,4 +1,5 @@
 import ElideSubnav from '../components/ElideSubnav'
+import { openEnquiry } from '../lib/enquiry'
 
 const TIMELINE = [
   {
@@ -56,7 +57,7 @@ function ElideStory() {
             <button
               type="button"
               className="ef-btn-primary"
-              onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+              onClick={() => openEnquiry()}
             >
               Get in Touch
             </button>
@@ -156,7 +157,7 @@ function ElideStory() {
           <button
             type="button"
             className="ef-btn-primary"
-            onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+            onClick={() => openEnquiry()}
           >
             Request a Quote →
           </button>

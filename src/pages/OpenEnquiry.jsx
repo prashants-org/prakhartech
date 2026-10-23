@@ -1,13 +1,15 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { openEnquiry } from '../lib/enquiry'
 
-function OpenEnquiry() {
+// /enquiry and /demo: deep links that open the enquiry form over the home page.
+function OpenEnquiry({ interest }) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    window.dispatchEvent(new Event('open-enquiry'))
+    openEnquiry({ interest, source: 'deep-link' })
     navigate('/', { replace: true })
-  }, [navigate])
+  }, [navigate, interest])
 
   return null
 }

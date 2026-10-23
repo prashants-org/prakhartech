@@ -1,4 +1,5 @@
 import ElideSubnav from '../components/ElideSubnav'
+import { openEnquiry } from '../lib/enquiry'
 
 const COVERAGE = [
   {
@@ -77,7 +78,7 @@ function ElideWarranty() {
             <button
               type="button"
               className="ef-btn-ghost"
-              onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+              onClick={() => openEnquiry()}
             >
               Warranty Support
             </button>
@@ -160,7 +161,7 @@ function ElideWarranty() {
           <button
             type="button"
             className="ef-btn-primary"
-            onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+            onClick={() => openEnquiry()}
           >
             Contact Warranty Team →
           </button>

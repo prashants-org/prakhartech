@@ -1,4 +1,5 @@
 import ElideSubnav from '../components/ElideSubnav'
+import { openEnquiry } from '../lib/enquiry'
 
 const PATENTS = [
   {
@@ -51,7 +52,7 @@ function ElidePatents() {
             <button
               type="button"
               className="ef-btn-primary"
-              onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+              onClick={() => openEnquiry()}
             >
               Request Documentation
             </button>
@@ -112,7 +113,7 @@ function ElidePatents() {
           <button
             type="button"
             className="ef-btn-primary"
-            onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+            onClick={() => openEnquiry()}
           >
             Request Documents →
           </button>

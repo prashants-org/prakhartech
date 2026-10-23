@@ -1,3 +1,5 @@
+import { openEnquiry } from '../lib/enquiry'
+
 const softwareShots = (baseUrl) => [
   { title: 'Software 1', image: `${baseUrl}images/sof_1.png` },
   { title: 'Software 2', image: `${baseUrl}images/sof_2.png` },
@@ -62,7 +64,7 @@ function Softwares() {
             <button
               type="button"
               className="primary-btn"
-              onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+              onClick={() => openEnquiry()}
             >
               Book a Demo
             </button>

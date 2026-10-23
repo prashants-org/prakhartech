@@ -1,3 +1,5 @@
+import { openEnquiry } from '../lib/enquiry'
+
 const securitySegments = (baseUrl) => [
   {
     title: 'Bank Mortgage Vehicles',
@@ -122,7 +124,7 @@ function Security() {
           <button
             type="button"
             className="primary-btn"
-            onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+            onClick={() => openEnquiry()}
           >
             Book a Demo
           </button>

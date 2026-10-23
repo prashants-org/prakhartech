@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { contactInfo } from '../data/contactInfo'
+import { openEnquiry } from '../lib/enquiry'
 
 function Contact() {
   const mapLocations = contactInfo.locations.filter((location) => location.address)
@@ -72,7 +73,7 @@ function Contact() {
               <button
                 type="button"
                 className="secondary-btn"
-                onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+                onClick={() => openEnquiry()}
               >
                 Start an Enquiry
               </button>

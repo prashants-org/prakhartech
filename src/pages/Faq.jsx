@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import JsonLd from '../components/JsonLd'
+import { faqSchema } from '../lib/structuredData'
 
 const faqs = [
   {
@@ -94,6 +96,7 @@ const categories = [
 function Faq() {
   return (
     <>
+      <JsonLd data={faqSchema(faqs.map((f) => ({ q: f.question, a: f.answer })))} />
       <section className="page-header faq-hero">
         <div className="container faq-hero-inner">
           <div>

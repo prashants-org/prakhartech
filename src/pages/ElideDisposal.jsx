@@ -1,10 +1,12 @@
+import { Link } from 'react-router-dom'
 import ElideSubnav from '../components/ElideSubnav'
+import { openEnquiry } from '../lib/enquiry'
 
 const RETURN_STEPS = [
   {
     num: '01',
     title: 'Contact our support team',
-    detail: 'Email Info@prakhartech.com or call us with your order reference, purchase date, and the reason for return. We will respond within 24 business hours.',
+    detail: 'Email info@prakhartech.com or call us with your order reference, purchase date, and the reason for return. We will respond within 24 business hours.',
   },
   {
     num: '02',
@@ -67,13 +69,13 @@ function ElideDisposal() {
             <button
               type="button"
               className="ef-btn-primary"
-              onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+              onClick={() => openEnquiry()}
             >
               Request a Return
             </button>
-            <a href="/elidefireball/product-warrantee" className="ef-btn-ghost">
+            <Link to="/elidefireball/product-warranty" className="ef-btn-ghost">
               Warranty Details →
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -145,7 +147,7 @@ function ElideDisposal() {
           <button
             type="button"
             className="ef-btn-primary"
-            onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+            onClick={() => openEnquiry()}
           >
             Contact Support →
           </button>

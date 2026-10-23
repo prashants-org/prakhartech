@@ -1,5 +1,7 @@
-import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import FieldError from '../components/FieldError'
+import { contactInfo } from '../data/contactInfo'
+import { useEnquiryForm } from '../hooks/useEnquiryForm'
 
 const USE_CASES = [
   { icon: '🏠', title: 'Homes & Kitchens', desc: 'Gas cylinders, cooking areas, electrical panels — protect your family automatically.' },
@@ -36,41 +38,14 @@ const EMPTY_FORM = { name: '', email: '', phone: '', company: '', interest: '', 
 
 function ElideFireball() {
   const baseUrl = import.meta.env.BASE_URL
-  const [form, setForm] = useState(EMPTY_FORM)
-  const [status, setStatus] = useState('idle') // idle | sending | success | error
-
-  function handleChange(e) {
-    const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value }))
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault()
-    setStatus('sending')
-    try {
-      const res = await fetch('https://formsubmit.co/ajax/Info@prakhartech.com', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          _subject: `Elide Fireball Enquiry – ${form.name}`,
-          Name: form.name,
-          Email: form.email,
-          Phone: form.phone,
-          Company: form.company,
-          Interest: form.interest,
-          Message: form.message,
-        }),
-      })
-      if (res.ok) {
-        setStatus('success')
-        setForm(EMPTY_FORM)
-      } else {
-        setStatus('error')
-      }
-    } catch {
-      setStatus('error')
-    }
-  }
+  const form = useEnquiryForm({
+    initial: EMPTY_FORM,
+    source: 'elide-page',
+    toPayload: (v) => ({
+      subject: `Elide Fireball Enquiry – ${v.name}`,
+      fields: { Name: v.name, Email: v.email, Phone: v.phone, Company: v.company, Interest: v.interest, Message: v.message },
+    }),
+  })
 
   return (
     <>
@@ -134,7 +109,7 @@ function ElideFireball() {
           <NavLink to="/elidefireball/product-overview">Product Overview</NavLink>
           <NavLink to="/elidefireball/faq">FAQ</NavLink>
           <NavLink to="/elidefireball/health-and-safety">Health &amp; Safety</NavLink>
-          <NavLink to="/elidefireball/product-warrantee">Warranty</NavLink>
+          <NavLink to="/elidefireball/product-warranty">Warranty</NavLink>
           <NavLink to="/elidefireball/patents">Patents</NavLink>
           <NavLink to="/elidefireball/the-elide-fire-ball-story">Our Story</NavLink>
         </div>
@@ -316,8 +291,8 @@ function ElideFireball() {
               </div>
             </div>
             <div className="ef-enquiry-contact">
-              <a href="mailto:Info@prakhartech.com" className="ef-contact-pill">
-                ✉ Info@prakhartech.com
+              <a href={`mailto:${contactInfo.enquiryEmail}`} className="ef-contact-pill">
+                ✉ {contactInfo.enquiryEmail}
               </a>
               <a href="tel:+919309847652" className="ef-contact-pill">
                 📞 +91-9309847652
@@ -326,76 +301,45 @@ function ElideFireball() {
           </div>
 
           <div className="ef-form-card">
-            {status === 'success' ? (
+            {form.status === 'success' ? (
               <div className="ef-form-success">
                 <div className="ef-success-icon">✓</div>
                 <h3>Enquiry sent!</h3>
-                <p>Thank you. We'll get back to you at your email address within 24 business hours.</p>
-                <button type="button" className="ef-btn-primary" onClick={() => setStatus('idle')}>
+                <p>Thank you. We'll reply to <strong>{form.submittedEmail}</strong> within 24 business hours.</p>
+                <button type="button" className="ef-btn-primary" onClick={() => form.setStatus('idle')}>
                   Send another
                 </button>
               </div>
             ) : (
-              <form className="ef-form" onSubmit={handleSubmit} noValidate>
+              <form className="ef-form" onSubmit={form.handleSubmit} noValidate>
+                <input {...form.honeypotProps} />
                 <h3 className="ef-form-title">Elide Fireball Enquiry</h3>
                 <div className="ef-form-row">
                   <div className="ef-field">
                     <label htmlFor="ef-name">Full name *</label>
-                    <input
-                      id="ef-name"
-                      type="text"
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      placeholder="Your full name"
-                      required
-                    />
+                    <input type="text" autoComplete="name" placeholder="Your full name" required {...form.field('name', 'ef')} />
+                    <FieldError id="ef-name" message={form.errors.name} />
                   </div>
                   <div className="ef-field">
                     <label htmlFor="ef-email">Email address *</label>
-                    <input
-                      id="ef-email"
-                      type="email"
-                      name="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      placeholder="you@company.com"
-                      required
-                    />
+                    <input type="email" autoComplete="email" placeholder="you@company.com" required {...form.field('email', 'ef')} />
+                    <FieldError id="ef-email" message={form.errors.email} />
                   </div>
                 </div>
                 <div className="ef-form-row">
                   <div className="ef-field">
                     <label htmlFor="ef-phone">Phone number</label>
-                    <input
-                      id="ef-phone"
-                      type="tel"
-                      name="phone"
-                      value={form.phone}
-                      onChange={handleChange}
-                      placeholder="+91 XXXXX XXXXX"
-                    />
+                    <input type="tel" autoComplete="tel" placeholder="+91 XXXXX XXXXX" {...form.field('phone', 'ef')} />
+                    <FieldError id="ef-phone" message={form.errors.phone} />
                   </div>
                   <div className="ef-field">
                     <label htmlFor="ef-company">Company / Organisation</label>
-                    <input
-                      id="ef-company"
-                      type="text"
-                      name="company"
-                      value={form.company}
-                      onChange={handleChange}
-                      placeholder="Your company name"
-                    />
+                    <input type="text" autoComplete="organization" placeholder="Your company name" {...form.field('company', 'ef')} />
                   </div>
                 </div>
                 <div className="ef-field">
                   <label htmlFor="ef-interest">I am interested in</label>
-                  <select
-                    id="ef-interest"
-                    name="interest"
-                    value={form.interest}
-                    onChange={handleChange}
-                  >
+                  <select {...form.field('interest', 'ef')}>
                     <option value="">Select an option</option>
                     <option value="Single unit purchase">Single unit purchase</option>
                     <option value="Bulk order / distributor">Bulk order / distributor</option>
@@ -406,28 +350,17 @@ function ElideFireball() {
                 </div>
                 <div className="ef-field">
                   <label htmlFor="ef-message">Message</label>
-                  <textarea
-                    id="ef-message"
-                    name="message"
-                    value={form.message}
-                    onChange={handleChange}
-                    placeholder="Tell us about your facility, requirements, or any questions…"
-                    rows={4}
-                  />
+                  <textarea rows={4} placeholder="Tell us about your facility, requirements, or any questions…" {...form.field('message', 'ef')} />
                 </div>
 
-                {status === 'error' && (
-                  <p className="ef-form-error">
-                    Something went wrong. Please try again or email us directly at Info@prakhartech.com
+                {form.status === 'error' && (
+                  <p className="ef-form-error" role="alert">
+                    Something went wrong. Please try again or email us directly at {contactInfo.enquiryEmail}
                   </p>
                 )}
 
-                <button
-                  type="submit"
-                  className="ef-btn-submit"
-                  disabled={status === 'sending'}
-                >
-                  {status === 'sending' ? 'Sending…' : 'Send Enquiry →'}
+                <button type="submit" className="ef-btn-submit" disabled={form.status === 'sending'}>
+                  {form.status === 'sending' ? 'Sending…' : 'Send Enquiry →'}
                 </button>
                 <p className="ef-form-note">
                   Your details are sent directly to our team and never shared with third parties.
@@ -464,7 +397,7 @@ function ElideFireball() {
               <p>Guidelines for safe handling, storage, and deployment.</p>
               <span className="ef-resource-link">Read more →</span>
             </Link>
-            <Link to="/elidefireball/product-warrantee" className="ef-resource-card">
+            <Link to="/elidefireball/product-warranty" className="ef-resource-card">
               <div className="ef-resource-icon">📜</div>
               <h4>Warranty</h4>
               <p>5-year product guarantee terms and return policies.</p>

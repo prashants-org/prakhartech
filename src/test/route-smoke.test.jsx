@@ -27,7 +27,7 @@ const routes = [
   '/elidefireball/faq',
   '/elidefireball/health-and-safety',
   '/elidefireball/disposal',
-  '/elidefireball/product-warrantee',
+  '/elidefireball/product-warranty',
   '/elidefireball/patents',
   '/elidefireball/the-elide-fire-ball-story'
 ]

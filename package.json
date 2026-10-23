@@ -1,11 +1,11 @@
 {
-  "name": "reactpage",
+  "name": "prakhartech",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && vite build --ssr src/entry-server.jsx && node scripts/prerender.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "npm run test:unit && npm run test:e2e:ui",
@@ -13,7 +13,9 @@
     "test:unit:watch": "vitest",
     "test:unit:report": "vitest run --coverage && start coverage/index.html",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "build:spa": "vite build",
+    "optimize:images": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "react": "^19.2.0",

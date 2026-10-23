@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { openEnquiry } from '../lib/enquiry'
 
 function About() {
   const baseUrl = import.meta.env.BASE_URL
@@ -30,7 +31,7 @@ function About() {
               <button
                 type="button"
                 className="primary-btn"
-                onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+                onClick={() => openEnquiry()}
               >
                 Request a Demo
               </button>

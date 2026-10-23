@@ -1,4 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
+import FieldError from '../components/FieldError'
+import AddToQuoteButton from '../components/quote/AddToQuoteButton'
+import { quoteId } from '../components/quote/quoteStore'
+import { contactInfo } from '../data/contactInfo'
+import { useEnquiryForm } from '../hooks/useEnquiryForm'
+import { GIFT_PRODUCTS as PRODUCTS } from '../data/gifts'
 
 function useInView(threshold = 0.08) {
   const ref = useRef(null)
@@ -16,90 +22,6 @@ function useInView(threshold = 0.08) {
   return [ref, inView]
 }
 
-/*
-  large: true  → tile spans 2 rows. Two large tiles anchor the mosaic:
-  index 0 (left anchor) and index 7 (right anchor).
-
-  Layout with auto-placement (3-col grid, span-2 on index 0 and 7):
-  [ 0 LARGE ] [ 1 ] [ 2 ]
-  [ 0 LARGE ] [ 3 ] [ 4 ]
-  [ 5 ] [ 6 ] [ 7 LARGE ]
-  [ 8 ] [ 9 ] [ 7 LARGE ]
-*/
-const PRODUCTS = [
-  {
-    name: 'Titan Watch',
-    category: 'Accessories',
-    tagline: 'Time, elegantly marked',
-    desc: 'Iconic Titan timepieces that carry decades of trust. A watch gifted is a memory worn every single day.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.36.45-AM.png',
-    large: true,
-  },
-  {
-    name: 'Gold Coins',
-    category: 'Tanishq',
-    tagline: 'Certified purity, lasting value',
-    desc: 'Certified gold coins from Tanishq — an auspicious and valuable gift for weddings, anniversaries, and corporate milestones.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.38.16-AM.png',
-  },
-  {
-    name: 'Skinn Festive',
-    category: 'Fragrances',
-    tagline: "A scent they won't forget",
-    desc: 'Curated festive fragrance sets by Skinn — luxurious perfumes that leave a lasting impression long after the occasion.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.36.59-AM.png',
-  },
-  {
-    name: 'Silver Articles',
-    category: 'Tanishq',
-    tagline: 'Crafted for every occasion',
-    desc: 'Exquisite silver artefacts that carry cultural significance and aesthetic beauty — perfect for pooja gifts and festive hampers.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.38.02-AM.png',
-  },
-  {
-    name: 'Diya',
-    category: 'Festive Decor',
-    tagline: 'Light up their space',
-    desc: 'Beautifully handcrafted diyas for festivals, weddings, and home decoration — a timeless gifting choice for every occasion.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.37.49-AM.png',
-  },
-  {
-    name: 'Carvaan',
-    category: 'Electronics',
-    tagline: 'Classic music, reimagined',
-    desc: 'A premium digital music player pre-loaded with thousands of classic Hindi songs — the most nostalgic gift you can give.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.39.02-AM.png',
-  },
-  {
-    name: 'Silver Coins',
-    category: 'Tanishq',
-    tagline: 'Pure silver, pure intent',
-    desc: 'Pure silver coins from Tanishq — auspicious and cherished gifts for Diwali, housewarmings, and corporate events.',
-    img: 'https://amananindia.com/wp-content/uploads/2022/11/Screenshot-2024-09-23-at-11.25.06-AM.png',
-  },
-  {
-    name: 'VIP Bags',
-    category: 'Bags',
-    tagline: 'Carry it with confidence',
-    desc: 'Premium VIP travel and lifestyle bags — a sophisticated choice for business travellers and high-value client gifts.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-11.30.48-AM.png',
-    large: true,
-  },
-  {
-    name: 'Pigeon',
-    category: 'Kitchen',
-    tagline: 'Practical, premium, purposeful',
-    desc: 'Quality kitchen appliances from Pigeon — thoughtful gifts for new homes, housewarmings, and festive occasions.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-11.39.25-AM.png',
-  },
-  {
-    name: 'IRTH Bags',
-    category: 'Bags',
-    tagline: 'Style that travels with them',
-    desc: 'Stylish and functional bags from IRTH — designed for daily use and built for corporate gifting at any scale.',
-    img: 'https://amananindia.com/wp-content/uploads/2024/09/Screenshot-2024-09-23-at-10.37.21-AM.png',
-  },
-]
 
 const CATEGORIES = ['All', ...Array.from(new Set(PRODUCTS.map((p) => p.category)))]
 const EMPTY_FORM = { name: '', email: '', phone: '', company: '', occasion: '', message: '' }
@@ -129,12 +51,10 @@ function MosaicTile({ product, index, flat }) {
         <p className="gfm-tagline">{product.tagline}</p>
         <div className="gfm-hover-reveal">
           <p className="gfm-desc">{product.desc}</p>
-          <a href="#gf-enquiry" className="gfm-enquire">
-            Enquire
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
+          <AddToQuoteButton
+            className="gfm-quote-btn"
+            product={{ id: quoteId('gift', product.name), name: product.name, brand: product.category, category: 'Corporate Gifts', img: product.img }}
+          />
         </div>
       </div>
     </article>
@@ -143,8 +63,14 @@ function MosaicTile({ product, index, flat }) {
 
 function Gifts() {
   const [activeCategory, setActiveCategory] = useState('All')
-  const [form, setForm]     = useState(EMPTY_FORM)
-  const [status, setStatus] = useState('idle')
+  const form = useEnquiryForm({
+    initial: EMPTY_FORM,
+    source: 'gifts-page',
+    toPayload: (v) => ({
+      subject: `Gifts Enquiry – ${v.occasion || 'General'} – ${v.name}`,
+      fields: { Name: v.name, Email: v.email, Phone: v.phone, Company: v.company, Occasion: v.occasion, Message: v.message },
+    }),
+  })
 
   const [catalogRef, catalogInView] = useInView()
   const [processRef, processInView] = useInView()
@@ -152,29 +78,6 @@ function Gifts() {
 
   const isFiltering = activeCategory !== 'All'
   const filtered    = isFiltering ? PRODUCTS.filter((p) => p.category === activeCategory) : PRODUCTS
-
-  function handleChange(e) {
-    const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value }))
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault()
-    setStatus('sending')
-    try {
-      const res = await fetch('https://formsubmit.co/ajax/Info@prakhartech.com', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          _subject: `Gifts Enquiry – ${form.name}`,
-          Name: form.name, Email: form.email, Phone: form.phone,
-          Company: form.company, Occasion: form.occasion, Message: form.message,
-        }),
-      })
-      if (res.ok) { setStatus('success'); setForm(EMPTY_FORM) }
-      else setStatus('error')
-    } catch { setStatus('error') }
-  }
 
   return (
     <>
@@ -318,11 +221,11 @@ function Gifts() {
                 Fill in the form — our team will come back to you within 24 hours with a personalised quote, branding options, and delivery timelines.
               </p>
               <div className="gf-contact-links">
-                <a href="mailto:Info@prakhartech.com" className="gf-contact-item">
-                  <span className="gf-contact-icon">✉</span><span>Info@prakhartech.com</span>
+                <a href={`mailto:${contactInfo.enquiryEmail}`} className="gf-contact-item">
+                  <span className="gf-contact-icon">✉</span><span>{contactInfo.enquiryEmail}</span>
                 </a>
-                <a href="tel:+919309847652" className="gf-contact-item">
-                  <span className="gf-contact-icon">↗</span><span>+91 93098 47652</span>
+                <a href={`tel:${contactInfo.phone}`} className="gf-contact-item">
+                  <span className="gf-contact-icon">↗</span><span>{contactInfo.phone}</span>
                 </a>
               </div>
               <div className="gf-guarantee-list">
@@ -334,38 +237,42 @@ function Gifts() {
             </div>
 
             <div className="gf-form-wrap gf-reveal gf-reveal--d1">
-              {status === 'success' ? (
+              {form.status === 'success' ? (
                 <div className="gf-success">
                   <div className="gf-success-check">✓</div>
                   <h3>We've got your enquiry.</h3>
                   <p>Expect a response from our team within 24 business hours.</p>
-                  <button className="gf-cta-primary" onClick={() => setStatus('idle')}>Send another</button>
+                  <button type="button" className="gf-cta-primary" onClick={() => form.setStatus('idle')}>Send another</button>
                 </div>
               ) : (
-                <form className="gf-form" onSubmit={handleSubmit} noValidate>
+                <form className="gf-form" onSubmit={form.handleSubmit} noValidate>
+                  <input {...form.honeypotProps} />
                   <div className="gf-form-row">
                     <div className="gf-field">
                       <label htmlFor="gf-name">Full name *</label>
-                      <input id="gf-name" type="text" name="name" value={form.name} onChange={handleChange} placeholder="Your name" required />
+                      <input type="text" autoComplete="name" placeholder="Your name" required {...form.field('name', 'gf')} />
+                      <FieldError id="gf-name" message={form.errors.name} />
                     </div>
                     <div className="gf-field">
                       <label htmlFor="gf-email">Email *</label>
-                      <input id="gf-email" type="email" name="email" value={form.email} onChange={handleChange} placeholder="you@company.com" required />
+                      <input type="email" autoComplete="email" placeholder="you@company.com" required {...form.field('email', 'gf')} />
+                      <FieldError id="gf-email" message={form.errors.email} />
                     </div>
                   </div>
                   <div className="gf-form-row">
                     <div className="gf-field">
                       <label htmlFor="gf-phone">Phone</label>
-                      <input id="gf-phone" type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+91 XXXXX XXXXX" />
+                      <input type="tel" autoComplete="tel" placeholder="+91 XXXXX XXXXX" {...form.field('phone', 'gf')} />
+                      <FieldError id="gf-phone" message={form.errors.phone} />
                     </div>
                     <div className="gf-field">
                       <label htmlFor="gf-company">Company</label>
-                      <input id="gf-company" type="text" name="company" value={form.company} onChange={handleChange} placeholder="Your company" />
+                      <input type="text" autoComplete="organization" placeholder="Your company" {...form.field('company', 'gf')} />
                     </div>
                   </div>
                   <div className="gf-field">
                     <label htmlFor="gf-occasion">Occasion</label>
-                    <select id="gf-occasion" name="occasion" value={form.occasion} onChange={handleChange}>
+                    <select {...form.field('occasion', 'gf')}>
                       <option value="">Select an occasion</option>
                       <option>Diwali / Festive</option>
                       <option>Wedding</option>
@@ -378,13 +285,13 @@ function Gifts() {
                   </div>
                   <div className="gf-field">
                     <label htmlFor="gf-message">Tell us more</label>
-                    <textarea id="gf-message" name="message" value={form.message} onChange={handleChange} rows={4} placeholder="Products you're interested in, quantity, budget, branding requirements…" />
+                    <textarea rows={4} placeholder="Products you're interested in, quantity, budget, branding requirements…" {...form.field('message', 'gf')} />
                   </div>
-                  {status === 'error' && (
-                    <p className="gf-error">Something went wrong — please email us at Info@prakhartech.com</p>
+                  {form.status === 'error' && (
+                    <p className="gf-error" role="alert">Something went wrong — please email us at {contactInfo.enquiryEmail}</p>
                   )}
-                  <button type="submit" className="gf-submit" disabled={status === 'sending'}>
-                    {status === 'sending' ? 'Sending…' : 'Send Enquiry'}
+                  <button type="submit" className="gf-submit" disabled={form.status === 'sending'}>
+                    {form.status === 'sending' ? 'Sending…' : 'Send Enquiry'}
                   </button>
                   <p className="gf-form-note">Your details go directly to our team. Never shared.</p>
                 </form>

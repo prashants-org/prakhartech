@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { openEnquiry } from '../lib/enquiry'
 
 const products = (baseUrl) => [
   {
@@ -52,7 +53,7 @@ function Products() {
                 <button
                   type="button"
                   className="primary-btn"
-                  onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+                  onClick={() => openEnquiry()}
                 >
                   Request a Demo
                 </button>
@@ -90,7 +91,7 @@ function Products() {
             <button
               type="button"
               className="primary-btn"
-              onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+              onClick={() => openEnquiry()}
             >
               Start an Enquiry
             </button>

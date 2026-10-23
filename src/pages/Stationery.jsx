@@ -1,3 +1,9 @@
+import { openEnquiry } from '../lib/enquiry'
+import { CLIENTS } from '../data/clients'
+import { contactInfo } from '../data/contactInfo'
+import AddToQuoteButton from '../components/quote/AddToQuoteButton'
+import { quoteId } from '../components/quote/quoteStore'
+
 const SERVICES = [
   {
     icon: (
@@ -122,35 +128,12 @@ const PRODUCT_SHOWCASE = [
   },
 ]
 
-const CLIENTS = [
-  { name: 'KPMG',              logo: '/stationery/logos/kpmg.png' },
-  { name: 'Mahindra Rise',     logo: '/stationery/logos/mahindra.png' },
-  { name: 'Lear Corporation',  logo: '/stationery/logos/lear.png' },
-  { name: 'Black & Veatch',    logo: '/stationery/logos/black-veatch.png' },
-  { name: 'Air Products',      logo: '/stationery/logos/air-products.png' },
-  { name: 'CNH Industrial',    logo: '/stationery/logos/cnh.png' },
-  { name: 'RBL Bank',          logo: '/stationery/logos/rbl.png' },
-  { name: 'Ador Welding',      logo: '/stationery/logos/ador-welding.png' },
-  { name: 'Oriental Insurance',logo: '/stationery/logos/oriental-insurance.png' },
-  { name: 'Inteva Products',   logo: '/stationery/logos/inteva.png' },
-  { name: 'Motherson Sumi',    logo: '/stationery/logos/motherson.png' },
-  { name: 'Sidel',             logo: '/stationery/logos/sidel.png' },
-  { name: 'Ducati Energia',    logo: '/stationery/logos/ducati-energia.png' },
-  { name: 'Tristone',          logo: '/stationery/logos/tristone.png' },
-  { name: 'Ador Digatron',     logo: '/stationery/logos/ador-digatron.png' },
-  { name: 'Alicon',            logo: '/stationery/logos/alicon.png' },
-  { name: 'DPK Techolyser',    logo: '/stationery/logos/dpk.png' },
-  { name: 'Plasma Biotal India', logo: '/stationery/logos/plasma-biotal.png' },
-  { name: 'Padmatech Industries', logo: '/stationery/logos/padmatech.webp' },
-  { name: 'Enpro',             logo: '/stationery/logos/enpro.svg' },
-  { name: 'Mack Valves',       logo: '/stationery/logos/mack-valves.png' },
-  { name: 'Capital',           logo: '/stationery/logos/capital.png' },
-]
+
 
 function Stationery() {
   const baseUrl = import.meta.env.BASE_URL
   return (
-    <main className="st-page">
+    <div className="st-page">
 
       {/* ── Hero ── */}
       <section className="st-hero">
@@ -170,7 +153,7 @@ function Stationery() {
             <button
               type="button"
               className="st-btn-primary"
-              onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+              onClick={() => openEnquiry()}
             >
               Request a Quote
             </button>
@@ -334,6 +317,9 @@ function Stationery() {
                     <div className="st-product-info">
                       <span className="st-product-brand">{p.brand}</span>
                       <p className="st-product-name">{p.name}</p>
+                      <AddToQuoteButton
+                        product={{ id: quoteId(cat.category, p.name), name: p.name, brand: p.brand, category: cat.category, img: p.img }}
+                      />
                     </div>
                   </div>
                 ))}
@@ -390,15 +376,15 @@ function Stationery() {
             <h2>Ready to simplify your office procurement?</h2>
             <p>
               Reach Mr.&nbsp;Prashant Srivastava directly at{' '}
-              <a href="tel:+919326950999">+91&nbsp;93269&nbsp;50999</a> or{' '}
-              <a href="mailto:prashant@prakhartech.com">prashant@prakhartech.com</a> — or send
-              an enquiry and we'll get back to you within 24 hours.
+              <a href={`tel:${contactInfo.salesContact.phone}`}>{contactInfo.salesContact.phone}</a> or{' '}
+              <a href={`mailto:${contactInfo.salesEmail}`}>{contactInfo.salesEmail}</a> — or add
+              products to your quote basket and send one request. We reply within 24 hours.
             </p>
           </div>
           <button
             type="button"
             className="st-cta-btn"
-            onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+            onClick={() => openEnquiry()}
           >
             Send an Enquiry
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -406,7 +392,7 @@ function Stationery() {
         </div>
       </section>
 
-    </main>
+    </div>
   )
 }
 

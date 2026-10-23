@@ -1,4 +1,5 @@
 import ElideSubnav from '../components/ElideSubnav'
+import { openEnquiry } from '../lib/enquiry'
 
 const GUIDELINES = [
   {
@@ -63,7 +64,7 @@ function ElideHealthSafety() {
             <button
               type="button"
               className="ef-btn-primary"
-              onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+              onClick={() => openEnquiry()}
             >
               Request Site Assessment
             </button>
@@ -140,7 +141,7 @@ function ElideHealthSafety() {
           <button
             type="button"
             className="ef-btn-primary"
-            onClick={() => window.dispatchEvent(new Event('open-enquiry'))}
+            onClick={() => openEnquiry()}
           >
             Talk to Our Team →
           </button>
