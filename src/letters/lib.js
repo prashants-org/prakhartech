@@ -102,6 +102,27 @@ export function findBlanks(letter) {
   return [...new Set(text.match(BLANK) || [])]
 }
 
+const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+const FILLABLE = ['recipient', 'subject', 'bodyHtml', 'closing', 'signatoryName', 'designation']
+
+/**
+ * The letter with the values typed in the "Fill in the blanks" panel put in place of each [blank].
+ * The draft itself keeps the [blanks], so the panel can still find them and the values can be changed.
+ */
+export function fillBlanks(letter, fills) {
+  const entries = Object.entries(fills || {}).filter(([, v]) => typeof v === 'string' && v.trim())
+  if (!entries.length) return letter
+  const out = { ...letter }
+  for (const field of FILLABLE) {
+    let text = out[field] || ''
+    for (const [blank, value] of entries) {
+      text = field === 'bodyHtml' ? text.split(escapeHtml(blank)).join(escapeHtml(value)) : text.split(blank).join(value)
+    }
+    out[field] = text
+  }
+  return out
+}
+
 /** A draft with a template's text in place of its own. */
 export function applyTemplate(draft, template) {
   return { ...draft, ...Object.fromEntries(TEMPLATE_FIELDS.map((k) => [k, template[k] ?? ''])) }

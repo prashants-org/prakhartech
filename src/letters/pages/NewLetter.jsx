@@ -3,12 +3,13 @@ import { useSession } from '../context'
 import { useFixedDoc, useLiveDoc } from '../data'
 import { issueLetter } from '../api'
 import { freshLetter, loadDraft, saveDraft, startNewDraft, takeStashNote } from '../drafts'
-import { findBlanks, isBlankLayout, formatLetterDate, formatRef, htmlToText, isBlank, istYear } from '../lib'
+import { fillBlanks, findBlanks, isBlankLayout, formatLetterDate, formatRef, htmlToText, isBlank, istYear } from '../lib'
 import { useAction, useImageAspect, useMySignature } from '../hooks'
 import { MAX_HEIGHT, WIDTH_RANGE, maxWidth, measureTextEnd, placeSignature, placeStamp, withFit } from '../placement'
 import { go } from '../router'
 import LetterSheet from '../components/LetterSheet'
 import TemplatePicker from '../components/TemplatePicker'
+import BlanksPanel from '../components/BlanksPanel'
 import Icon from '../components/Icon'
 import { Button, Dialog, Loading, Notice, PageHeader } from '../components/ui'
 
@@ -64,10 +65,15 @@ export default function NewLetter() {
     stamp: draft.stamp && stamp?.id === draft.stamp.assetId ? stamp.image : null,
   }
 
-  const blanks = findBlanks(draft)
+  // The draft keeps the [blanks]; the page and the issued letter show the values typed in the panel.
+  const fills = draft.fills || {}
+  const shown = fillBlanks(draft, fills)
+  const allBlanks = findBlanks(draft)
+  const blanks = findBlanks(shown) // still to fill in
+  const setFill = (blank, value) => update('fills', { ...fills, [blank]: value })
 
   const startIssue = () => {
-    const missing = missingParts(draft)
+    const missing = missingParts(shown)
     if (missing.length) return action.fail(`Please fill in ${missing.join(', ')} before issuing.`)
     if (blanks.length) return action.fail(`Please fill in the blanks left from the template: ${blanks.join(', ')}.`)
     action.reset()
@@ -87,7 +93,7 @@ export default function NewLetter() {
   const issue = () =>
     action.run(async () => {
       // A signature/stamp replaced since it was added is dropped rather than saved with a stale id.
-      const clean = { ...draft, signature: images.signature ? draft.signature : null, stamp: images.stamp ? draft.stamp : null }
+      const clean = { ...shown, signature: images.signature ? draft.signature : null, stamp: images.stamp ? draft.stamp : null }
       const { id } = await issueLetter({ who, draft: clean, templateId: template.id })
       saveDraft(who.email, freshLetter(profile))
       go(`/letter/${id}`)
@@ -135,6 +141,8 @@ export default function NewLetter() {
         />
       </div>
 
+      <div className={`lt-compose${allBlanks.length ? ' has-panel' : ''}`}>
+      <div className="lt-compose-main">
       <div className="lt-bar no-print">
         <div className="lt-bar-row">
           <div className="lt-chips">
@@ -201,12 +209,15 @@ export default function NewLetter() {
       </div>
 
       <div className="lt-sheet-wrap">
-        <LetterSheet template={template} letter={draft} images={images} refText={`${nextRef} (on issue)`} dateText={today} editable onChange={update} />
+        <LetterSheet template={template} letter={shown} images={images} refText={`${nextRef} (on issue)`} dateText={today} editable onChange={update} />
       </div>
       <p className="lt-hint lt-info no-print">
         <Icon name="pen" size={15} />
         Drag the signature and stamp on the page to place them.
       </p>
+      </div>
+      {allBlanks.length > 0 && <BlanksPanel blanks={allBlanks} fills={fills} onFill={setFill} />}
+      </div>
 
       {confirming && (
         <Dialog

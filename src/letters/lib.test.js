@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { applyTemplate, findBlanks, firstLine, formatRef, isBlankLayout, isDraftEmpty, istYear, letterId, letterTitle, sanitizeHtml, toCsv } from './lib'
+import { applyTemplate, fillBlanks, findBlanks, firstLine, formatRef, isBlankLayout, isDraftEmpty, istYear, letterId, letterTitle, sanitizeHtml, toCsv } from './lib'
 
 describe('letter reference numbers', () => {
   it('pads the sequence to four digits', () => {
@@ -59,6 +59,18 @@ describe('letter templates', () => {
     const blankLetter = applyTemplate({ recipient: 'x', subject: 'y', bodyHtml: '', closing: 'c' }, { recipient: '', subject: '', bodyHtml: '', closing: 'c', layout: 'blank' })
     expect(isBlankLayout(blankLetter)).toBe(true)
     expect(isBlankLayout(applyTemplate(blankLetter, { recipient: 'A', subject: 'B', bodyHtml: '', closing: 'c' }))).toBe(false)
+  })
+
+  it('puts the values typed for each [blank] into every field, keeping the draft unchanged', () => {
+    const draft = { recipient: '[Full name]\n[City]', subject: 'Offer – [Designation]', bodyHtml: '<p>Dear [Full name],</p><p>[A &amp; B]</p>', closing: 'Yours,' }
+    // A value of only spaces counts as not filled in yet.
+    const out = fillBlanks(draft, { '[Full name]': 'Asha <Rao>', '[Designation]': 'Engineer', '[City]': '  ', '[A & B]': 'x & y' })
+    expect(out.recipient).toBe('Asha <Rao>\n[City]')
+    expect(out.subject).toBe('Offer – Engineer')
+    // Typed text is escaped in the letter body, so it can't add formatting or code.
+    expect(out.bodyHtml).toBe('<p>Dear Asha &lt;Rao&gt;,</p><p>x &amp; y</p>')
+    expect(findBlanks(out)).toEqual(['[City]'])
+    expect(draft.subject).toBe('Offer – [Designation]')
   })
 
   it('names a letter by its subject, or by its first line when it has none', () => {
