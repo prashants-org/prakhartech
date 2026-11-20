@@ -1,5 +1,7 @@
 import { useRef } from 'react'
 import { sanitizeHtml } from '../lib'
+import { useImageAspect } from '../hooks'
+import { drawnWidth } from '../placement'
 import Editable from './Editable'
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v))
@@ -116,6 +118,9 @@ export default function LetterSheet({ template: t, letter, images = {}, refText,
 // A signature or stamp image placed in the space above the signatory's name. Drag to move.
 function Placed({ kind, item, src, editable, sheetRef, onMove }) {
   const drag = useRef(null)
+  const aspect = useImageAspect(src)
+  // With the size limit on, wait for the image's shape so it never flashes at full size.
+  const waiting = item.fit && !aspect
   const down = (e) => {
     if (!editable) return
     e.preventDefault()
@@ -141,7 +146,12 @@ function Placed({ kind, item, src, editable, sheetRef, onMove }) {
       alt={kind === 'stamp' ? 'Company stamp' : 'Signature'}
       draggable={false}
       className={`lh-placed lh-placed-${kind}${editable ? ' is-draggable' : ''}`}
-      style={{ left: `${item.x}mm`, top: `${item.y}mm`, width: `${item.w}mm` }}
+      style={{
+        left: `${item.x}mm`,
+        top: `${item.y}mm`,
+        width: `${drawnWidth(kind, item, aspect)}mm`,
+        visibility: waiting ? 'hidden' : undefined,
+      }}
       onPointerDown={down}
       onPointerMove={move}
       onPointerUp={up}

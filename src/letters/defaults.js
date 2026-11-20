@@ -39,10 +39,6 @@ export function imageDefaults() {
   }
 }
 
-export const DEFAULT_PLACEMENT = {
-  signature: { x: 0, y: 1, w: 42 },
-  stamp: { x: 52, y: -4, w: 32 },
-}
 
 export function emptyLetter(profile) {
   return {

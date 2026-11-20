@@ -1,5 +1,5 @@
 // Hooks shared by several pages.
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { collection, query, where } from 'firebase/firestore'
 import { db } from './firebase'
 import { useLiveQuery } from './data'
@@ -28,6 +28,22 @@ export function useAction() {
   const fail = useCallback((error) => setState({ busy: false, error, done: false }), [])
   const reset = useCallback(() => setState(IDLE), [])
   return { ...state, run, fail, reset }
+}
+
+/** Width ÷ height of an image, or undefined until it has loaded. */
+export function useImageAspect(src) {
+  const [state, setState] = useState({ src: null, aspect: undefined })
+  useEffect(() => {
+    if (!src) return
+    let live = true
+    const img = new Image()
+    img.onload = () => live && img.naturalHeight && setState({ src, aspect: img.naturalWidth / img.naturalHeight })
+    img.src = src
+    return () => {
+      live = false
+    }
+  }, [src])
+  return state.src === src ? state.aspect : undefined
 }
 
 /** The signed-in person's newest saved signature: undefined while loading, null if none. */

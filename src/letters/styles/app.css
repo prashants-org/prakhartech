@@ -438,13 +438,16 @@ img { max-width: 100%; }
   font-size: 0.86rem;
   font-weight: 600;
   color: var(--ink-2);
-  cursor: pointer;
   transition: border-color 0.2s, background 0.2s, color 0.2s;
 }
-.lt-toggle input { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); }
-.lt-toggle:has(input:checked) { background: var(--accent-soft); border-color: rgba(37, 61, 97, 0.2); color: var(--accent); }
-.lt-toggle.is-disabled { opacity: 0.55; cursor: not-allowed; }
+.lt-toggle label { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }
+.lt-toggle input[type='checkbox'] { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); }
+.lt-toggle.is-on { background: var(--accent-soft); border-color: rgba(37, 61, 97, 0.2); color: var(--accent); }
+.lt-toggle.is-disabled, .lt-toggle.is-disabled label { opacity: 0.55; cursor: not-allowed; }
 .lt-toggle .lt-range { width: 80px; margin-left: 4px; }
+/* "Fit" size limit, a smaller switch inside the same pill */
+.lt-fit { padding: 2px 9px 2px 6px; border-radius: 999px; background: #fff; border: 1px solid rgba(37, 61, 97, 0.18); font-size: 0.78rem; }
+.lt-fit input[type='checkbox'] { width: 14px; height: 14px; }
 .lt-link { font-size: 0.86rem; font-weight: 600; text-decoration: none; }
 .lt-link:hover { text-decoration: underline; }
 .lt-hint { display: flex; align-items: center; gap: 8px; margin: 12px 0 0; font-size: 0.82rem; color: var(--muted); }

@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { useSession } from '../context'
 import { useFixedDoc, useLiveDoc } from '../data'
 import { issueLetter } from '../api'
-import { DEFAULT_PLACEMENT, emptyLetter } from '../defaults'
+import { emptyLetter } from '../defaults'
 import { formatLetterDate, formatRef, htmlToText, isBlank, istYear } from '../lib'
-import { useAction, useMySignature } from '../hooks'
+import { useAction, useImageAspect, useMySignature } from '../hooks'
+import { MAX_HEIGHT, WIDTH_RANGE, maxWidth, measureTextEnd, placeSignature, placeStamp, withFit } from '../placement'
 import { go } from '../router'
 import LetterSheet from '../components/LetterSheet'
 import Icon from '../components/Icon'
@@ -62,6 +63,7 @@ export default function NewLetter() {
   const year = istYear()
   const counter = useLiveDoc('counters', String(year))
   const mySignature = useMySignature(who.email)
+  const aspect = { signature: useImageAspect(mySignature?.image), stamp: useImageAspect(stamp?.image) }
 
   if (template === undefined || counter.data === undefined) return <Loading />
   if (!template) return <Notice kind="error">The current letterhead design could not be loaded.</Notice>
@@ -76,9 +78,6 @@ export default function NewLetter() {
       saveDraft(who.email, next)
       return next
     })
-
-  const toggle = (kind, asset) => update(kind, draft[kind] ? null : { assetId: asset.id, ...DEFAULT_PLACEMENT[kind] })
-  const resize = (kind, w) => update(kind, { ...draft[kind], w: Number(w) })
 
   const nextRef = formatRef(year, (counter.data?.last || 0) + 1)
   const today = formatLetterDate()
@@ -107,23 +106,21 @@ export default function NewLetter() {
     if (window.confirm('Clear this draft and start a new letter?')) replace(freshFrom(draft, profile))
   }
 
-  const placeToggle = (kind, label, asset, max) => (
-    <label className={`lt-toggle${asset ? '' : ' is-disabled'}`}>
-      <input type="checkbox" checked={!!draft[kind]} disabled={!asset} onChange={() => toggle(kind, asset)} />
-      {label}
-      {draft[kind] && (
-        <input
-          type="range"
-          className="lt-range"
-          min="20"
-          max={max}
-          value={draft[kind].w}
-          onChange={(e) => resize(kind, e.target.value)}
-          aria-label={`${label} size`}
-        />
-      )}
-    </label>
-  )
+  const toggleSignature = () => update('signature', draft.signature ? null : placeSignature(mySignature.id))
+  // The stamp goes to its best spot each time it is turned on; it can be dragged from there.
+  const toggleStamp = () =>
+    update(
+      'stamp',
+      draft.stamp
+        ? null
+        : placeStamp(stamp.id, {
+            signature: images.signature ? draft.signature : null,
+            signatureAspect: aspect.signature,
+            stampAspect: aspect.stamp,
+            contentWidth: 210 - 2 * template.sideMargin,
+            textEnd: measureTextEnd(document.querySelector('.lt-sheet-wrap .lh-sheet')),
+          }),
+    )
 
   return (
     <div className="lt-desk">
@@ -171,13 +168,29 @@ export default function NewLetter() {
             ))}
           </div>
           <div className="lt-place">
-            {placeToggle('signature', 'My signature', mySignature, 70)}
+            <PlaceControl
+              kind="signature"
+              label="My signature"
+              available={!!mySignature}
+              item={draft.signature}
+              aspect={aspect.signature}
+              onToggle={toggleSignature}
+              onChange={(v) => update('signature', v)}
+            />
             {mySignature === null && (
               <a href="#/signature" className="lt-link">
                 Add your signature
               </a>
             )}
-            {placeToggle('stamp', 'Company stamp', stamp, 50)}
+            <PlaceControl
+              kind="stamp"
+              label="Company stamp"
+              available={!!stamp}
+              item={draft.stamp}
+              aspect={aspect.stamp}
+              onToggle={toggleStamp}
+              onChange={(v) => update('stamp', v)}
+            />
           </div>
         </div>
         {action.error && !confirming && <Notice kind="error">{action.error}</Notice>}
@@ -212,6 +225,36 @@ export default function NewLetter() {
           <p>Once issued it cannot be edited. If something is wrong, an admin can cancel it and you can issue a new one.</p>
           {action.error && <Notice kind="error">{action.error}</Notice>}
         </Dialog>
+      )}
+    </div>
+  )
+}
+
+/** On/off switch for the signature or stamp, with its size slider and the "Fit" size limit. */
+function PlaceControl({ kind, label, available, item, aspect, onToggle, onChange }) {
+  const on = !!item
+  return (
+    <div className={`lt-toggle${on ? ' is-on' : ''}${available ? '' : ' is-disabled'}`}>
+      <label className="lt-toggle-main">
+        <input type="checkbox" checked={on} disabled={!available} onChange={onToggle} />
+        {label}
+      </label>
+      {on && (
+        <>
+          <input
+            type="range"
+            className="lt-range"
+            min={WIDTH_RANGE[kind][0]}
+            max={maxWidth(kind, item.fit, aspect)}
+            value={item.w}
+            onChange={(e) => onChange({ ...item, w: Number(e.target.value) })}
+            aria-label={`${label} size`}
+          />
+          <label className="lt-fit" title={`Keep it at most ${MAX_HEIGHT[kind]} mm tall so it doesn't run over the text. Turn off to make it bigger.`}>
+            <input type="checkbox" checked={!!item.fit} onChange={(e) => onChange(withFit(kind, item, e.target.checked, aspect))} />
+            Fit
+          </label>
+        </>
       )}
     </div>
   )
