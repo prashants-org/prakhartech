@@ -16,13 +16,12 @@ export default function SignatureStamp() {
   return (
     <>
       <PageHeader
-        kicker="Signature & stamp"
         title="Your signature and the company stamp"
         lead="Images placed on your letters, like a scanned signature. They are not a certified digital signature (DSC). Letters already issued keep the signature and stamp they were issued with."
       />
 
       <div className="lt-grid-2">
-        <Card title="My signature" icon="pen" accent>
+        <Card title="My signature" icon="pen">
           <AssetPreview image={current?.image} alt="Your current signature" empty="No signature yet" />
           {current && <p className="lt-asset-meta">Saved {formatDateTime(current.createdAt)}</p>}
 
@@ -42,7 +41,7 @@ export default function SignatureStamp() {
           </div>
         </Card>
 
-        <Card title="Company stamp" icon="stamp" accent>
+        <Card title="Company stamp" icon="stamp">
           <AssetPreview image={stamp?.image} alt="Current company stamp" empty="No stamp yet" stamp />
           {isAdmin ? (
             <div className="lt-section">

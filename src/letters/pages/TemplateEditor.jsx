@@ -60,7 +60,6 @@ function EditorForm({ start, editing, categories }) {
       <div className="no-print">
         <PageHeader
           back={{ href: '#/templates', label: 'Templates' }}
-          kicker={editing ? 'Edit template' : 'New template'}
           title={editing ? editing.name : 'Write a letter template'}
           lead="Type the letter on the letterhead below. Put anything that changes from letter to letter in [square brackets], like [Full name] or [Amount], so people remember to fill it in."
           actions={

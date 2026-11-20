@@ -11,7 +11,7 @@ import { useAction } from './hooks'
 import { go, useHashPath } from './router'
 import Icon from './components/Icon'
 import Gate from './components/Gate'
-import { ICON, LOGO } from './brand'
+import { ICON, ICON_REVERSED, LOGO } from './brand'
 import { Button, Loading, Notice } from './components/ui'
 import { errorText } from './errors'
 import SignIn from './pages/SignIn'
@@ -118,10 +118,10 @@ function FirstRun({ session }) {
 const NAV = [
   { key: 'new', label: 'New letter', icon: 'plus' },
   { key: 'register', label: 'Register', icon: 'list' },
-  { key: 'templates', label: 'Templates', icon: 'file' },
+  { key: 'templates', label: 'Templates', icon: 'copy' },
   { key: 'signature', label: 'Signature & stamp', icon: 'pen' },
   { key: 'designs', label: 'Designs', icon: 'palette', admin: true },
-  { key: 'backup', label: 'Backup', icon: 'download', admin: true },
+  { key: 'backup', label: 'Backup', icon: 'database', admin: true },
 ]
 
 /** Works out the page for a hash path, and which nav item it belongs to. */
@@ -148,6 +148,7 @@ function Shell() {
   const path = useHashPath()
   const { user, profile, isAdmin } = useSession()
   const { active, page } = route(path.split('/').filter(Boolean), isAdmin)
+  const [menuOpen, setMenuOpen] = useState(false)
   const name = profile.name || user.displayName || user.email
   const initials = name
     .split(/[\s@.]+/)
@@ -156,56 +157,84 @@ function Shell() {
     .map((w) => w[0].toUpperCase())
     .join('')
 
-  // Each page starts at the top.
+  // Each page starts at the top, with the phone menu closed.
   useEffect(() => {
     window.scrollTo(0, 0)
+    setMenuOpen(false)
   }, [path])
 
+  const link = (n) => (
+    <a key={n.key} href={`#/${n.key}`} className={active === n.key ? 'is-active' : undefined} aria-current={active === n.key ? 'page' : undefined}>
+      <Icon name={n.icon} size={18} />
+      {n.label}
+    </a>
+  )
+
   return (
-    <>
-      <header className="lt-top no-print">
-        <div className="lt-top-inner">
+    <div className={`lt-app${menuOpen ? ' is-menu-open' : ''}`}>
+      <aside className="lt-side no-print" aria-label="Letter system">
+        <img className="lt-side-mark" src={ICON_REVERSED} alt="" aria-hidden="true" />
+        <div className="lt-side-top">
           <a href="#/new" className="lt-brand">
-            <img src={ICON} alt="" />
+            <img src={ICON_REVERSED} alt="" />
             <span>
               <span className="lt-brand-title">Prakhar Technology</span>
-              <span className="lt-brand-sub">Letters · staff only</span>
+              <span className="lt-brand-sub">Letter system</span>
             </span>
           </a>
-          <nav className="lt-nav" aria-label="Letter system">
-            {NAV.filter((n) => !n.admin || isAdmin).map((n) => (
-              <a key={n.key} href={`#/${n.key}`} className={active === n.key ? 'is-active' : undefined} aria-current={active === n.key ? 'page' : undefined}>
-                <Icon name={n.icon} size={16} />
-                {n.label}
-              </a>
-            ))}
+          <button
+            type="button"
+            className="lt-menu-btn"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            aria-controls="lt-side-nav"
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            <Icon name={menuOpen ? 'x' : 'menu'} />
+          </button>
+        </div>
+
+        <div className="lt-side-body" id="lt-side-nav">
+          <nav className="lt-nav">
+            <p className="lt-nav-label">Letters</p>
+            {NAV.filter((n) => !n.admin).map(link)}
+            {isAdmin && (
+              <>
+                <p className="lt-nav-label">Admin</p>
+                {NAV.filter((n) => n.admin).map(link)}
+              </>
+            )}
           </nav>
-          <div className="lt-user">
-            <span className="lt-avatar" aria-hidden="true">
-              {user.photoURL ? <img src={user.photoURL} alt="" referrerPolicy="no-referrer" /> : initials}
-            </span>
-            <span className="lt-user-text" title={user.email}>
-              <b>{name}</b>
-              <small>{isAdmin ? 'Admin' : 'Staff'}</small>
-            </span>
-            <button
-              type="button"
-              className="lt-icon-btn"
-              title="Sign out"
-              aria-label="Sign out"
-              onClick={() => {
-                signOut(auth)
-                go('/new')
-              }}
-            >
-              <Icon name="logout" />
-            </button>
+
+          <div className="lt-side-foot">
+            <div className="lt-user">
+              <span className="lt-avatar" aria-hidden="true">
+                {user.photoURL ? <img src={user.photoURL} alt="" referrerPolicy="no-referrer" /> : initials}
+              </span>
+              <span className="lt-user-text" title={user.email}>
+                <b>{name}</b>
+                <small>{isAdmin ? 'Admin' : 'Staff'}</small>
+              </span>
+              <button
+                type="button"
+                className="lt-icon-btn"
+                title="Sign out"
+                aria-label="Sign out"
+                onClick={() => {
+                  signOut(auth)
+                  go('/new')
+                }}
+              >
+                <Icon name="logout" />
+              </button>
+            </div>
+            <p className="lt-side-legal">© {new Date().getFullYear()} Prakhar Technology. All rights reserved.</p>
           </div>
         </div>
-      </header>
+      </aside>
       <main className="lt-main" key={active}>
         {page}
       </main>
-    </>
+    </div>
   )
 }

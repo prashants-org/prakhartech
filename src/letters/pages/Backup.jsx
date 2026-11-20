@@ -29,13 +29,12 @@ export default function Backup() {
   return (
     <>
       <PageHeader
-        kicker="Backup · admin"
         title="Backup and restore"
         lead="The free Firebase plan keeps no backups of its own. Download a full backup regularly (for example every month) and keep it somewhere safe, such as the company Google Drive."
       />
 
       <div className="lt-grid-2">
-        <Card title="Download a full backup" icon="download" accent>
+        <Card title="Download a full backup" icon="download">
           <p className="lt-muted lt-small">
             One file with every letter (issued and cancelled), the reference number counters, all letterhead designs, signatures and stamps, saved letter
             templates, settings, the history log and the list of allowed users.
@@ -93,7 +92,7 @@ function Restore({ who }) {
   const toAdd = file?.plan ? restoreCount(file.plan) : 0
 
   return (
-    <Card title="Restore from a backup" icon="upload" accent>
+    <Card title="Restore from a backup" icon="upload">
       <p className="lt-muted lt-small">
         Puts back anything that is missing from the system, for example after records were deleted in the Firebase console. It only ever <b>adds</b> missing
         records: nothing already here is changed or replaced. Restored records are marked as restored, with who did it and when.

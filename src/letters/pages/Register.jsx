@@ -51,7 +51,6 @@ export default function Register() {
   return (
     <>
       <PageHeader
-        kicker="Register"
         title="Issued letters"
         lead="Every letter issued on the letterhead, newest first. Open one to read, reprint or cancel it."
         actions={

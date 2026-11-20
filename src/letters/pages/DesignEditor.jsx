@@ -8,7 +8,7 @@ import { formatLetterDate } from '../lib'
 import { useAction } from '../hooks'
 import { go } from '../router'
 import LetterSheet from '../components/LetterSheet'
-import { Button, Card, Check, Field, FileInput, Loading, Notice, PageHeader } from '../components/ui'
+import { Badge, Button, Card, Check, Field, FileInput, Loading, Notice, PageHeader } from '../components/ui'
 import { templatesQuery } from '../queries'
 
 // Fields a design keeps (everything else on the saved document is bookkeeping).
@@ -71,7 +71,7 @@ function EditorForm({ start, family, version, base }) {
     <>
       <PageHeader
         back={{ href: '#/designs', label: 'Designs' }}
-        kicker={base ? `New version · v${version}` : 'New design'}
+        badge={base && <Badge tone="accent">New version v{version}</Badge>}
         title={base ? `Edit ${base.name}` : 'Upload a letterhead design'}
         lead={
           base
@@ -81,7 +81,7 @@ function EditorForm({ start, family, version, base }) {
       />
 
       <div className="lt-design-grid">
-        <Card accent>
+        <Card>
           <form onSubmit={(e) => e.preventDefault()}>
             <Field label="Design name">
               <input type="text" {...text('name')} />
@@ -182,10 +182,7 @@ function EditorForm({ start, family, version, base }) {
         </Card>
 
         <div className="lt-preview-col">
-          <p className="lt-kicker">
-            <span className="lt-dot" aria-hidden="true" />
-            Live preview
-          </p>
+          <p className="lt-section-label">Live preview</p>
           <div className="lt-preview-frame">
             <LetterSheet template={d} letter={SAMPLE_LETTER} refText="PT/2026/0000" dateText={formatLetterDate()} />
           </div>

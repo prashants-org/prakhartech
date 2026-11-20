@@ -1,5 +1,5 @@
 // Building blocks for every screen of the letters app. They follow the website's
-// look: pill buttons, kicker + headline page heads, soft rounded cards.
+// look: brand navy, clear page heads, quiet white cards.
 import { useEffect, useRef } from 'react'
 import Icon from './Icon'
 
@@ -28,8 +28,8 @@ export function Button({ variant = 'secondary', size, icon, href, className, chi
   )
 }
 
-/** Top of a page: kicker with the accent dot, headline, intro and actions on the right. */
-export function PageHeader({ kicker, title, lead, back, actions }) {
+/** Top of a page: optional back link, headline (with an optional badge beside it), intro and actions on the right. */
+export function PageHeader({ title, badge, lead, back, actions }) {
   return (
     <header className="lt-ph">
       {back && (
@@ -40,13 +40,10 @@ export function PageHeader({ kicker, title, lead, back, actions }) {
       )}
       <div className="lt-ph-row">
         <div className="lt-ph-copy">
-          {kicker && (
-            <p className="lt-kicker">
-              <span className="lt-dot" aria-hidden="true" />
-              {kicker}
-            </p>
-          )}
-          <h1>{title}</h1>
+          <h1>
+            {title}
+            {badge}
+          </h1>
           {lead && <p className="lt-lead">{lead}</p>}
         </div>
         {actions && <div className="lt-actions">{actions}</div>}

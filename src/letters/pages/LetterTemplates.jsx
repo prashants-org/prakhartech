@@ -37,7 +37,6 @@ export default function LetterTemplates() {
   return (
     <>
       <PageHeader
-        kicker="Templates"
         title="Letter templates"
         lead="Ready-made letters for common occasions. Start a letter from one, then fill in the blanks in [square brackets]. Anyone can add templates for other occasions."
         actions={
@@ -46,7 +45,15 @@ export default function LetterTemplates() {
           </Button>
         }
       />
-      {error && <Notice kind="error">Saved templates could not be loaded ({errorText(error)}). The built-in ones are still available.</Notice>}
+      {error && (
+        <Notice kind={error.code === 'permission-denied' ? 'info' : 'error'}>
+          {error.code === 'permission-denied'
+            ? isAdmin
+              ? 'Templates written by your team can’t be shown yet, because the database rules for them haven’t been published in Firebase. Publish firestore.rules to turn them on. The built-in templates below work as normal.'
+              : 'Templates written by your team aren’t switched on yet. Ask an admin to turn them on. The built-in templates below work as normal.'
+            : `Templates written by your team couldn’t be loaded: ${errorText(error)} The built-in templates below work as normal.`}
+        </Notice>
+      )}
       {action.error && <Notice kind="error">{action.error}</Notice>}
 
       {controls}

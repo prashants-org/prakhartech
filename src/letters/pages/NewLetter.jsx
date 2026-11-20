@@ -116,7 +116,6 @@ export default function NewLetter() {
     <div className="lt-desk">
       <div className="no-print">
         <PageHeader
-          kicker="New letter"
           title="Write a letter"
           lead="Type straight onto the letterhead. Your draft stays on this computer until you issue it."
           actions={

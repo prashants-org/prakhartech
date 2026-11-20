@@ -40,11 +40,7 @@ export default function LetterView({ id }) {
       <div className="no-print">
         <PageHeader
           back={{ href: '#/register', label: 'Register' }}
-          kicker={
-            <>
-              Letter <Badge status={letter.status}>{cancelled ? 'Cancelled' : 'Issued'}</Badge>
-            </>
-          }
+          badge={<Badge status={letter.status}>{cancelled ? 'Cancelled' : 'Issued'}</Badge>}
           title={letter.ref}
           lead={letter.subject}
           actions={

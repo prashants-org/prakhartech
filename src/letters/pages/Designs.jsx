@@ -48,7 +48,6 @@ export default function Designs() {
   return (
     <>
       <PageHeader
-        kicker="Designs · admin"
         title="Letterhead designs"
         lead="New letters use the current design. Changing a design saves a new version, and earlier versions are kept so old letters always reprint exactly as they were issued."
         actions={
