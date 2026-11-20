@@ -306,27 +306,75 @@ img { max-width: 100%; }
 .lt-dialog-body p { margin: 0 0 12px; line-height: 1.6; }
 .lt-dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; padding: 16px 24px 22px; }
 
-/* ── Sign-in and other full-page screens ── */
-.lt-gate { min-height: 100vh; display: grid; grid-template-rows: auto 1fr; }
-.lt-gate-top { width: var(--wrap); margin: 0 auto; padding: 22px 0; }
-.lt-gate-top img { height: 46px; display: block; }
-.lt-gate-grid { width: var(--wrap); margin: 0 auto; display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(28px, 6vw, 80px); align-items: center; padding: 24px 0 64px; }
-.lt-gate-copy h1 { margin: 0 0 16px; font-size: clamp(2.1rem, 4.4vw, 3.2rem); line-height: 1.06; letter-spacing: -0.035em; }
-.lt-gate-copy h1 em { font-style: normal; color: var(--brand-maroon); }
-.lt-gate-copy .lt-lead { font-size: 1.08rem; max-width: 520px; margin: 0 0 28px; }
-.lt-gate-copy .lt-notice { max-width: 520px; }
-.lt-gate-note { margin: 18px 0 0; font-size: 0.85rem; color: var(--muted); display: flex; align-items: center; gap: 8px; }
-.lt-gate-btn { background: #fff; color: var(--ink); border-color: rgba(148, 163, 184, 0.45); box-shadow: var(--card-shadow); }
-.lt-gate-btn:hover:not(:disabled) { border-color: var(--accent); box-shadow: var(--shadow-soft); }
-.lt-features { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
-.lt-feature { display: flex; gap: 16px; align-items: flex-start; padding: 20px; border-radius: var(--radius); background: #fff; border: 1px solid var(--line-soft); box-shadow: var(--card-shadow); }
-.lt-feature:nth-child(1) { border-left: 3px solid var(--brand-navy); }
-.lt-feature:nth-child(2) { border-left: 3px solid var(--accent-2); }
-.lt-feature:nth-child(3) { border-left: 3px solid var(--brand-maroon); }
-.lt-feature h3 { margin: 0 0 4px; font-size: 1rem; }
-.lt-feature p { margin: 0; font-size: 0.9rem; color: var(--ink-2); line-height: 1.55; }
-.lt-feature .lt-card-icon { flex: none; width: 40px; height: 40px; border-radius: 12px; }
-.lt-feature:nth-child(3) .lt-card-icon { background: rgba(114, 1, 7, 0.08); color: var(--brand-maroon); }
+/* ── Sign-in and other screens before the app opens (components/Gate.jsx) ── */
+.lt-login { min-height: 100vh; display: grid; grid-template-columns: minmax(380px, 46%) 1fr; background: #fff; }
+.lt-login-brand {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+  padding: clamp(32px, 5vw, 64px);
+  color: #fff;
+  background:
+    radial-gradient(520px 320px at 100% 0%, rgba(59, 90, 138, 0.55), transparent 70%),
+    radial-gradient(420px 280px at 0% 100%, rgba(114, 1, 7, 0.35), transparent 70%),
+    linear-gradient(150deg, var(--brand-navy) 0%, #172a45 55%, var(--ink) 100%);
+}
+.lt-login-mark { position: absolute; right: -90px; bottom: -70px; width: 420px; opacity: 0.07; pointer-events: none; }
+.lt-login-brand-inner { position: relative; margin: auto 0; max-width: 480px; }
+.lt-login-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+.lt-login-kicker .lt-dot { background: #e5484d; box-shadow: 0 0 0 4px rgba(229, 72, 77, 0.22); }
+.lt-login-headline { margin: 0 0 36px; color: #fff; font-size: clamp(1.9rem, 3.2vw, 2.7rem); line-height: 1.1; letter-spacing: -0.03em; }
+.lt-login-headline span { color: #f3a6a9; }
+.lt-login-features { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; }
+.lt-login-features li { display: flex; gap: 14px; align-items: flex-start; }
+.lt-login-features b { display: block; margin-bottom: 2px; font-size: 0.98rem; }
+.lt-login-features p { margin: 0; font-size: 0.9rem; line-height: 1.55; color: rgba(255, 255, 255, 0.7); }
+.lt-login-feature-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+.lt-login-foot { position: relative; margin: 0; font-size: 0.85rem; color: rgba(255, 255, 255, 0.55); letter-spacing: 0.04em; }
+
+.lt-login-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 48px 24px;
+  background: linear-gradient(180deg, #fff 0%, var(--soft) 100%);
+}
+.lt-login-card { width: min(420px, 100%); text-align: center; }
+.lt-login-logo { display: block; height: clamp(130px, 18vh, 170px); width: auto; margin: 0 auto 32px; }
+.lt-login-card h1 { margin: 0 0 10px; font-size: clamp(1.6rem, 2.6vw, 2rem); letter-spacing: -0.03em; }
+.lt-login-lead { margin: 0 auto 28px; max-width: 360px; color: var(--ink-2); line-height: 1.6; }
+.lt-login-body { display: grid; gap: 14px; text-align: left; }
+.lt-login-body .lt-btn { width: 100%; }
+.lt-login-body .lt-notice { margin: 0; }
+.lt-google-btn { color: var(--ink); background: #fff; border-color: rgba(148, 163, 184, 0.5); box-shadow: var(--card-shadow); }
+.lt-google-btn:hover:not(:disabled) { border-color: var(--accent); box-shadow: var(--shadow-soft); }
+.lt-login-note { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 4px 0 0; font-size: 0.84rem; color: var(--muted); }
+.lt-login-legal { margin: 0; font-size: 0.8rem; color: var(--muted); }
 
 /* ── Letter editor and viewer ── */
 .lt-desk { display: grid; gap: 20px; }
@@ -433,7 +481,11 @@ img { max-width: 100%; }
   .lt-nav::-webkit-scrollbar { display: none; }
   .lt-bar { position: static; }
   .lt-preview-col { position: static; }
-  .lt-design-grid, .lt-grid-2, .lt-gate-grid { grid-template-columns: 1fr; }
+  .lt-design-grid, .lt-grid-2 { grid-template-columns: 1fr; }
+  .lt-login { grid-template-columns: 1fr; }
+  .lt-login-panel { order: -1; min-height: auto; padding: 40px 20px 32px; }
+  .lt-login-brand { padding: 36px 24px; }
+  .lt-login-logo { height: 120px; margin-bottom: 24px; }
   .lt-main { padding-top: 24px; }
   .lt-sheet-wrap { overflow-x: auto; justify-content: flex-start; }
   .lt-sheet-wrap .lh-sheet { zoom: calc((100vw - 32px) / 794px); }

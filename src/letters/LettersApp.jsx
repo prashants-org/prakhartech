@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import { onAuthStateChanged, signInWithPopup, signInWithRedirect, signOut } from 'firebase/auth'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
-import { auth, db, googleProvider } from './firebase'
+import { auth, db } from './firebase'
 import { SessionContext, useSession } from './context'
 import { useLiveDoc } from './data'
 import { setUpSystem, whoFrom } from './api'
@@ -9,18 +9,18 @@ import { classicDefaults } from './defaults'
 import { urlToDataUrl } from './images'
 import { useAction } from './hooks'
 import { go, useHashPath } from './router'
-import Icon, { GoogleMark } from './components/Icon'
+import Icon from './components/Icon'
+import Gate from './components/Gate'
+import { ICON, LOGO } from './brand'
 import { Button, Loading, Notice } from './components/ui'
 import { errorText } from './errors'
+import SignIn from './pages/SignIn'
 import NewLetter from './pages/NewLetter'
 import Register from './pages/Register'
 import LetterView from './pages/LetterView'
 import SignatureStamp from './pages/SignatureStamp'
 import Designs from './pages/Designs'
 import DesignEditor from './pages/DesignEditor'
-
-const LOGO = '/brand/prakhar-logo.svg'
-const ICON = '/brand/prakhar-icon.svg'
 
 export default function LettersApp() {
   const [state, setState] = useState({ status: 'loading' })
@@ -57,83 +57,6 @@ export default function LettersApp() {
       <Button variant="secondary" icon="logout" onClick={() => signOut(auth)}>
         Sign in with a different account
       </Button>
-    </Gate>
-  )
-}
-
-const FEATURES = [
-  ['hash', 'Automatic reference numbers', 'Every letter gets the next number, like PT/2026/0001, and today’s date.'],
-  ['list', 'A register of every letter', 'Search, reprint or cancel letters already sent. Nothing is ever deleted.'],
-  ['stamp', 'Signature and company stamp', 'Place your signature and the stamp on the letterhead before you issue it.'],
-]
-
-/** Full-page screen in the website's hero style, used before the app itself opens. */
-function Gate({ title, lead, children }) {
-  return (
-    <div className="lt-gate">
-      <div className="lt-gate-top">
-        <img src={LOGO} alt="Prakhar Technology" />
-      </div>
-      <main className="lt-gate-grid">
-        <div className="lt-gate-copy">
-          <p className="lt-kicker">
-            <span className="lt-dot" aria-hidden="true" />
-            Staff only · Letter system
-          </p>
-          <h1>{title}</h1>
-          {lead && <p className="lt-lead">{lead}</p>}
-          {children}
-        </div>
-        <ul className="lt-features" aria-label="What the letter system does">
-          {FEATURES.map(([icon, heading, text]) => (
-            <li key={heading} className="lt-feature">
-              <span className="lt-card-icon">
-                <Icon name={icon} size={19} />
-              </span>
-              <div>
-                <h3>{heading}</h3>
-                <p>{text}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </main>
-    </div>
-  )
-}
-
-function SignIn() {
-  const [error, setError] = useState('')
-  const signIn = async () => {
-    setError('')
-    try {
-      await signInWithPopup(auth, googleProvider)
-    } catch (e) {
-      if (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-environment') {
-        await signInWithRedirect(auth, googleProvider)
-      } else if (e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {
-        setError(errorText(e))
-      }
-    }
-  }
-  return (
-    <Gate
-      title={
-        <>
-          Letters on the <em>company letterhead</em>
-        </>
-      }
-      lead="Issue letters with an automatic reference number, sign and stamp them, and look up any letter already sent."
-    >
-      <button type="button" className="lt-btn lt-btn--lg lt-gate-btn" onClick={signIn}>
-        <GoogleMark size={20} />
-        Sign in with Google
-      </button>
-      {error && <Notice kind="error">{error}</Notice>}
-      <p className="lt-gate-note">
-        <Icon name="shield" size={15} />
-        Only people an admin has added can sign in.
-      </p>
     </Gate>
   )
 }
