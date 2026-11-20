@@ -69,6 +69,7 @@ img { max-width: 100%; }
 }
 .lt-btn:hover:not(:disabled) { transform: translateY(-2px); }
 .lt-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.lt-btn[aria-busy='true'] { opacity: 1; cursor: progress; }
 .lt-btn--primary { color: #fff; background: var(--accent); box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 28%, transparent); }
 .lt-btn--primary:hover:not(:disabled) { box-shadow: 0 14px 32px color-mix(in srgb, var(--accent) 36%, transparent); }
 .lt-btn--secondary { color: var(--ink); background: #fff; border-color: rgba(148, 163, 184, 0.45); }
@@ -244,6 +245,7 @@ img { max-width: 100%; }
 .lt-notice--ok { background: var(--ok-soft); border-color: #abefc6; color: #085d3a; }
 .lt-loading { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 64px 16px; color: var(--muted); }
 .lt-spinner { width: 20px; height: 20px; border-radius: 50%; border: 2.5px solid var(--accent-soft); border-top-color: var(--accent); animation: lt-spin 0.8s linear infinite; }
+.lt-spinner--sm { width: 18px; height: 18px; border-width: 2px; }
 @keyframes lt-spin { to { transform: rotate(360deg); } }
 .lt-empty { display: grid; justify-items: center; gap: 10px; padding: 48px 16px; text-align: center; color: var(--muted); }
 .lt-empty p { margin: 0; max-width: 420px; }
