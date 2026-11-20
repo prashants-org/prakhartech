@@ -22,10 +22,12 @@ const FORMATS = [
 ]
 
 function missingParts(draft) {
+  // A blank letter is entirely up to the writer: nothing on it is required.
+  if (isBlankLayout(draft)) return []
   const body = htmlToText(draft.bodyHtml).trim()
   return [
-    !isBlankLayout(draft) && isBlank(draft.recipient) && 'the recipient',
-    !isBlankLayout(draft) && isBlank(draft.subject) && 'the subject',
+    isBlank(draft.recipient) && 'the recipient',
+    isBlank(draft.subject) && 'the subject',
     (isBlank(body) || body === 'Dear Sir / Madam,') && 'the letter text',
     isBlank(draft.signatoryName) && 'the signatory name',
   ].filter(Boolean)
