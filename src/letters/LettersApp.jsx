@@ -177,7 +177,10 @@ function Shell() {
         <img className="lt-side-mark" src={ICON_REVERSED} alt="" aria-hidden="true" />
         <div className="lt-side-top">
           <a href="#/new" className="lt-brand">
-            <img src={ICON_REVERSED} alt="" />
+            {/* The logo in its own colours, on a white tile so the navy P shows on the navy panel. */}
+            <span className="lt-brand-tile">
+              <img src={ICON} alt="" />
+            </span>
             <span>
               <span className="lt-brand-title">Prakhar Technology</span>
               <span className="lt-brand-sub">Letter system</span>
@@ -229,13 +232,16 @@ function Shell() {
                 <Icon name="logout" />
               </button>
             </div>
-            <p className="lt-side-legal">© {new Date().getFullYear()} Prakhar Technology. All rights reserved.</p>
           </div>
         </div>
       </aside>
-      <main className="lt-main" key={active}>
-        {page}
-      </main>
+      <div className="lt-content">
+        <main className="lt-main" key={active}>
+          {page}
+        </main>
+        {/* Same wording as the website footer. */}
+        <footer className="lt-legal no-print">© {new Date().getFullYear()} Prakhar Technology. All rights reserved.</footer>
+      </div>
     </div>
   )
 }

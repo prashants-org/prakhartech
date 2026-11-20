@@ -37,6 +37,7 @@ export default function NewLetter() {
   const [confirming, setConfirming] = useState(false)
   const [picking, setPicking] = useState(false)
   const [replacing, setReplacing] = useState(null) // a template waiting for "replace your draft?"
+  const [clearing, setClearing] = useState(false) // "start a new blank letter?" is open
   const action = useAction()
 
   const template = useFixedDoc('templates', settings.templateId)
@@ -92,9 +93,7 @@ export default function NewLetter() {
       go(`/letter/${id}`)
     })
 
-  const clearDraft = () => {
-    if (window.confirm('Clear this draft and start a new letter?')) replace(freshFrom(draft, profile))
-  }
+  const clearDraft = () => (isDraftEmpty(draft, emptyLetter(profile)) ? replace(freshFrom(draft, profile)) : setClearing(true))
 
   const toggleSignature = () => update('signature', draft.signature ? null : placeSignature(mySignature.id))
   // The stamp goes to its best spot each time it is turned on; it can be dragged from there.
@@ -229,6 +228,32 @@ export default function NewLetter() {
       )}
 
       {picking && <TemplatePicker onPick={pickTemplate} onClose={() => setPicking(false)} />}
+
+      {clearing && (
+        <Dialog
+          title="Start a new blank letter?"
+          onClose={() => setClearing(false)}
+          actions={
+            <>
+              <Button variant="secondary" onClick={() => setClearing(false)}>
+                Keep my draft
+              </Button>
+              <Button
+                variant="primary"
+                icon="file"
+                onClick={() => {
+                  replace(freshFrom(draft, profile))
+                  setClearing(false)
+                }}
+              >
+                Start a new letter
+              </Button>
+            </>
+          }
+        >
+          <p>What you have typed in this draft will be cleared. Your name and designation stay as they are.</p>
+        </Dialog>
+      )}
 
       {replacing && (
         <Dialog

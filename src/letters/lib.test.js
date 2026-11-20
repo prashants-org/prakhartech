@@ -70,7 +70,10 @@ describe('built-in templates', () => {
       expect(ids.has(t.id)).toBe(false)
       ids.add(t.id)
       expect(CATEGORIES).toContain(t.category)
-      for (const k of ['name', 'description', 'recipient', 'subject', 'bodyHtml', 'closing']) expect(t[k], `${t.id}.${k}`).toBeTruthy()
+      // The blank letter is empty on purpose; every other template has all its parts.
+      const required = t.id === 'builtin:blank-letter' ? ['name', 'description', 'closing'] : ['name', 'description', 'recipient', 'subject', 'bodyHtml', 'closing']
+      for (const k of required) expect(t[k], `${t.id}.${k}`).toBeTruthy()
+      for (const k of ['recipient', 'subject', 'bodyHtml']) expect(typeof t[k]).toBe('string')
       expect(sanitizeHtml(t.bodyHtml)).toBe(t.bodyHtml)
     }
     expect(BUILTIN_TEMPLATES.length).toBeGreaterThan(30)

@@ -67,7 +67,7 @@ export function useLetterTemplates() {
     // If saved templates can't be read, the built-in ones are still offered.
     if (!data && !error) return undefined
     const order = (c) => (CATEGORIES.includes(c) ? CATEGORIES.indexOf(c) : CATEGORIES.length)
-    return [...BUILTIN_TEMPLATES, ...(data || [])].sort((a, b) => order(a.category) - order(b.category) || a.category.localeCompare(b.category) || a.name.localeCompare(b.name))
+    return [...BUILTIN_TEMPLATES, ...(data || [])].sort((a, b) => (b.first ? 1 : 0) - (a.first ? 1 : 0) || order(a.category) - order(b.category) || a.category.localeCompare(b.category) || a.name.localeCompare(b.name))
   }, [data, error])
   return { templates: all, error }
 }

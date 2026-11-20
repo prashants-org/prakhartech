@@ -115,10 +115,13 @@ img { max-width: 100%; }
   color: #fff;
   background: var(--side-bg);
 }
-.lt-side-mark { position: absolute; right: -70px; bottom: 90px; width: 260px; opacity: 0.06; pointer-events: none; }
+/* The whole mark, faint, in the empty space between the links and the user card. */
+.lt-side-mark { position: absolute; left: 50%; bottom: 110px; width: 150px; transform: translateX(-50%); opacity: 0.07; filter: brightness(0) invert(1); pointer-events: none; }
+@media (max-height: 700px) { .lt-side-mark { display: none; } }
 .lt-side-top { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 20px 18px; }
 .lt-brand { display: flex; align-items: center; gap: 12px; min-width: 0; text-decoration: none; color: #fff; }
-.lt-brand img { height: 38px; width: auto; display: block; flex: none; }
+.lt-brand-tile { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: #fff; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22); }
+.lt-brand-tile img { height: 30px; width: auto; display: block; }
 .lt-brand-title { display: block; font-weight: 700; font-size: 1rem; letter-spacing: -0.01em; line-height: 1.2; color: #fff; }
 .lt-brand-sub { display: block; font-size: 0.78rem; color: rgba(255, 255, 255, 0.6); }
 .lt-menu-btn {
@@ -173,15 +176,18 @@ img { max-width: 100%; }
 .lt-user-text small { color: rgba(255, 255, 255, 0.6); font-size: 0.76rem; }
 .lt-user .lt-icon-btn { color: rgba(255, 255, 255, 0.7); }
 .lt-user .lt-icon-btn:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
-.lt-side-legal { margin: 12px 4px 0; font-size: 0.72rem; line-height: 1.4; color: rgba(255, 255, 255, 0.42); }
 
+.lt-content { margin-left: var(--side-w); min-height: 100vh; display: flex; flex-direction: column; }
 .lt-main {
-  margin-left: var(--side-w);
-  max-width: calc(1240px + var(--side-w));
-  padding: 36px clamp(20px, 3.5vw, 48px) 72px;
+  flex: 1;
+  width: 100%;
+  max-width: 1240px;
+  padding: 36px clamp(20px, 3.5vw, 48px) 56px;
   animation: lt-enter 0.32s var(--ease-out);
 }
 @keyframes lt-enter { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.lt-legal { padding: 18px clamp(20px, 3.5vw, 48px) 24px; border-top: 1px solid var(--line); font-size: 0.8rem; color: var(--muted); }
 
 /* ── Page header ── */
 .lt-ph { margin-bottom: 24px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
@@ -568,7 +574,8 @@ img { max-width: 100%; }
   .lt-side { position: sticky; top: 0; bottom: auto; width: auto; height: var(--top-h); overflow: visible; }
   .lt-side-mark { display: none; }
   .lt-side-top { height: var(--top-h); padding: 0 16px; }
-  .lt-brand img { height: 32px; }
+  .lt-brand-tile { width: 40px; height: 40px; border-radius: 10px; }
+  .lt-brand-tile img { height: 26px; }
   .lt-menu-btn { display: grid; }
   .lt-side-body {
     display: none;
@@ -583,7 +590,9 @@ img { max-width: 100%; }
   }
   .is-menu-open .lt-side-body { display: flex; }
   .lt-nav { border-top: none; }
-  .lt-main { margin-left: 0; padding: 24px 16px 56px; }
+  .lt-content { margin-left: 0; min-height: calc(100vh - var(--top-h)); }
+  .lt-main { padding: 24px 16px 40px; }
+  .lt-legal { padding: 16px; text-align: center; }
   .lt-bar { position: static; }
   .lt-preview-col { position: static; }
   .lt-design-grid, .lt-grid-2 { grid-template-columns: 1fr; }
@@ -609,5 +618,6 @@ img { max-width: 100%; }
 
 /* ── Print: only the letter ── */
 @media print {
-  .lt-main { margin-left: 0 !important; max-width: none !important; }
+  .lt-content { margin-left: 0 !important; display: block !important; min-height: 0 !important; }
+  .lt-main { max-width: none !important; }
 }

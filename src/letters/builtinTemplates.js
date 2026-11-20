@@ -231,5 +231,7 @@ export const BUILTIN_TEMPLATES = [
     'In this time [he/she] [Achievements and strengths, with one or two examples]. [He/She] is [Qualities].',
     'I am confident [he/she] will be a valuable addition to [Organisation / course]. Please contact me on [Phone / email] if you need any further information.',
   )),
+  // Shown first in every list: an empty page on the letterhead.
+  { ...T('blank-letter', 'General & official', 'Blank letter', 'An empty page on the letterhead. Write the whole letter yourself.', '', '', ''), first: true },
   T('blank', 'General & official', 'Plain letter', 'A blank letter with just the greeting and closing.', '[Recipient name]\n[Address]', '[Subject]', p(SIR, '[Write your letter here.]')),
 ]
