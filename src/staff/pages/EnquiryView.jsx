@@ -167,13 +167,13 @@ export default function EnquiryView({ id, who }) {
 
           <h3 className="sp-sub">Contact them</h3>
           <div className="sp-contact">
-            <Button variant="secondary" icon="file" href={e.email ? mailtoLink(e) : undefined} disabled={!e.email}>
+            <Button variant="secondary" icon="mail" href={e.email ? mailtoLink(e) : undefined} disabled={!e.email}>
               Email
             </Button>
             <Button variant="secondary" icon="external" href={e.phone ? whatsappLink(e) : undefined} target="_blank" rel="noreferrer" disabled={!e.phone}>
               WhatsApp
             </Button>
-            <Button variant="secondary" icon="history" href={e.phone ? telLink(e) : undefined} disabled={!e.phone}>
+            <Button variant="secondary" icon="phone" href={e.phone ? telLink(e) : undefined} disabled={!e.phone}>
               Call
             </Button>
           </div>
@@ -220,7 +220,7 @@ export default function EnquiryView({ id, who }) {
               Add as a note
             </Button>
             <span className="sp-compose-gap" />
-            <Button variant="primary" icon="file" disabled={!text.trim() || !e.email || action.busy} onClick={() => reply('email')}>
+            <Button variant="primary" icon="mail" disabled={!text.trim() || !e.email || action.busy} onClick={() => reply('email')}>
               Reply by email
             </Button>
             <Button variant="primary" icon="external" disabled={!text.trim() || !e.phone || action.busy} onClick={() => reply('whatsapp')}>
