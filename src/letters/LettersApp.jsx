@@ -25,6 +25,7 @@ import LetterTemplates from './pages/LetterTemplates'
 import TemplateEditor from './pages/TemplateEditor'
 import Backup from './pages/Backup'
 import Drafts from './pages/Drafts'
+import Home from './pages/Home'
 
 export default function LettersApp() {
   const [state, setState] = useState({ status: 'loading' })
@@ -117,6 +118,7 @@ function FirstRun({ session }) {
 }
 
 const NAV = [
+  { key: 'home', label: 'Dashboard', icon: 'grid' },
   { key: 'new', label: 'New letter', icon: 'plus' },
   { key: 'drafts', label: 'Drafts', icon: 'inbox' },
   { key: 'register', label: 'Register', icon: 'list' },
@@ -129,6 +131,7 @@ const NAV = [
 /** Works out the page for a hash path, and which nav item it belongs to. */
 function route(parts, isAdmin) {
   const [section, a, b] = parts
+  if (section === 'new') return { active: 'new', page: <NewLetter /> }
   if (section === 'register') return { active: 'register', page: <Register /> }
   if (section === 'letter' && a) return { active: 'register', page: <LetterView id={a} /> }
   if (section === 'templates') {
@@ -144,7 +147,7 @@ function route(parts, isAdmin) {
     if (a === 'new') return { active: 'designs', page: <DesignEditor key="new" mode="new-image" /> }
     return { active: 'designs', page: <Designs /> }
   }
-  return { active: 'new', page: <NewLetter /> }
+  return { active: 'home', page: <Home /> }
 }
 
 function Shell() {
@@ -181,7 +184,7 @@ function Shell() {
       <aside className="lt-side no-print" aria-label="Letter system">
         <img className="lt-side-mark" src={ICON_REVERSED} alt="" aria-hidden="true" />
         <div className="lt-side-top">
-          <a href="#/new" className="lt-brand">
+          <a href="#/" className="lt-brand">
             {/* The logo in its own colours, on a white tile so the navy P shows on the navy panel. */}
             <span className="lt-brand-tile">
               <img src={ICON} alt="" />
@@ -231,7 +234,7 @@ function Shell() {
                 aria-label="Sign out"
                 onClick={() => {
                   signOut(auth)
-                  go('/new')
+                  go('/')
                 }}
               >
                 <Icon name="logout" />

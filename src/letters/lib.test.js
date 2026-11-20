@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { applyTemplate, fillBlanks, findBlanks, firstLine, formatRef, isBlankLayout, isDraftEmpty, istYear, letterId, letterTitle, sanitizeHtml, toCsv } from './lib'
+import { applyTemplate, fillBlanks, findBlanks, firstLine, formatRef, isBlankLayout, isDraftEmpty, istMonthKey, istYear, letterId, letterTitle, sanitizeHtml, toCsv } from './lib'
 
 describe('letter reference numbers', () => {
   it('pads the sequence to four digits', () => {
@@ -16,6 +16,7 @@ describe('letter reference numbers', () => {
     // 31 Dec 2026 20:00 UTC is already 1 Jan 2027 in India
     expect(istYear(new Date('2026-12-31T20:00:00Z'))).toBe(2027)
     expect(istYear(new Date('2026-12-31T18:00:00Z'))).toBe(2026)
+    expect(istMonthKey(new Date('2026-10-31T20:00:00Z'))).toBe('2026-11')
   })
 })
 

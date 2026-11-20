@@ -1,7 +1,7 @@
 // Hash-based pages (#/register, #/letter/2026-4 …) so GitHub Pages only ever serves /letters/.
 import { useEffect, useState } from 'react'
 
-const current = () => window.location.hash.replace(/^#/, '') || '/new'
+const current = () => window.location.hash.replace(/^#/, '') || '/'
 
 export function useHashPath() {
   const [path, setPath] = useState(current)

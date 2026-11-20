@@ -12,6 +12,11 @@ export function istYear(date = new Date()) {
   return Number(new Intl.DateTimeFormat('en-IN', { year: 'numeric', timeZone: TIME_ZONE }).format(date))
 }
 
+/** Year and month in India time, e.g. "2026-11", for grouping letters by month. */
+export function istMonthKey(date = new Date()) {
+  return new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', timeZone: TIME_ZONE }).format(date)
+}
+
 export function formatLetterDate(date = new Date()) {
   return new Intl.DateTimeFormat('en-IN', { day: '2-digit', month: 'long', year: 'numeric', timeZone: TIME_ZONE }).format(date)
 }
