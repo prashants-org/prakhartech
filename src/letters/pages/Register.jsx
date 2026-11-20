@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react'
 import { useSession } from '../context'
-import { useLiveQuery } from '../data'
+import { useLiveDoc, useLiveQuery } from '../data'
+import { skipRefNumber } from '../api'
+import { useAction } from '../hooks'
 import { lettersQuery } from '../queries'
-import { downloadFile, firstLine, formatDateTime, htmlToText, letterDateText, letterTitle, toCsv } from '../lib'
+import { downloadFile, firstLine, formatDateTime, formatRef, htmlToText, istYear, letterDateText, letterTitle, toCsv } from '../lib'
 import Icon from '../components/Icon'
-import { Badge, Button, Card, Empty, Loading, Notice, PageHeader } from '../components/ui'
+import { Badge, Button, Card, Dialog, Empty, Field, Loading, Notice, PageHeader } from '../components/ui'
 import { errorText } from '../errors'
 
 const today = () => new Date().toISOString().slice(0, 10)
@@ -36,6 +38,7 @@ export default function Register() {
   const [search, setSearch] = useState('')
   const [year, setYear] = useState('all')
   const [status, setStatus] = useState('all')
+  const [skipping, setSkipping] = useState(false)
 
   const years = useMemo(() => [...new Set((letters || []).map((l) => l.year))].sort((a, b) => b - a), [letters])
   const shown = useMemo(() => {
@@ -54,11 +57,19 @@ export default function Register() {
         title="Issued letters"
         lead="Every letter issued on the letterhead, newest first. Open one to read, reprint or cancel it."
         actions={
-          <Button variant="secondary" icon="download" onClick={() => exportCsv(shown)}>
-            Export list (CSV)
-          </Button>
+          <>
+            {isAdmin && (
+              <Button variant="secondary" icon="hash" onClick={() => setSkipping(true)}>
+                Next ref number
+              </Button>
+            )}
+            <Button variant="secondary" icon="download" onClick={() => exportCsv(shown)}>
+              Export list (CSV)
+            </Button>
+          </>
         }
       />
+      {skipping && <SkipDialog onClose={() => setSkipping(false)} />}
 
       <Card flush>
         <div className="lt-filters">
@@ -134,5 +145,60 @@ export default function Register() {
         </div>
       </Card>
     </>
+  )
+}
+
+/** Admins only: move this year's numbering forward (never back). */
+function SkipDialog({ onClose }) {
+  const { who } = useSession()
+  const year = istYear()
+  const counter = useLiveDoc('counters', String(year))
+  const [value, setValue] = useState('')
+  const [reason, setReason] = useState('')
+  const action = useAction()
+
+  if (counter.data === undefined) return null
+  const last = counter.data?.last || 0
+  const next = Number(value)
+  const valid = Number.isInteger(next) && next > last + 1 && next < 100000
+
+  const save = async () => {
+    if (!valid) return action.fail(`Enter a number higher than ${last + 1}.`)
+    if (!reason.trim()) return action.fail('Please give a reason.')
+    if (await action.run(() => skipRefNumber({ who, year, next, reason: reason.trim() }))) onClose()
+  }
+
+  return (
+    <Dialog
+      title="Next reference number"
+      onClose={() => !action.busy && onClose()}
+      actions={
+        <>
+          <Button variant="secondary" disabled={action.busy} onClick={onClose}>
+            Keep {formatRef(year, last + 1)}
+          </Button>
+          <Button variant="primary" icon="check" disabled={action.busy || !valid} onClick={save}>
+            {action.busy ? 'Saving…' : valid ? `Next letter: ${formatRef(year, next)}` : 'Set number'}
+          </Button>
+        </>
+      }
+    >
+      <p>
+        The next letter issued in {year} will be <b>{formatRef(year, last + 1)}</b>. You can move the numbering forward, for example to continue from a paper
+        register. It can only go up: the numbers skipped are never used, so no two letters ever share one.
+      </p>
+      {counter.data?.skippedAt && (
+        <p className="lt-sub">
+          Last moved forward by {counter.data.skippedBy?.name} on {formatDateTime(counter.data.skippedAt)}: “{counter.data.skipReason}”.
+        </p>
+      )}
+      <Field label={`Next number (higher than ${last + 1})`}>
+        <input type="number" min={last + 2} step={1} value={value} onChange={(e) => setValue(e.target.value)} placeholder={String(last + 2)} autoFocus />
+      </Field>
+      <Field label="Reason">
+        <input type="text" value={reason} maxLength={300} onChange={(e) => setReason(e.target.value)} placeholder="e.g. Continuing from the paper register" />
+      </Field>
+      {action.error && <Notice kind="error">{action.error}</Notice>}
+    </Dialog>
   )
 }

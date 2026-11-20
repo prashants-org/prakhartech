@@ -1,5 +1,5 @@
 // Every write the letter system makes. Each one is checked again by firestore.rules.
-import { collection, doc, runTransaction, serverTimestamp, writeBatch } from 'firebase/firestore'
+import { collection, deleteField, doc, runTransaction, serverTimestamp, writeBatch } from 'firebase/firestore'
 import { db } from './firebase'
 import { dateFromKey, formatLetterDate, formatRef, isBlankLayout, istDateKey, istYear, letterDateText, letterId, letterTitle, sanitizeHtml } from './lib'
 
@@ -24,7 +24,9 @@ export function issueLetter({ who, draft, templateId, letterDate = istDateKey() 
     const seq = (counter.exists() ? counter.data().last : 0) + 1
     const id = letterId(year, seq)
     const ref = formatRef(year, seq)
-    tx.set(counterRef, { last: seq })
+    // update, not set: an admin may have skipped numbers ahead, and that note stays on the counter.
+    if (counter.exists()) tx.update(counterRef, { last: seq })
+    else tx.set(counterRef, { last: seq })
     tx.set(doc(db, 'letters', id), {
       ref,
       year,
@@ -66,6 +68,90 @@ export async function changeLetterDate({ who, letter, letterDate, reason }) {
   })
   addAudit(batch, who, 'letters', 'letter.redated', { ref: letter.ref, from: letterDateText(letter), to: formatLetterDate(dateFromKey(letterDate)), reason })
   await batch.commit()
+}
+
+/**
+ * Admins only: moves this year's numbering forward so the next letter gets `next` (numbers in
+ * between are never used). Numbers can only go up.
+ */
+export function skipRefNumber({ who, year, next, reason }) {
+  const counterRef = doc(db, 'counters', String(year))
+  return runTransaction(db, async (tx) => {
+    const counter = await tx.get(counterRef)
+    const last = counter.exists() ? counter.data().last : 0
+    if (!Number.isInteger(next) || next - 1 <= last) throw new Error(`The next number must be higher than ${formatRef(year, last + 1)}.`)
+    const data = { last: next - 1, skippedAt: serverTimestamp(), skippedBy: who, skipReason: reason }
+    if (counter.exists()) tx.update(counterRef, data)
+    else tx.set(counterRef, data)
+    addAudit(tx, who, 'letters', 'ref.skipped', { year, from: formatRef(year, last + 1), to: formatRef(year, next), reason })
+  })
+}
+
+/** Admins only: brings a cancelled letter back as issued. The cancellation is kept on it as `lastCancelled`. */
+export async function reinstateLetter({ who, letter, reason }) {
+  const batch = writeBatch(db)
+  batch.update(doc(db, 'letters', letter.id), {
+    status: 'issued',
+    cancelledAt: deleteField(),
+    cancelledBy: deleteField(),
+    cancelReason: deleteField(),
+    lastCancelled: { at: letter.cancelledAt || null, by: letter.cancelledBy || null, reason: letter.cancelReason || '' },
+    reinstatedAt: serverTimestamp(),
+    reinstatedBy: who,
+    reinstateReason: reason,
+  })
+  addAudit(batch, who, 'letters', 'letter.reinstated', { ref: letter.ref, reason })
+  await batch.commit()
+}
+
+// The parts of an issued letter an admin can edit. Each edit keeps the text it replaced as a version.
+export const EDITABLE_FIELDS = [
+  ['recipient', 'Recipient'],
+  ['subject', 'Subject'],
+  ['bodyHtml', 'Letter text'],
+  ['closing', 'Closing'],
+  ['signatoryName', 'Signatory name'],
+  ['designation', 'Designation'],
+]
+const clean = (key, value) => (key === 'bodyHtml' ? sanitizeHtml(value || '') : (value || '').trim())
+
+/** The fields an edit would change ([] when it changes nothing). */
+export function editedFields(letter, draft) {
+  return EDITABLE_FIELDS.filter(([k]) => clean(k, draft[k]) !== clean(k, letter[k])).map(([k]) => k)
+}
+
+/**
+ * Admins only: saves new text for an issued letter. The text it replaces is kept as version N in
+ * letterVersions, and the letter becomes version N + 1. Nothing is saved when nothing changed.
+ */
+export async function editLetter({ who, letter, draft, reason }) {
+  const changed = editedFields(letter, draft)
+  if (!changed.length) return { changed: [] }
+  const version = letter.version || 1
+  const batch = writeBatch(db)
+  batch.set(doc(db, 'letterVersions', `${letter.id}-v${version}`), {
+    letterId: letter.id,
+    ref: letter.ref,
+    version,
+    ...Object.fromEntries(EDITABLE_FIELDS.map(([k]) => [k, letter[k] || ''])),
+    // Who wrote this version and when: the issuer, or whoever made the previous edit.
+    writtenAt: letter.editedAt || letter.issuedAt || null,
+    writtenBy: letter.editedBy || letter.issuedBy || null,
+    writtenReason: letter.editReason || '',
+    savedAt: serverTimestamp(),
+    savedBy: who,
+  })
+  batch.update(doc(db, 'letters', letter.id), {
+    ...Object.fromEntries(changed.map((k) => [k, clean(k, draft[k])])),
+    version: version + 1,
+    editedAt: serverTimestamp(),
+    editedBy: who,
+    editReason: reason,
+  })
+  const labels = Object.fromEntries(EDITABLE_FIELDS)
+  addAudit(batch, who, 'letters', 'letter.edited', { ref: letter.ref, version: version + 1, changed: changed.map((k) => labels[k]), reason })
+  await batch.commit()
+  return { changed }
 }
 
 export async function cancelLetter({ who, letter, reason }) {

@@ -20,6 +20,7 @@ import SignIn from './pages/SignIn'
 import NewLetter from './pages/NewLetter'
 import Register from './pages/Register'
 import LetterView from './pages/LetterView'
+import LetterEdit from './pages/LetterEdit'
 import SignatureStamp from './pages/SignatureStamp'
 import Designs from './pages/Designs'
 import DesignEditor from './pages/DesignEditor'
@@ -143,6 +144,7 @@ function route(parts, isAdmin) {
   const [section, a, b] = parts
   if (section === 'new') return { active: 'new', page: <NewLetter /> }
   if (section === 'register') return { active: 'register', page: <Register /> }
+  if (section === 'letter' && a && b === 'edit' && isAdmin) return { active: 'register', page: <LetterEdit key={a} id={a} /> }
   if (section === 'letter' && a) return { active: 'register', page: <LetterView id={a} /> }
   if (section === 'templates') {
     if (a === 'new') return { active: 'templates', page: <TemplateEditor key={`new-${b}`} mode={b === 'draft' ? 'draft' : 'new'} /> }

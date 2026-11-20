@@ -13,13 +13,15 @@ rules_version = '2';
 //   site editors          change the website's client logos and contact details (site/*):
 //                         admins, and staff whose allowedUsers record has siteEditor: true
 //   everyone              read the website content (site/*), which the public pages show
-//   admin                 everything staff can, plus cancel letters, date a letter another day of
-//                         its year (when issuing or afterwards), manage designs and the stamp,
+//   admin                 everything staff can, plus cancel and reinstate letters, edit an issued
+//                         letter's text (each earlier text kept in letterVersions), date a letter
+//                         another day of its year, move the next reference number forward (never
+//                         back), manage designs and the stamp,
 //                         change any letter template, and back up / restore
 //
-// Nothing is ever deleted (letter templates aside: they are text to copy, not records). Issued
-// letters and designs are never edited: a letter can only be cancelled, a design can only be
-// retired or replaced by a new version.
+// Nothing is ever deleted (letter templates aside: they are text to copy, not records). Designs
+// are never edited: they are retired or replaced by a new version. Only admins change an issued
+// letter, and an edit keeps the text it replaced as a version that can't be changed or deleted.
 //
 // Restore from backup: an admin may re-create a record that is MISSING, with any contents,
 // as long as it is stamped restoredAt (now) and restoredBy (themselves). A create can never
@@ -131,11 +133,40 @@ service cloud.firestore {
         && request.resource.data.last == 1
         && existsAfter(/databases/$(database)/documents/letters/$(year + '-1'));
       allow update: if isMember()
-        && request.resource.data.keys().hasOnly(['last'])
+        && (request.resource.data.keys().hasOnly(['last'])
+            || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['last']))
         && request.resource.data.last == resource.data.last + 1
         && existsAfter(/databases/$(database)/documents/letters/$(year + '-' + string(request.resource.data.last)));
+      // An admin may move this year's numbering forward (never back); the skipped numbers are never used.
+      allow create: if isAdmin()
+        && year == string(istYear())
+        && skipNote(request.resource.data)
+        && request.resource.data.last >= 1;
+      allow update: if isAdmin()
+        && skipNote(request.resource.data)
+        && request.resource.data.last > resource.data.last;
       allow delete: if false;
     }
+
+    function skipNote(d) {
+      return d.keys().hasOnly(['last', 'skippedAt', 'skippedBy', 'skipReason'])
+        && d.last is int && d.last < 100000
+        && d.skippedAt == request.time
+        && isMe(d.skippedBy)
+        && d.skipReason is string && d.skipReason.size() > 0 && d.skipReason.size() <= 300;
+    }
+
+    // The text of a letter that an admin may change after issuing it.
+    function letterTextKeys() { return ['recipient', 'subject', 'bodyHtml', 'closing', 'signatoryName', 'designation']; }
+    function validLetterText(d) {
+      return d.recipient is string && d.recipient.size() <= 2000
+        && d.subject is string && d.subject.size() <= 500
+        && d.bodyHtml is string && d.bodyHtml.size() <= 100000
+        && d.closing is string && d.closing.size() <= 200
+        && d.signatoryName is string && d.signatoryName.size() <= 200
+        && d.designation is string && d.designation.size() <= 500;
+    }
+    function versionPath(id, v) { return /databases/$(database)/documents/letterVersions/$(id + '-v' + string(v)); }
 
     function validNewLetter(id, d) {
       let counterPath = /databases/$(database)/documents/counters/$(string(d.year));
@@ -167,6 +198,34 @@ service cloud.firestore {
         && isMe(request.resource.data.cancelledBy)
         && request.resource.data.cancelReason is string
         && request.resource.data.cancelReason.size() > 0;
+      // An admin may bring a cancelled letter back, keeping a note of the cancellation.
+      allow update: if isAdmin()
+        && resource.data.status == 'cancelled'
+        && request.resource.data.status == 'issued'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'cancelledAt', 'cancelledBy', 'cancelReason',
+                                                                              'lastCancelled', 'reinstatedAt', 'reinstatedBy', 'reinstateReason'])
+        && !('cancelledAt' in request.resource.data)
+        && !('cancelReason' in request.resource.data)
+        && request.resource.data.lastCancelled is map
+        && request.resource.data.reinstatedAt == request.time
+        && isMe(request.resource.data.reinstatedBy)
+        && request.resource.data.reinstateReason is string
+        && request.resource.data.reinstateReason.size() > 0
+        && request.resource.data.reinstateReason.size() <= 300;
+      // An admin may change the text of an issued letter. The text it replaces must be saved, in
+      // the same write, as the next letterVersions record, and something must actually change.
+      allow update: if isAdmin()
+        && resource.data.status == 'issued'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(letterTextKeys().concat(['version', 'editedAt', 'editedBy', 'editReason']))
+        && request.resource.data.diff(resource.data).affectedKeys().hasAny(letterTextKeys())
+        && validLetterText(request.resource.data)
+        && request.resource.data.version == resource.data.get('version', 1) + 1
+        && existsAfter(versionPath(id, resource.data.get('version', 1)))
+        && request.resource.data.editedAt == request.time
+        && isMe(request.resource.data.editedBy)
+        && request.resource.data.editReason is string
+        && request.resource.data.editReason.size() > 0
+        && request.resource.data.editReason.size() <= 300;
       // An admin may change the date printed on an issued letter (same year), giving a reason.
       allow update: if isAdmin()
         && resource.data.status == 'issued'
@@ -180,6 +239,25 @@ service cloud.firestore {
         && request.resource.data.dateChangeReason.size() > 0
         && request.resource.data.dateChangeReason.size() <= 300;
       allow delete: if false;
+    }
+
+    // Earlier text of edited letters, one record per replaced version (id: letterId-vN). Written only
+    // together with the edit that replaces it, and never changed or deleted.
+    match /letterVersions/{vid} {
+      allow read: if isMember();
+      allow create: if restoring(request.resource.data);
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly(letterTextKeys().concat(['letterId', 'ref', 'version', 'writtenAt', 'writtenBy',
+                                                                          'writtenReason', 'savedAt', 'savedBy']))
+        && request.resource.data.letterId is string
+        && request.resource.data.version is int
+        && vid == request.resource.data.letterId + '-v' + string(request.resource.data.version)
+        && validLetterText(request.resource.data)
+        && get(/databases/$(database)/documents/letters/$(request.resource.data.letterId)).data.get('version', 1) == request.resource.data.version
+        && getAfter(/databases/$(database)/documents/letters/$(request.resource.data.letterId)).data.version == request.resource.data.version + 1
+        && request.resource.data.savedAt == request.time
+        && isMe(request.resource.data.savedBy);
+      allow update, delete: if false;
     }
 
     // Ready-made letter text. Anyone can add one; the writer or an admin can change or delete it.

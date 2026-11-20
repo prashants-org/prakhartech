@@ -10,6 +10,7 @@ export const BACKUP_VERSION = 1
 // Firebase console and the app is not allowed to write it.
 export const COLLECTIONS = [
   { name: 'letters', label: 'Letters' },
+  { name: 'letterVersions', label: 'Earlier versions of edited letters' },
   { name: 'counters', label: 'Reference number counters' },
   { name: 'templates', label: 'Letterhead designs' },
   { name: 'assets', label: 'Signatures and stamps' },
