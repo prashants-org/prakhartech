@@ -24,6 +24,23 @@ describe('drafts', () => {
     expect(takeStashNote()).toBe(false)
   })
 
+  it('does not keep a letter from a template that was never changed, but keeps one that was', () => {
+    const offer = { recipient: '[Full name]', subject: 'Offer – [Designation]', bodyHtml: '<p>Dear [Full name],</p>', closing: 'Regards,' }
+    startNewDraft(email, profile, loadDraft(email, profile), offer)
+    startNewDraft(email, profile, loadDraft(email, profile), null)
+    expect(loadSavedDrafts(email)).toHaveLength(0)
+
+    startNewDraft(email, profile, loadDraft(email, profile), offer)
+    saveDraft(email, { ...loadDraft(email, profile), fills: { '[Full name]': 'Asha' } })
+    startNewDraft(email, profile, loadDraft(email, profile), null)
+    expect(loadSavedDrafts(email)).toHaveLength(1)
+
+    startNewDraft(email, profile, loadDraft(email, profile), offer)
+    saveDraft(email, { ...loadDraft(email, profile), closing: 'Warm regards,' })
+    startNewDraft(email, profile, loadDraft(email, profile), null)
+    expect(loadSavedDrafts(email)).toHaveLength(2)
+  })
+
   it('opens a saved draft, putting the open one aside, without duplicating either', () => {
     saveDraft(email, { ...loadDraft(email, profile), subject: 'First' })
     startNewDraft(email, profile, loadDraft(email, profile), null)

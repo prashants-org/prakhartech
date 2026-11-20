@@ -2,7 +2,7 @@
 // The open letter (on the New letter page) is the "current" draft; letters put aside when
 // starting another one are kept in a list of saved drafts that can be opened again.
 import { emptyLetter } from './defaults'
-import { applyTemplate, isDraftEmpty } from './lib'
+import { TEMPLATE_FIELDS, applyTemplate, isDraftEmpty } from './lib'
 
 const key = (email) => `pt-letters-draft:${email}`
 const listKey = (email) => `pt-letters-drafts:${email}`
@@ -52,8 +52,23 @@ export function saveDraft(email, draft) {
   write(key(email), draft)
 }
 
-/** A fresh letter, blank or from a template, always with the writer's own name and designation. */
-export const freshLetter = (profile, template) => (template ? applyTemplate(emptyLetter(profile), template) : emptyLetter(profile))
+/**
+ * A fresh letter, blank or from a template, always with the writer's own name and designation.
+ * A letter from a template remembers the template's text (`origin`), so it can tell later whether it was changed.
+ */
+export function freshLetter(profile, template) {
+  if (!template) return emptyLetter(profile)
+  const letter = applyTemplate(emptyLetter(profile), template)
+  return { ...letter, origin: Object.fromEntries(TEMPLATE_FIELDS.map((k) => [k, letter[k]])) }
+}
+
+/** True when nothing has been typed into the letter since it was started, blank or from a template. */
+export function isUntouched(draft, profile) {
+  const start = { ...emptyLetter(profile), ...(draft.origin || {}) }
+  const sameSigner = ['signatoryName', 'designation'].every((k) => (draft[k] || '').trim() === (start[k] || '').trim())
+  const noFills = !Object.values(draft.fills || {}).some((v) => typeof v === 'string' && v.trim())
+  return sameSigner && noFills && isDraftEmpty(draft, start)
+}
 
 /** Saved drafts, most recently put aside first: [{ id, savedAt, letter }]. */
 export function loadSavedDrafts(email) {
@@ -73,7 +88,7 @@ export function deleteSavedDraft(email, id) {
  * Returns false when there is nothing worth keeping.
  */
 export function stashDraft(email, draft, profile) {
-  if (isDraftEmpty(draft, emptyLetter(profile))) return false
+  if (isUntouched(draft, profile)) return false
   const id = draft.draftId || newId()
   const rest = loadSavedDrafts(email).filter((d) => d.id !== id)
   write(listKey(email), [{ id, savedAt: Date.now(), letter: { ...draft, draftId: id } }, ...rest])
