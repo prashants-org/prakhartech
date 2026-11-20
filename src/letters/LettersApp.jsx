@@ -7,7 +7,7 @@ import { useLiveDoc } from './data'
 import { setUpSystem, whoFrom } from './api'
 import { classicDefaults } from './defaults'
 import { urlToDataUrl } from './images'
-import { useAction } from './hooks'
+import { useAction, useSavedDrafts } from './hooks'
 import { go, useHashPath } from './router'
 import Icon from './components/Icon'
 import Gate from './components/Gate'
@@ -24,6 +24,7 @@ import DesignEditor from './pages/DesignEditor'
 import LetterTemplates from './pages/LetterTemplates'
 import TemplateEditor from './pages/TemplateEditor'
 import Backup from './pages/Backup'
+import Drafts from './pages/Drafts'
 
 export default function LettersApp() {
   const [state, setState] = useState({ status: 'loading' })
@@ -117,6 +118,7 @@ function FirstRun({ session }) {
 
 const NAV = [
   { key: 'new', label: 'New letter', icon: 'plus' },
+  { key: 'drafts', label: 'Drafts', icon: 'inbox' },
   { key: 'register', label: 'Register', icon: 'list' },
   { key: 'templates', label: 'Templates', icon: 'copy' },
   { key: 'signature', label: 'Signature & stamp', icon: 'pen' },
@@ -134,6 +136,7 @@ function route(parts, isAdmin) {
     if ((a === 'edit' || a === 'copy') && b) return { active: 'templates', page: <TemplateEditor key={`${a}-${b}`} mode={a} id={b} /> }
     return { active: 'templates', page: <LetterTemplates /> }
   }
+  if (section === 'drafts') return { active: 'drafts', page: <Drafts /> }
   if (section === 'signature') return { active: 'signature', page: <SignatureStamp /> }
   if (section === 'backup' && isAdmin) return { active: 'backup', page: <Backup /> }
   if (section === 'designs' && isAdmin) {
@@ -146,10 +149,11 @@ function route(parts, isAdmin) {
 
 function Shell() {
   const path = useHashPath()
-  const { user, profile, isAdmin } = useSession()
+  const { user, profile, who, isAdmin } = useSession()
   const { active, page } = route(path.split('/').filter(Boolean), isAdmin)
   // The phone menu is open for the page it was opened on, so going to another page closes it.
   const [menuFor, setMenuFor] = useState(null)
+  const draftCount = useSavedDrafts(who.email).length
   const menuOpen = menuFor === path
   const name = profile.name || user.displayName || user.email
   const initials = name
@@ -168,6 +172,7 @@ function Shell() {
     <a key={n.key} href={`#/${n.key}`} className={active === n.key ? 'is-active' : undefined} aria-current={active === n.key ? 'page' : undefined}>
       <Icon name={n.icon} size={18} />
       {n.label}
+      {n.key === 'drafts' && draftCount > 0 && <span className="lt-nav-count">{draftCount}</span>}
     </a>
   )
 

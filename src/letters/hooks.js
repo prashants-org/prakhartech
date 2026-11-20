@@ -1,11 +1,12 @@
 // Hooks shared by several pages.
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react'
 import { collection, query, where } from 'firebase/firestore'
 import { db } from './firebase'
 import { useLiveQuery } from './data'
 import { errorText } from './errors'
 import { letterTemplatesQuery } from './queries'
 import { BUILTIN_TEMPLATES, CATEGORIES } from './builtinTemplates'
+import { loadSavedDrafts, savedDraftsSnapshot, subscribeDrafts } from './drafts'
 
 const IDLE = { busy: false, error: '', done: false }
 
@@ -70,4 +71,11 @@ export function useLetterTemplates() {
     return [...BUILTIN_TEMPLATES, ...(data || [])].sort((a, b) => (b.first ? 1 : 0) - (a.first ? 1 : 0) || order(a.category) - order(b.category) || a.category.localeCompare(b.category) || a.name.localeCompare(b.name))
   }, [data, error])
   return { templates: all, error }
+}
+
+/** This person's saved drafts (kept in this browser), kept up to date as they change. */
+export function useSavedDrafts(email) {
+  const snapshot = useSyncExternalStore(subscribeDrafts, () => savedDraftsSnapshot(email))
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- the snapshot text stands for the list
+  return useMemo(() => loadSavedDrafts(email), [email, snapshot])
 }

@@ -2,9 +2,8 @@ import { useState } from 'react'
 import { useSession } from '../context'
 import { useFixedDoc, useLiveDoc } from '../data'
 import { issueLetter } from '../api'
-import { emptyLetter } from '../defaults'
-import { freshFrom, loadDraft, saveDraft } from '../drafts'
-import { applyTemplate, findBlanks, isBlankLayout, formatLetterDate, formatRef, htmlToText, isBlank, isDraftEmpty, istYear } from '../lib'
+import { freshLetter, loadDraft, saveDraft, startNewDraft, takeStashNote } from '../drafts'
+import { findBlanks, isBlankLayout, formatLetterDate, formatRef, htmlToText, isBlank, istYear } from '../lib'
 import { useAction, useImageAspect, useMySignature } from '../hooks'
 import { MAX_HEIGHT, WIDTH_RANGE, maxWidth, measureTextEnd, placeSignature, placeStamp, withFit } from '../placement'
 import { go } from '../router'
@@ -38,8 +37,7 @@ export default function NewLetter() {
   const [draft, setDraft] = useState(() => loadDraft(who.email, profile))
   const [confirming, setConfirming] = useState(false)
   const [picking, setPicking] = useState(false)
-  const [replacing, setReplacing] = useState(null) // a template waiting for "replace your draft?"
-  const [clearing, setClearing] = useState(false) // "start a new blank letter?" is open
+  const [stashed, setStashed] = useState(takeStashNote) // the previous letter was just put aside in Drafts
   const action = useAction()
 
   const template = useFixedDoc('templates', settings.templateId)
@@ -52,10 +50,6 @@ export default function NewLetter() {
   if (template === undefined || counter.data === undefined) return <Loading />
   if (!template) return <Notice kind="error">The current letterhead design could not be loaded.</Notice>
 
-  const replace = (next) => {
-    setDraft(next)
-    saveDraft(who.email, next)
-  }
   const update = (field, value) =>
     setDraft((d) => {
       const next = { ...d, [field]: value }
@@ -80,10 +74,14 @@ export default function NewLetter() {
     setConfirming(true)
   }
 
-  const pickTemplate = (t) => {
+  // A new letter (blank or from a template) never overwrites the open one: that is put aside in Drafts.
+  // The new letter starts with the writer's own name and designation, not ones typed on the old letter.
+  const startNew = (t) => {
     setPicking(false)
-    if (isDraftEmpty(draft, emptyLetter(profile))) replace(applyTemplate(draft, t))
-    else setReplacing(t)
+    action.reset()
+    setDraft(startNewDraft(who.email, profile, draft, t))
+    setStashed(takeStashNote())
+    window.scrollTo(0, 0)
   }
 
   const issue = () =>
@@ -91,11 +89,10 @@ export default function NewLetter() {
       // A signature/stamp replaced since it was added is dropped rather than saved with a stale id.
       const clean = { ...draft, signature: images.signature ? draft.signature : null, stamp: images.stamp ? draft.stamp : null }
       const { id } = await issueLetter({ who, draft: clean, templateId: template.id })
-      saveDraft(who.email, freshFrom(draft, profile))
+      saveDraft(who.email, freshLetter(profile))
       go(`/letter/${id}`)
     })
 
-  const clearDraft = () => (isDraftEmpty(draft, emptyLetter(profile)) ? replace(freshFrom(draft, profile)) : setClearing(true))
 
   const toggleSignature = () => update('signature', draft.signature ? null : placeSignature(mySignature.id))
   // The stamp goes to its best spot each time it is turned on; it can be dragged from there.
@@ -121,7 +118,7 @@ export default function NewLetter() {
           lead="Type straight onto the letterhead. Your draft stays on this computer until you issue it."
           actions={
             <>
-              <Button variant="ghost" icon="file" onClick={clearDraft}>
+              <Button variant="ghost" icon="file" onClick={() => startNew(null)}>
                 Start a new letter
               </Button>
               <Button variant="ghost" icon="upload" onClick={() => go('/templates/new/draft')} title="Save this letter's text as a template others can reuse">
@@ -196,6 +193,11 @@ export default function NewLetter() {
           </div>
         </div>
         {action.error && !confirming && <Notice kind="error">{action.error}</Notice>}
+        {stashed && (
+          <Notice kind="ok">
+            Your previous letter was saved in <a href="#/drafts">Drafts</a>. Open it from there to carry on.
+          </Notice>
+        )}
       </div>
 
       <div className="lt-sheet-wrap">
@@ -229,58 +231,8 @@ export default function NewLetter() {
         </Dialog>
       )}
 
-      {picking && <TemplatePicker onPick={pickTemplate} onClose={() => setPicking(false)} />}
+      {picking && <TemplatePicker onPick={startNew} onClose={() => setPicking(false)} />}
 
-      {clearing && (
-        <Dialog
-          title="Start a new letter?"
-          onClose={() => setClearing(false)}
-          actions={
-            <>
-              <Button variant="secondary" onClick={() => setClearing(false)}>
-                Keep my draft
-              </Button>
-              <Button
-                variant="primary"
-                icon="file"
-                onClick={() => {
-                  replace(freshFrom(draft, profile))
-                  setClearing(false)
-                }}
-              >
-                Start a new letter
-              </Button>
-            </>
-          }
-        >
-          <p>What you have typed in this draft will be cleared. Your name and designation stay as they are.</p>
-        </Dialog>
-      )}
-
-      {replacing && (
-        <Dialog
-          title="Replace your draft?"
-          onClose={() => setReplacing(null)}
-          actions={
-            <>
-              <Button variant="secondary" onClick={() => setReplacing(null)}>
-                Keep my draft
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => {
-                  replace(applyTemplate(draft, replacing))
-                  setReplacing(null)
-                }}
-              >
-                Use “{replacing.name}”
-              </Button>
-            </>
-          }
-        >
-          <p>The recipient, subject and text you have typed will be replaced by the template. Your name, designation, signature and stamp stay as they are.</p>
-        </Dialog>
-      )}
     </div>
   )
 }

@@ -620,3 +620,14 @@ img { max-width: 100%; }
   .lt-content { margin-left: 0 !important; display: block !important; min-height: 0 !important; }
   .lt-main { max-width: none !important; }
 }
+
+/* ── Drafts ── */
+.lt-nav-count { margin-left: auto; min-width: 22px; padding: 1px 7px; border-radius: 999px; background: rgba(255, 255, 255, 0.16); color: #fff; font-size: 0.74rem; font-weight: 700; text-align: center; }
+.lt-nav a.is-active .lt-nav-count { background: var(--brand-maroon); }
+.lt-draft-list { list-style: none; margin: 0; padding: 0; }
+.lt-draft-list .lt-draft-row { padding: 14px 22px; }
+.lt-draft-list li + li { border-top: 1px solid var(--line-soft); }
+.lt-draft-row { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; }
+.lt-draft-main { display: grid; gap: 3px; min-width: 0; }
+.lt-draft-main b { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--ink); }
+.lt-draft-main .lt-sub { display: flex; align-items: center; gap: 5px; }

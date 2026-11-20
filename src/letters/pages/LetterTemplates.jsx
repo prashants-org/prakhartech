@@ -3,8 +3,8 @@ import { useSession } from '../context'
 import { useFixedDoc } from '../data'
 import { deleteLetterTemplate } from '../api'
 import { emptyLetter } from '../defaults'
-import { loadDraft, saveDraft } from '../drafts'
-import { applyTemplate, canManageTemplate, formatLetterDate, isDraftEmpty } from '../lib'
+import { loadDraft, startNewDraft } from '../drafts'
+import { applyTemplate, canManageTemplate, formatLetterDate } from '../lib'
 import { useAction, useLetterTemplates } from '../hooks'
 import { go } from '../router'
 import LetterSheet from '../components/LetterSheet'
@@ -19,17 +19,15 @@ export default function LetterTemplates() {
   const { shown, controls } = useTemplateFilter(templates)
   const design = useFixedDoc('templates', settings.templateId)
   const [previewing, setPreviewing] = useState(null)
-  const [replacing, setReplacing] = useState(null)
   const action = useAction()
 
   if (!templates) return <Loading />
 
-  const start = (t) => {
-    const draft = loadDraft(who.email, profile)
-    saveDraft(who.email, applyTemplate(draft, t))
+  // The letter being written is put aside in Drafts, never overwritten.
+  const use = (t) => {
+    startNewDraft(who.email, profile, loadDraft(who.email, profile), t)
     go('/new')
   }
-  const use = (t) => (isDraftEmpty(loadDraft(who.email, profile), emptyLetter(profile)) ? start(t) : setReplacing(t))
   const remove = (t) => {
     if (window.confirm(`Delete the template “${t.name}”? Letters already written from it are not affected.`)) action.run(() => deleteLetterTemplate({ who, template: t }))
   }
@@ -118,24 +116,6 @@ export default function LetterTemplates() {
         </Dialog>
       )}
 
-      {replacing && (
-        <Dialog
-          title="Replace your draft?"
-          onClose={() => setReplacing(null)}
-          actions={
-            <>
-              <Button variant="secondary" onClick={() => setReplacing(null)}>
-                Keep my draft
-              </Button>
-              <Button variant="primary" onClick={() => start(replacing)}>
-                Use “{replacing.name}”
-              </Button>
-            </>
-          }
-        >
-          <p>You have a letter in progress. Its recipient, subject and text will be replaced by this template. Your name, designation, signature and stamp stay as they are.</p>
-        </Dialog>
-      )}
     </>
   )
 }
