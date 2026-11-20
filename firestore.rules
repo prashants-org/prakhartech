@@ -1,0 +1,142 @@
+rules_version = '2';
+
+// Security rules for the Prakhar Technology letter system (/letters).
+// Paste into Firebase console → Firestore Database → Rules, then Publish.
+//
+// Who can do what
+//   allowedUsers/{email}  managed only in the Firebase console. role: 'admin' | 'staff'
+//   staff                 issue letters, read the register, add their own signature
+//   admin                 everything staff can, plus cancel letters, manage designs and the stamp
+//
+// Nothing is ever deleted. Issued letters and designs are never edited:
+// a letter can only be cancelled, a design can only be retired or replaced by a new version.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null
+        && request.auth.token.email != null
+        && request.auth.token.email_verified == true;
+    }
+    function myEmail() { return request.auth.token.email.lower(); }
+    function userPath() { return /databases/$(database)/documents/allowedUsers/$(myEmail()); }
+    function isMember() { return signedIn() && exists(userPath()); }
+    function isAdmin() { return isMember() && get(userPath()).data.role == 'admin'; }
+    function isMe(who) { return who is map && who.email == myEmail(); }
+    function settingsPath() { return /databases/$(database)/documents/settings/current; }
+    function templatePath(id) { return /databases/$(database)/documents/templates/$(id); }
+    function assetPath(id) { return /databases/$(database)/documents/assets/$(id); }
+    // Calendar year in India (UTC+5:30), so a letter issued at 00:30 IST on 1 January gets the new year.
+    function istYear() { return (request.time + duration.value(330, 'm')).year(); }
+
+    match /allowedUsers/{email} {
+      allow get: if signedIn() && email == myEmail();
+      allow list: if isAdmin();
+      allow write: if false;
+    }
+
+    match /settings/{id} {
+      allow read: if isMember();
+      allow create, update: if isAdmin()
+        && id == 'current'
+        && request.resource.data.keys().hasOnly(['templateId', 'stampId', 'updatedAt', 'updatedBy'])
+        && request.resource.data.updatedAt == request.time
+        && isMe(request.resource.data.updatedBy)
+        && getAfter(templatePath(request.resource.data.templateId)).data.status == 'available'
+        && (request.resource.data.get('stampId', null) == null
+            || getAfter(assetPath(request.resource.data.stampId)).data.kind == 'stamp');
+      allow delete: if false;
+    }
+
+    match /templates/{id} {
+      allow read: if isMember();
+      allow create: if isAdmin()
+        && request.resource.data.status == 'available'
+        && request.resource.data.kind in ['classic', 'image']
+        && request.resource.data.version is int
+        && request.resource.data.family is string
+        && request.resource.data.note is string
+        && request.resource.data.note.size() > 0
+        && request.resource.data.createdAt == request.time
+        && isMe(request.resource.data.createdBy);
+      // A design is never edited. The only change allowed is retiring one that is not in use.
+      allow update: if isAdmin()
+        && resource.data.status == 'available'
+        && request.resource.data.status == 'retired'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'retiredAt', 'retiredBy'])
+        && request.resource.data.retiredAt == request.time
+        && isMe(request.resource.data.retiredBy)
+        && getAfter(settingsPath()).data.templateId != id;
+      allow delete: if false;
+    }
+
+    // Signature and stamp images. Never changed once saved, so old letters always show what was used.
+    match /assets/{id} {
+      allow read: if isMember();
+      allow create: if isMember()
+        && request.resource.data.image is string
+        && request.resource.data.image.size() < 750000
+        && request.resource.data.createdAt == request.time
+        && isMe(request.resource.data.createdBy)
+        && ((request.resource.data.kind == 'signature' && request.resource.data.ownerEmail == myEmail())
+            || (request.resource.data.kind == 'stamp' && isAdmin()));
+      allow update, delete: if false;
+    }
+
+    // Last reference number used in each year. Moves up by exactly one, together with the new letter.
+    match /counters/{year} {
+      allow read: if isMember();
+      allow create: if isMember()
+        && year == string(istYear())
+        && request.resource.data.keys().hasOnly(['last'])
+        && request.resource.data.last == 1
+        && existsAfter(/databases/$(database)/documents/letters/$(year + '-1'));
+      allow update: if isMember()
+        && request.resource.data.keys().hasOnly(['last'])
+        && request.resource.data.last == resource.data.last + 1
+        && existsAfter(/databases/$(database)/documents/letters/$(year + '-' + string(request.resource.data.last)));
+      allow delete: if false;
+    }
+
+    function validNewLetter(id, d) {
+      let counterPath = /databases/$(database)/documents/counters/$(string(d.year));
+      return d.year == istYear()
+        && d.seq is int && d.seq >= 1
+        && id == string(d.year) + '-' + string(d.seq)
+        && d.ref.matches('PT/' + string(d.year) + '/[0-9]{4,}')
+        && int(d.ref.split('/')[2]) == d.seq
+        && getAfter(counterPath).data.last == d.seq
+        && d.status == 'issued'
+        && d.issuedAt == request.time
+        && isMe(d.issuedBy)
+        && d.templateId == get(settingsPath()).data.templateId
+        && (d.signature == null || get(assetPath(d.signature.assetId)).data.ownerEmail == myEmail())
+        && (d.stamp == null || get(assetPath(d.stamp.assetId)).data.kind == 'stamp');
+    }
+
+    match /letters/{id} {
+      allow read: if isMember();
+      allow create: if isMember() && validNewLetter(id, request.resource.data);
+      allow update: if isAdmin()
+        && resource.data.status == 'issued'
+        && request.resource.data.status == 'cancelled'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'cancelledAt', 'cancelledBy', 'cancelReason'])
+        && request.resource.data.cancelledAt == request.time
+        && isMe(request.resource.data.cancelledBy)
+        && request.resource.data.cancelReason is string
+        && request.resource.data.cancelReason.size() > 0;
+      allow delete: if false;
+    }
+
+    // Who did what and when: letters issued and cancelled, design and stamp changes.
+    match /auditLog/{id} {
+      allow read: if isAdmin();
+      allow create: if isMember()
+        && request.resource.data.at == request.time
+        && isMe(request.resource.data.by)
+        && request.resource.data.action is string
+        && request.resource.data.area in ['letters', 'design', 'stamp'];
+      allow update, delete: if false;
+    }
+  }
+}

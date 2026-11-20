@@ -1,0 +1,126 @@
+import { useMemo, useState } from 'react'
+import { useLiveQuery } from '../data'
+import { lettersQuery } from '../queries'
+import { downloadFile, firstLine, formatDateTime, htmlToText, toCsv } from '../lib'
+import { Loading, Notice } from '../components/ui'
+import { errorText } from '../errors'
+
+export default function Register() {
+  const { data: letters, error } = useLiveQuery(lettersQuery, 'all-letters')
+  const [search, setSearch] = useState('')
+  const [year, setYear] = useState('all')
+  const [status, setStatus] = useState('all')
+
+  const years = useMemo(() => [...new Set((letters || []).map((l) => l.year))].sort((a, b) => b - a), [letters])
+
+  const shown = useMemo(() => {
+    const q = search.trim().toLowerCase()
+    return (letters || []).filter((l) => {
+      if (year !== 'all' && String(l.year) !== year) return false
+      if (status !== 'all' && l.status !== status) return false
+      if (!q) return true
+      return [l.ref, l.recipient, l.subject, l.issuedBy?.name, l.issuedBy?.email, l.signatoryName].some((v) => v?.toLowerCase().includes(q))
+    })
+  }, [letters, search, year, status])
+
+  if (error) return <Notice kind="error">{errorText(error)}</Notice>
+  if (!letters) return <Loading />
+
+  const exportCsv = () => {
+    const rows = [['Ref', 'Date', 'Recipient', 'Subject', 'Signed by', 'Issued by', 'Issued at', 'Status', 'Cancelled by', 'Cancel reason']]
+    for (const l of shown) {
+      rows.push([
+        l.ref,
+        l.dateText,
+        l.recipient.replace(/\n/g, ', '),
+        l.subject,
+        l.signatoryName,
+        l.issuedBy?.email,
+        formatDateTime(l.issuedAt),
+        l.status,
+        l.cancelledBy?.email || '',
+        l.cancelReason || '',
+      ])
+    }
+    downloadFile(`letter-register-${new Date().toISOString().slice(0, 10)}.csv`, toCsv(rows), 'text/csv;charset=utf-8')
+  }
+
+  const exportBackup = () => {
+    const plain = (v) => (v?.toDate ? v.toDate().toISOString() : v)
+    const data = letters.map((l) => Object.fromEntries(Object.entries(l).map(([k, v]) => [k, plain(v)])))
+    downloadFile(`letters-backup-${new Date().toISOString().slice(0, 10)}.json`, JSON.stringify({ exportedAt: new Date().toISOString(), letters: data }, null, 2), 'application/json')
+  }
+
+  return (
+    <div className="lt-page">
+      <div className="lt-page-head">
+        <h1>Register of issued letters</h1>
+        <div className="lt-toolbar-actions">
+          <button type="button" className="lt-btn lt-btn-ghost" onClick={exportCsv}>
+            Export list (CSV)
+          </button>
+          <button type="button" className="lt-btn lt-btn-ghost" onClick={exportBackup}>
+            Download full backup
+          </button>
+        </div>
+      </div>
+
+      <div className="lt-filters">
+        <input type="search" placeholder="Search ref, recipient, subject or person" value={search} onChange={(e) => setSearch(e.target.value)} aria-label="Search letters" />
+        <select value={year} onChange={(e) => setYear(e.target.value)} aria-label="Year">
+          <option value="all">All years</option>
+          {years.map((y) => (
+            <option key={y} value={String(y)}>
+              {y}
+            </option>
+          ))}
+        </select>
+        <select value={status} onChange={(e) => setStatus(e.target.value)} aria-label="Status">
+          <option value="all">All letters</option>
+          <option value="issued">Issued</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      {shown.length === 0 ? (
+        <p className="lt-muted">{letters.length ? 'No letters match your search.' : 'No letters have been issued yet.'}</p>
+      ) : (
+        <div className="lt-table-wrap">
+          <table className="lt-table">
+            <thead>
+              <tr>
+                <th>Ref</th>
+                <th>Date</th>
+                <th>To</th>
+                <th>Subject</th>
+                <th>Issued by</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {shown.map((l) => (
+                <tr key={l.id} className={l.status === 'cancelled' ? 'is-cancelled' : ''}>
+                  <td>
+                    <a href={`#/letter/${l.id}`} className="lt-ref">
+                      {l.ref}
+                    </a>
+                  </td>
+                  <td>{l.dateText}</td>
+                  <td>{firstLine(l.recipient)}</td>
+                  <td title={htmlToText(l.bodyHtml).slice(0, 200)}>{l.subject}</td>
+                  <td>{l.issuedBy?.name}</td>
+                  <td>
+                    <span className={`lt-badge lt-badge-${l.status}`}>{l.status === 'cancelled' ? 'Cancelled' : 'Issued'}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      <p className="lt-muted lt-small">
+        {shown.length} of {letters.length} letters. Download a full backup now and then: the free Firebase plan has no automatic backups.
+      </p>
+    </div>
+  )
+}
