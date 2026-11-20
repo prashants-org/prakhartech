@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useSession } from '../context'
 import { useLiveQuery } from '../data'
 import { lettersQuery } from '../queries'
-import { downloadFile, firstLine, formatDateTime, htmlToText, letterTitle, toCsv } from '../lib'
+import { downloadFile, firstLine, formatDateTime, htmlToText, letterDateText, letterTitle, toCsv } from '../lib'
 import Icon from '../components/Icon'
 import { Badge, Button, Card, Empty, Loading, Notice, PageHeader } from '../components/ui'
 import { errorText } from '../errors'
@@ -14,7 +14,7 @@ function exportCsv(letters) {
   for (const l of letters) {
     rows.push([
       l.ref,
-      l.dateText,
+      letterDateText(l),
       l.recipient.replace(/\n/g, ', '),
       letterTitle(l),
       l.signatoryName,
@@ -115,7 +115,7 @@ export default function Register() {
                           {l.ref}
                         </a>
                       </td>
-                      <td>{l.dateText}</td>
+                      <td>{letterDateText(l)}</td>
                       <td>{firstLine(l.recipient) || <span className="lt-muted">—</span>}</td>
                       <td title={htmlToText(l.bodyHtml).slice(0, 200)}>{letterTitle(l)}</td>
                       <td>{l.issuedBy?.name}</td>

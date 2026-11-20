@@ -3,7 +3,7 @@ import { useSession } from '../context'
 import { useFixedDoc, useLiveDoc } from '../data'
 import { issueLetter } from '../api'
 import { freshLetter, loadDraft, saveDraft, startNewDraft, takeStashNote } from '../drafts'
-import { fillBlanks, findBlanks, isBlankLayout, formatLetterDate, formatRef, htmlToText, isBlank, istYear } from '../lib'
+import { dateFromKey, fillBlanks, findBlanks, isBlankLayout, isDateKeyInYear, formatLetterDate, formatRef, htmlToText, isBlank, istDateKey, istYear } from '../lib'
 import { useAction, useImageAspect, useMySignature } from '../hooks'
 import { MAX_HEIGHT, WIDTH_RANGE, maxWidth, measureTextEnd, placeSignature, placeStamp, withFit } from '../placement'
 import { go } from '../router'
@@ -34,11 +34,12 @@ function missingParts(draft) {
 }
 
 export default function NewLetter() {
-  const { who, profile, settings } = useSession()
+  const { who, profile, settings, isAdmin } = useSession()
   const [draft, setDraft] = useState(() => loadDraft(who.email, profile))
   const [confirming, setConfirming] = useState(false)
   const [picking, setPicking] = useState(false)
   const [stashed, setStashed] = useState(takeStashNote) // the previous letter was just put aside in Drafts
+  const [letterDate, setLetterDate] = useState(istDateKey) // admins may date a letter another day this year
   const action = useAction()
 
   const template = useFixedDoc('templates', settings.templateId)
@@ -59,7 +60,10 @@ export default function NewLetter() {
     })
 
   const nextRef = formatRef(year, (counter.data?.last || 0) + 1)
-  const today = formatLetterDate()
+  const todayKey = istDateKey()
+  const dated = isAdmin && isDateKeyInYear(letterDate, year) ? letterDate : todayKey
+  const today = formatLetterDate(dateFromKey(dated))
+  const otherDay = dated !== todayKey
   const images = {
     signature: draft.signature && mySignature?.id === draft.signature.assetId ? mySignature.image : null,
     stamp: draft.stamp && stamp?.id === draft.stamp.assetId ? stamp.image : null,
@@ -76,6 +80,7 @@ export default function NewLetter() {
     const missing = missingParts(shown)
     if (missing.length) return action.fail(`Please fill in ${missing.join(', ')} before issuing.`)
     if (blanks.length) return action.fail(`Please fill in the blanks left from the template: ${blanks.join(', ')}.`)
+    if (isAdmin && !isDateKeyInYear(letterDate, year)) return action.fail(`Please choose a letter date in ${year}: the reference number belongs to this year.`)
     action.reset()
     setConfirming(true)
   }
@@ -94,7 +99,7 @@ export default function NewLetter() {
     action.run(async () => {
       // A signature/stamp replaced since it was added is dropped rather than saved with a stale id.
       const clean = { ...shown, signature: images.signature ? draft.signature : null, stamp: images.stamp ? draft.stamp : null }
-      const { id } = await issueLetter({ who, draft: clean, templateId: template.id })
+      const { id } = await issueLetter({ who, draft: clean, templateId: template.id, letterDate: dated })
       saveDraft(who.email, freshLetter(profile))
       go(`/letter/${id}`)
     })
@@ -150,10 +155,23 @@ export default function NewLetter() {
               <Icon name="hash" size={15} />
               Next ref <b>{nextRef}</b>
             </span>
-            <span className="lt-chip">
-              <Icon name="calendar" size={15} />
-              <b>{today}</b>
-            </span>
+            {isAdmin ? (
+              <label className={`lt-chip lt-chip--date${otherDay ? ' lt-chip--warn' : ''}`} title="Admins can date a letter another day this year">
+                <Icon name="calendar" size={15} />
+                <span className="lt-sr">Letter date</span>
+                <input type="date" value={letterDate} min={`${year}-01-01`} max={`${year}-12-31`} onChange={(e) => setLetterDate(e.target.value)} />
+                {otherDay && (
+                  <button type="button" className="lt-chip-reset" onClick={() => setLetterDate(todayKey)}>
+                    Today
+                  </button>
+                )}
+              </label>
+            ) : (
+              <span className="lt-chip">
+                <Icon name="calendar" size={15} />
+                <b>{today}</b>
+              </span>
+            )}
             <span className="lt-chip">
               <Icon name="palette" size={15} />
               {template.name} v{template.version}
@@ -235,8 +253,9 @@ export default function NewLetter() {
           }
         >
           <p>
-            It gets the next reference number (currently <b>{nextRef}</b>) and today’s date, and is saved in the register.
+            It gets the next reference number (currently <b>{nextRef}</b>) and {otherDay ? <>the date <b>{today}</b></> : 'today’s date'}, and is saved in the register.
           </p>
+          {otherDay && <Notice kind="info">This letter is dated {today}, not today. The register also records when it was actually issued, and by whom.</Notice>}
           <p>Once issued it cannot be edited. If something is wrong, an admin can cancel it and you can issue a new one.</p>
           {action.error && <Notice kind="error">{action.error}</Notice>}
         </Dialog>

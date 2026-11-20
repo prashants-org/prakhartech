@@ -99,6 +99,19 @@ export const BUILTIN_TEMPLATES = [
     'This is to certify that <b>[Full name]</b> is working with Prakhar Technology, Pune, as <b>[Designation]</b> since [Date of joining].',
     'The company has no objection to [him/her] [Purpose, e.g. applying for a passport / travelling to Country from Date to Date / pursuing higher studies].',
   ), FOR_PT),
+  T('relieving-experience', 'Employees & HR', 'Relieving & experience letter', 'One letter that relieves a leaving employee and certifies their experience.', TO_WHOM, 'Relieving and experience letter', p(
+    'This is to certify that <b>[Full name]</b> was employed with Prakhar Technology, Pune, as <b>[Designation]</b> in the [Department] department from [Start date] to [Last working day].',
+    'During this period [he/she] was responsible for [Main responsibilities]. [He/She] was sincere, hardworking and conducted [himself/herself] well.',
+    '[He/She] resigned from the services of the company by letter dated [Resignation date]. [He/She] has been relieved of [his/her] duties at the close of business on [Last working day], after handing over all company property and documents. [His/Her] full and final settlement [has been completed / will be completed by Date].',
+    'We thank [him/her] for [his/her] contribution and wish [him/her] every success in [his/her] future endeavours.',
+  ), FOR_PT),
+  T('resignation-relieving', 'Employees & HR', 'Resignation accepted & relieving letter', 'Accepts a resignation and relieves the employee on their last day.', PERSON, 'Acceptance of resignation and relieving letter', p(
+    'Dear [First name],',
+    'We acknowledge receipt of your resignation letter dated [Resignation date] and accept it. You will be relieved from your duties as <b>[Designation]</b> at the close of business on [Last working day].',
+    'Please complete the handover of your work to [Name] and return all company property, documents and ID card before your last working day. Your full and final settlement will be processed by [Settlement date] as per company policy.',
+    'Your experience certificate will be issued along with the full and final settlement.',
+    'We thank you for your contribution and wish you the very best for the future.',
+  )),
 
   // ── Customers & sales ──
   T('quotation-cover', 'Customers & sales', 'Quotation cover letter', 'Sends a quotation with key terms.', COMPANY, 'Quotation for [Product / service] – [Quotation number]', p(
@@ -179,6 +192,14 @@ export const BUILTIN_TEMPLATES = [
     SIR,
     'We warrant the [Product / model] supplied against invoice [Invoice number] dated [Invoice date] against manufacturing defects for <b>[Warranty period]</b> from [Start date].',
     'The warranty does not cover damage from misuse, accident, tampering, or repairs by anyone other than Prakhar Technology or its authorised partners. For service, call +91 93098 47652 or email info@prakhartech.com quoting the invoice number.',
+  )),
+  T('installation-warranty', 'Service & warranty', 'Installation & warranty certificate', 'Confirms the installation and starts the warranty, in one certificate.', COMPANY, 'Installation and warranty certificate – [Product]', p(
+    SIR,
+    'This is to certify that Prakhar Technology has supplied against invoice [Invoice number] dated [Invoice date], and installed at [Site address] on [Installation date], the following:',
+    ul('[Product / model] – [Quantity] units', 'Serial / IMEI numbers: [Serial numbers]', 'Location / vehicle numbers: [Locations or vehicle numbers]'),
+    'The equipment was tested after installation and found to be working properly.',
+    'We warrant it against manufacturing defects for <b>[Warranty period]</b> from the date of installation, that is until [Warranty end date]. The warranty does not cover damage from misuse, accident, tampering, or repairs by anyone other than Prakhar Technology or its authorised partners.',
+    'For service, call +91 93098 47652 or email info@prakhartech.com quoting the invoice number.',
   )),
   T('amc-renewal', 'Service & warranty', 'AMC / subscription renewal', 'Reminds a customer that a contract or subscription is due.', COMPANY, 'Renewal of [AMC / subscription] due on [Due date]', p(
     'Dear [Contact name],',

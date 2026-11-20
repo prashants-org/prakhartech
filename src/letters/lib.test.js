@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { applyTemplate, fillBlanks, findBlanks, firstLine, formatRef, isBlankLayout, isDraftEmpty, istMonthKey, istYear, letterId, letterTitle, sanitizeHtml, toCsv } from './lib'
+import { applyTemplate, combineTemplates, fillBlanks, findBlanks, firstLine, formatRef, isBlankLayout, isDraftEmpty, istDateKey, istMonthKey, istYear, isDateKeyInYear, letterDateText, letterId, letterTitle, sanitizeHtml, toCsv } from './lib'
 
 describe('letter reference numbers', () => {
   it('pads the sequence to four digits', () => {
@@ -101,5 +101,65 @@ describe('built-in templates', () => {
       expect(sanitizeHtml(t.bodyHtml)).toBe(t.bodyHtml)
     }
     expect(BUILTIN_TEMPLATES.length).toBeGreaterThan(30)
+  })
+})
+
+describe('combining templates', () => {
+  const relieving = {
+    id: 'builtin:relieving-letter',
+    name: 'Relieving letter',
+    category: 'Employees & HR',
+    recipient: '[Full name]',
+    subject: 'Relieving letter',
+    bodyHtml: '<p>Dear [First name],</p><p>You are relieved on [Last working day].</p><p>We wish you the very best.</p>',
+    closing: 'Yours sincerely,',
+  }
+  const experience = {
+    id: 'builtin:experience-certificate',
+    name: 'Experience certificate',
+    category: 'Employees & HR',
+    recipient: 'To Whom It May Concern',
+    subject: 'Experience certificate',
+    bodyHtml: '<p>Dear Sir / Madam,</p><p>[Full name] worked here until [Last working day].</p><ul><li>Role: [Designation]</li></ul><p>We wish you the very best.</p>',
+    closing: 'For Prakhar Technology,',
+  }
+
+  it('keeps the first one’s recipient, greeting and closing, and joins the subjects', () => {
+    const c = combineTemplates([relieving, experience])
+    expect(c.recipient).toBe('[Full name]')
+    expect(c.closing).toBe('Yours sincerely,')
+    expect(c.subject).toBe('Relieving letter & Experience certificate')
+    expect(c.name).toBe('Relieving letter & Experience certificate')
+    expect(c.combined).toBe(true)
+  })
+
+  it('drops later greetings and repeated paragraphs, keeping lists', () => {
+    const c = combineTemplates([relieving, experience])
+    expect(c.bodyHtml).toBe(
+      '<p>Dear [First name],</p><p>You are relieved on [Last working day].</p><p>We wish you the very best.</p><p>[Full name] worked here until [Last working day].</p><ul><li>Role: [Designation]</li></ul>',
+    )
+    // The same blank in both is filled in once.
+    expect(findBlanks({ ...applyTemplate({ signatoryName: '', designation: '' }, c) }).filter((b) => b === '[Last working day]')).toHaveLength(1)
+  })
+
+  it('follows the order picked', () => {
+    const c = combineTemplates([experience, relieving])
+    expect(c.recipient).toBe('To Whom It May Concern')
+    expect(c.bodyHtml.startsWith('<p>Dear Sir / Madam,</p>')).toBe(true)
+    expect(c.bodyHtml).not.toContain('Dear [First name]')
+  })
+})
+
+describe('letter dates', () => {
+  it('works in India time and checks the year', () => {
+    expect(istDateKey(new Date('2026-12-31T20:00:00Z'))).toBe('2027-01-01')
+    expect(isDateKeyInYear('2026-02-28', 2026)).toBe(true)
+    expect(isDateKeyInYear('2026-02-30', 2026)).toBe(false)
+    expect(isDateKeyInYear('2025-12-31', 2026)).toBe(false)
+    expect(isDateKeyInYear('', 2026)).toBe(false)
+  })
+  it('prints the saved date, or the old printed text', () => {
+    expect(letterDateText({ letterDate: '2026-03-05', dateText: 'ignored' })).toBe('05 March 2026')
+    expect(letterDateText({ dateText: '01 January 2026' })).toBe('01 January 2026')
   })
 })

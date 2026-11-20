@@ -1,7 +1,7 @@
 // Every write the letter system makes. Each one is checked again by firestore.rules.
 import { collection, doc, runTransaction, serverTimestamp, writeBatch } from 'firebase/firestore'
 import { db } from './firebase'
-import { formatLetterDate, formatRef, isBlankLayout, istYear, letterId, letterTitle, sanitizeHtml } from './lib'
+import { dateFromKey, formatLetterDate, formatRef, isBlankLayout, istDateKey, istYear, letterDateText, letterId, letterTitle, sanitizeHtml } from './lib'
 
 export function whoFrom(user, profile) {
   return { email: user.email.toLowerCase(), name: profile?.name || user.displayName || user.email }
@@ -11,9 +11,13 @@ function addAudit(writer, who, area, action, details) {
   writer.set(doc(collection(db, 'auditLog')), { area, action, details, by: who, at: serverTimestamp() })
 }
 
-/** Takes the next reference number and saves the letter, in one step. */
-export function issueLetter({ who, draft, templateId }) {
+/**
+ * Takes the next reference number and saves the letter, in one step. `letterDate` ("YYYY-MM-DD") is
+ * the date printed on it: today, or another day this year when an admin chose one.
+ */
+export function issueLetter({ who, draft, templateId, letterDate = istDateKey() }) {
   const year = istYear()
+  const today = istDateKey()
   const counterRef = doc(db, 'counters', String(year))
   return runTransaction(db, async (tx) => {
     const counter = await tx.get(counterRef)
@@ -25,7 +29,8 @@ export function issueLetter({ who, draft, templateId }) {
       ref,
       year,
       seq,
-      dateText: formatLetterDate(),
+      letterDate,
+      dateText: formatLetterDate(dateFromKey(letterDate)),
       status: 'issued',
       issuedAt: serverTimestamp(),
       issuedBy: who,
@@ -40,9 +45,27 @@ export function issueLetter({ who, draft, templateId }) {
       signature: draft.signature || null,
       stamp: draft.stamp || null,
     })
-    addAudit(tx, who, 'letters', 'letter.issued', { ref, subject: letterTitle({ ...draft, subject: isBlankLayout(draft) ? '' : draft.subject.trim() }) })
+    addAudit(tx, who, 'letters', 'letter.issued', {
+      ref,
+      subject: letterTitle({ ...draft, subject: isBlankLayout(draft) ? '' : draft.subject.trim() }),
+      ...(letterDate !== today && { dated: letterDate }),
+    })
     return { id, ref }
   })
+}
+
+/** Admins only: changes the date printed on an issued letter, with a reason. The reference number stays. */
+export async function changeLetterDate({ who, letter, letterDate, reason }) {
+  const batch = writeBatch(db)
+  batch.update(doc(db, 'letters', letter.id), {
+    letterDate,
+    dateText: formatLetterDate(dateFromKey(letterDate)),
+    dateChangedAt: serverTimestamp(),
+    dateChangedBy: who,
+    dateChangeReason: reason,
+  })
+  addAudit(batch, who, 'letters', 'letter.redated', { ref: letter.ref, from: letterDateText(letter), to: formatLetterDate(dateFromKey(letterDate)), reason })
+  await batch.commit()
 }
 
 export async function cancelLetter({ who, letter, reason }) {

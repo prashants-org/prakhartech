@@ -13,7 +13,8 @@ rules_version = '2';
 //   site editors          change the website's client logos and contact details (site/*):
 //                         admins, and staff whose allowedUsers record has siteEditor: true
 //   everyone              read the website content (site/*), which the public pages show
-//   admin                 everything staff can, plus cancel letters, manage designs and the stamp,
+//   admin                 everything staff can, plus cancel letters, date a letter another day of
+//                         its year (when issuing or afterwards), manage designs and the stamp,
 //                         change any letter template, and back up / restore
 //
 // Nothing is ever deleted (letter templates aside: they are text to copy, not records). Issued
@@ -44,6 +45,18 @@ service cloud.firestore {
     function assetPath(id) { return /databases/$(database)/documents/assets/$(id); }
     // Calendar year in India (UTC+5:30), so a letter issued at 00:30 IST on 1 January gets the new year.
     function istYear() { return (request.time + duration.value(330, 'm')).year(); }
+    // A letter date "YYYY-MM-DD" in the letter's year (its reference number belongs to that year).
+    function validLetterDate(k, year) {
+      return k is string
+        && k.matches('[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        && int(k.split('-')[0]) == year
+        && int(k.split('-')[1]) >= 1 && int(k.split('-')[1]) <= 12
+        && int(k.split('-')[2]) >= 1 && int(k.split('-')[2]) <= 31;
+    }
+    function isTodayInIndia(k) {
+      let now = request.time + duration.value(330, 'm');
+      return int(k.split('-')[0]) == now.year() && int(k.split('-')[1]) == now.month() && int(k.split('-')[2]) == now.day();
+    }
     function restoring(d) { return isAdmin() && d.restoredAt == request.time && isMe(d.restoredBy); }
 
     match /allowedUsers/{email} {
@@ -137,7 +150,9 @@ service cloud.firestore {
         && isMe(d.issuedBy)
         && d.templateId == get(settingsPath()).data.templateId
         && (d.signature == null || get(assetPath(d.signature.assetId)).data.ownerEmail == myEmail())
-        && (d.stamp == null || get(assetPath(d.stamp.assetId)).data.kind == 'stamp');
+        && (d.stamp == null || get(assetPath(d.stamp.assetId)).data.kind == 'stamp')
+        // Dated today, or another day of the same year when an admin issues it.
+        && (!('letterDate' in d) || (validLetterDate(d.letterDate, d.year) && (isAdmin() || isTodayInIndia(d.letterDate))));
     }
 
     match /letters/{id} {
@@ -152,6 +167,18 @@ service cloud.firestore {
         && isMe(request.resource.data.cancelledBy)
         && request.resource.data.cancelReason is string
         && request.resource.data.cancelReason.size() > 0;
+      // An admin may change the date printed on an issued letter (same year), giving a reason.
+      allow update: if isAdmin()
+        && resource.data.status == 'issued'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['letterDate', 'dateText', 'dateChangedAt', 'dateChangedBy', 'dateChangeReason'])
+        && validLetterDate(request.resource.data.letterDate, resource.data.year)
+        && request.resource.data.dateText is string
+        && request.resource.data.dateText.size() <= 40
+        && request.resource.data.dateChangedAt == request.time
+        && isMe(request.resource.data.dateChangedBy)
+        && request.resource.data.dateChangeReason is string
+        && request.resource.data.dateChangeReason.size() > 0
+        && request.resource.data.dateChangeReason.size() <= 300;
       allow delete: if false;
     }
 

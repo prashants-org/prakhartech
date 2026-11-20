@@ -730,3 +730,22 @@ img { max-width: 100%; }
 }
 
 .lt-nav .lt-nav-ext { margin-left: auto; opacity: 0.6; }
+
+/* Combining templates in the picker */
+.lt-combine-modes { display: inline-flex; padding: 3px; margin-bottom: 12px; border-radius: 12px; background: #fff; border: 1px solid var(--line); }
+.lt-combine-modes button { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font: inherit; font-size: 0.86rem; font-weight: 600; color: var(--ink-2); background: none; border: 0; border-radius: 9px; cursor: pointer; }
+.lt-combine-modes button.is-on { background: var(--accent); color: #fff; }
+.lt-dialog-body p.lt-combine-help { margin: 0 0 12px; padding: 10px 14px; font-size: 0.86rem; border-radius: 10px; background: var(--accent-soft); color: var(--ink-2); }
+.lt-tpl-order { display: grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--field-line); font-size: 0.8rem; font-weight: 700; color: #fff; }
+.lt-tpl-item { justify-content: flex-start; }
+.lt-tpl-item .lt-tpl-item-main { flex: 1; }
+.lt-tpl-item.is-picked { background: var(--accent-soft); }
+.lt-tpl-item.is-picked .lt-tpl-order { background: var(--accent); border-color: var(--accent); }
+.lt-tpl-item:disabled { opacity: 0.45; cursor: default; }
+.lt-combine-summary { flex: 1; align-self: center; font-size: 0.86rem; color: var(--muted); }
+
+/* Letter date picker (admins) */
+.lt-chip--date { padding-top: 3px; padding-bottom: 3px; }
+.lt-chip--date input { font: inherit; font-weight: 700; color: var(--ink); border: 0; background: none; padding: 2px 0; cursor: pointer; }
+.lt-chip-reset { font: inherit; font-size: 0.78rem; font-weight: 600; color: var(--accent); background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; cursor: pointer; }
+.lt-tpl-list--short { max-height: min(38vh, 360px); }

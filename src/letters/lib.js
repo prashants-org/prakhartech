@@ -21,6 +21,23 @@ export function formatLetterDate(date = new Date()) {
   return new Intl.DateTimeFormat('en-IN', { day: '2-digit', month: 'long', year: 'numeric', timeZone: TIME_ZONE }).format(date)
 }
 
+/** A day in India time as "YYYY-MM-DD" (the letter date saved with a letter, and what a date input uses). */
+export function istDateKey(date = new Date()) {
+  return new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: TIME_ZONE }).format(date)
+}
+
+/** Midday in India on that day, so it formats as the same day anywhere. */
+export const dateFromKey = (key) => new Date(`${key}T12:00:00+05:30`)
+
+/** True for a real "YYYY-MM-DD" day in the given year. */
+export function isDateKeyInYear(key, year) {
+  if (typeof key !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(key)) return false
+  return Number(key.slice(0, 4)) === year && istDateKey(dateFromKey(key)) === key
+}
+
+/** The date printed on a letter. Letters before letter dates were saved only kept the printed text. */
+export const letterDateText = (letter) => (letter.letterDate ? formatLetterDate(dateFromKey(letter.letterDate)) : letter.dateText)
+
 export function formatDateTime(value) {
   const d = value?.toDate ? value.toDate() : value
   if (!d) return '—'
@@ -131,6 +148,49 @@ export function fillBlanks(letter, fills) {
 /** A draft with a template's text in place of its own. */
 export function applyTemplate(draft, template) {
   return { ...draft, ...Object.fromEntries(TEMPLATE_FIELDS.map((k) => [k, template[k] ?? ''])) }
+}
+
+// ── Combining templates ──
+
+export const MAX_COMBINE = 4
+// A paragraph that only greets the reader ("Dear [First name],", "To Whom It May Concern").
+const GREETING = /^(dear|respected|to whom it may concern|sir|madam)\b[^.!?]{0,60}[,:]?$/i
+const blockText = (el) => (el.textContent || '').replace(/\s+/g, ' ').trim()
+
+/**
+ * One template made from several, in the order given: the first one's recipient, greeting and
+ * closing, the subjects joined, then each one's paragraphs. Later greetings and any paragraph that
+ * appears twice are left out. Blanks with the same name are filled in once.
+ */
+export function combineTemplates(templates) {
+  const [first] = templates
+  const seen = new Set()
+  const parts = []
+  templates.forEach((t, i) => {
+    const doc = new DOMParser().parseFromString(`<body>${t.bodyHtml || ''}</body>`, 'text/html')
+    for (const el of [...doc.body.childNodes]) {
+      const text = el.nodeType === 1 ? blockText(el) : (el.textContent || '').trim()
+      if (!text) continue
+      if (i > 0 && GREETING.test(text)) continue
+      const key = text.toLowerCase()
+      if (seen.has(key)) continue
+      seen.add(key)
+      parts.push(el.nodeType === 1 ? el.outerHTML : `<p>${escapeHtml(text)}</p>`)
+    }
+  })
+  const subjects = [...new Set(templates.map((t) => (t.subject || '').trim()).filter(Boolean))]
+  return {
+    id: `combined:${templates.map((t) => t.id).join('+')}`,
+    combined: true,
+    category: first.category,
+    name: templates.map((t) => t.name).join(' & '),
+    description: `Combined from ${templates.length} templates`,
+    recipient: first.recipient || '',
+    subject: subjects.join(' & '),
+    bodyHtml: parts.join(''),
+    closing: first.closing || '',
+    ...(isBlankLayout(first) && { layout: 'blank' }),
+  }
 }
 
 /** True when nothing has been typed into the letter yet (so a template can replace it silently). */
