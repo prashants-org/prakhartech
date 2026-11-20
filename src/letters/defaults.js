@@ -44,6 +44,7 @@ export function emptyLetter(profile) {
   return {
     recipient: '',
     subject: '',
+    layout: '', // '' = the usual letter with To and Subject; 'blank' leaves them out
     bodyHtml: '<p>Dear Sir / Madam,</p><p><br></p>',
     closing: 'Yours sincerely,',
     signatoryName: profile?.name || '',

@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useSession } from '../context'
 import { useLiveQuery } from '../data'
 import { lettersQuery } from '../queries'
-import { downloadFile, firstLine, formatDateTime, htmlToText, toCsv } from '../lib'
+import { downloadFile, firstLine, formatDateTime, htmlToText, letterTitle, toCsv } from '../lib'
 import Icon from '../components/Icon'
 import { Badge, Button, Card, Empty, Loading, Notice, PageHeader } from '../components/ui'
 import { errorText } from '../errors'
@@ -16,7 +16,7 @@ function exportCsv(letters) {
       l.ref,
       l.dateText,
       l.recipient.replace(/\n/g, ', '),
-      l.subject,
+      letterTitle(l),
       l.signatoryName,
       l.issuedBy?.email,
       formatDateTime(l.issuedAt),
@@ -28,7 +28,7 @@ function exportCsv(letters) {
   downloadFile(`letter-register-${today()}.csv`, toCsv(rows), 'text/csv;charset=utf-8')
 }
 
-const matches = (l, q) => [l.ref, l.recipient, l.subject, l.issuedBy?.name, l.issuedBy?.email, l.signatoryName].some((v) => v?.toLowerCase().includes(q))
+const matches = (l, q) => [l.ref, l.recipient, letterTitle(l), l.issuedBy?.name, l.issuedBy?.email, l.signatoryName].some((v) => v?.toLowerCase().includes(q))
 
 export default function Register() {
   const { isAdmin } = useSession()
@@ -116,8 +116,8 @@ export default function Register() {
                         </a>
                       </td>
                       <td>{l.dateText}</td>
-                      <td>{firstLine(l.recipient)}</td>
-                      <td title={htmlToText(l.bodyHtml).slice(0, 200)}>{l.subject}</td>
+                      <td>{firstLine(l.recipient) || <span className="lt-muted">—</span>}</td>
+                      <td title={htmlToText(l.bodyHtml).slice(0, 200)}>{letterTitle(l)}</td>
                       <td>{l.issuedBy?.name}</td>
                       <td>
                         <Badge status={l.status}>{cancelled ? 'Cancelled' : 'Issued'}</Badge>

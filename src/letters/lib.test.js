@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { applyTemplate, findBlanks, firstLine, formatRef, isDraftEmpty, istYear, letterId, sanitizeHtml, toCsv } from './lib'
+import { applyTemplate, findBlanks, firstLine, formatRef, isBlankLayout, isDraftEmpty, istYear, letterId, letterTitle, sanitizeHtml, toCsv } from './lib'
 
 describe('letter reference numbers', () => {
   it('pads the sequence to four digits', () => {
@@ -52,7 +52,18 @@ describe('letter templates', () => {
   it('replaces only the letter text, keeping the signatory and placements', () => {
     const draft = { recipient: 'x', subject: 'y', bodyHtml: '<p>z</p>', closing: 'c', signatoryName: 'Me', signature: { x: 1 } }
     const next = applyTemplate(draft, { recipient: 'A', subject: 'B', bodyHtml: '<p>C</p>', closing: 'D', name: 'ignored' })
-    expect(next).toEqual({ recipient: 'A', subject: 'B', bodyHtml: '<p>C</p>', closing: 'D', signatoryName: 'Me', signature: { x: 1 } })
+    expect(next).toEqual({ recipient: 'A', subject: 'B', bodyHtml: '<p>C</p>', closing: 'D', layout: '', signatoryName: 'Me', signature: { x: 1 } })
+  })
+
+  it('switches to a blank letter (no To or Subject) and back', () => {
+    const blankLetter = applyTemplate({ recipient: 'x', subject: 'y', bodyHtml: '', closing: 'c' }, { recipient: '', subject: '', bodyHtml: '', closing: 'c', layout: 'blank' })
+    expect(isBlankLayout(blankLetter)).toBe(true)
+    expect(isBlankLayout(applyTemplate(blankLetter, { recipient: 'A', subject: 'B', bodyHtml: '', closing: 'c' }))).toBe(false)
+  })
+
+  it('names a letter by its subject, or by its first line when it has none', () => {
+    expect(letterTitle({ subject: 'Offer', bodyHtml: '<p>Hi</p>' })).toBe('Offer')
+    expect(letterTitle({ subject: '', bodyHtml: '<p>To whom it may concern</p><p>More</p>' })).toBe('To whom it may concern')
   })
 
   it('knows when a draft is still blank', () => {

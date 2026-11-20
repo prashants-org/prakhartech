@@ -1,7 +1,7 @@
 // Every write the letter system makes. Each one is checked again by firestore.rules.
 import { collection, doc, runTransaction, serverTimestamp, writeBatch } from 'firebase/firestore'
 import { db } from './firebase'
-import { formatLetterDate, formatRef, istYear, letterId, sanitizeHtml } from './lib'
+import { formatLetterDate, formatRef, isBlankLayout, istYear, letterId, letterTitle, sanitizeHtml } from './lib'
 
 export function whoFrom(user, profile) {
   return { email: user.email.toLowerCase(), name: profile?.name || user.displayName || user.email }
@@ -30,8 +30,9 @@ export function issueLetter({ who, draft, templateId }) {
       issuedAt: serverTimestamp(),
       issuedBy: who,
       templateId,
-      recipient: draft.recipient.trim(),
-      subject: draft.subject.trim(),
+      recipient: isBlankLayout(draft) ? '' : draft.recipient.trim(),
+      subject: isBlankLayout(draft) ? '' : draft.subject.trim(),
+      ...(isBlankLayout(draft) && { layout: 'blank' }),
       bodyHtml: sanitizeHtml(draft.bodyHtml),
       closing: draft.closing.trim(),
       signatoryName: draft.signatoryName.trim(),
@@ -39,7 +40,7 @@ export function issueLetter({ who, draft, templateId }) {
       signature: draft.signature || null,
       stamp: draft.stamp || null,
     })
-    addAudit(tx, who, 'letters', 'letter.issued', { ref, subject: draft.subject.trim() })
+    addAudit(tx, who, 'letters', 'letter.issued', { ref, subject: letterTitle({ ...draft, subject: isBlankLayout(draft) ? '' : draft.subject.trim() }) })
     return { id, ref }
   })
 }
@@ -140,6 +141,7 @@ export async function saveLetterTemplate({ who, id, original, data }) {
     subject: (data.subject || '').trim(),
     bodyHtml: sanitizeHtml(data.bodyHtml),
     closing: (data.closing || '').trim(),
+    ...(isBlankLayout(data) && { layout: 'blank' }),
     createdAt: id ? original.createdAt : serverTimestamp(),
     createdBy: id ? original.createdBy : who,
     updatedAt: serverTimestamp(),

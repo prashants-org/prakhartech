@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { sanitizeHtml } from '../lib'
+import { isBlankLayout, sanitizeHtml } from '../lib'
 import { useImageAspect } from '../hooks'
 import { drawnWidth } from '../placement'
 import Editable from './Editable'
@@ -82,12 +82,16 @@ export default function LetterSheet({ template: t, letter, images = {}, refText,
                   Date: <b>{dateText}</b>
                 </span>
               </div>
-              <div className="lh-label">To,</div>
-              {field('recipient', { placeholder: 'Recipient name, company and address', className: 'lh-recipient' })}
-              <div className="lh-subject">
-                <span>Subject:&nbsp;</span>
-                {field('subject', { singleLine: true, placeholder: 'Subject of the letter', className: 'lh-subject-text' })}
-              </div>
+              {!isBlankLayout(letter) && (
+                <>
+                  <div className="lh-label">To,</div>
+                  {field('recipient', { placeholder: 'Recipient name, company and address', className: 'lh-recipient' })}
+                  <div className="lh-subject">
+                    <span>Subject:&nbsp;</span>
+                    {field('subject', { singleLine: true, placeholder: 'Subject of the letter', className: 'lh-subject-text' })}
+                  </div>
+                </>
+              )}
               {field('bodyHtml', { rich: true, placeholder: 'Type the letter here', className: 'lh-body' })}
               {field('closing', { singleLine: true, placeholder: 'Yours sincerely,', className: 'lh-closing' })}
               <div className="lh-signzone">

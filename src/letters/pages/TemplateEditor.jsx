@@ -5,12 +5,12 @@ import { saveLetterTemplate } from '../api'
 import { CATEGORIES } from '../builtinTemplates'
 import { emptyLetter } from '../defaults'
 import { loadDraft } from '../drafts'
-import { TEMPLATE_FIELDS, canManageTemplate, formatLetterDate, htmlToText, isBlank } from '../lib'
+import { TEMPLATE_FIELDS, canManageTemplate, formatLetterDate, htmlToText, isBlank, isBlankLayout } from '../lib'
 import { useAction, useLetterTemplates } from '../hooks'
 import { go } from '../router'
 import LetterSheet from '../components/LetterSheet'
 import Icon from '../components/Icon'
-import { Button, Card, Field, Loading, Notice, PageHeader } from '../components/ui'
+import { Button, Card, Check, Field, Loading, Notice, PageHeader } from '../components/ui'
 
 const pickText = (src) => Object.fromEntries(TEMPLATE_FIELDS.map((k) => [k, src[k] ?? '']))
 
@@ -48,7 +48,8 @@ function EditorForm({ start, editing, categories }) {
   const save = async () => {
     if (isBlank(t.name)) return action.fail('Please give the template a name.')
     if (isBlank(t.category)) return action.fail('Please choose or type a category.')
-    if (isBlank(t.subject) || isBlank(htmlToText(t.bodyHtml))) return action.fail('Please write at least a subject and the letter text.')
+    if (isBlank(htmlToText(t.bodyHtml))) return action.fail('Please write the letter text.')
+    if (!isBlankLayout(t) && isBlank(t.subject)) return action.fail('Please write a subject, or switch off the To and Subject lines.')
     if (await action.run(() => saveLetterTemplate({ who, id: editing?.id, original: editing, data: t }))) go('/templates')
   }
 
@@ -92,6 +93,9 @@ function EditorForm({ start, editing, categories }) {
         <Field label="When to use it (optional)">
           <input type="text" value={t.description} maxLength={160} onChange={(e) => set('description', e.target.value)} placeholder="e.g. Confirms the date and time of a site visit" />
         </Field>
+        <Check checked={!isBlankLayout(t)} onChange={(on) => set('layout', on ? '' : 'blank')}>
+          Include the To and Subject lines (switch off for a blank letter)
+        </Check>
         {action.error && <Notice kind="error">{action.error}</Notice>}
         <p className="lt-hint">
           <Icon name="pen" size={15} />

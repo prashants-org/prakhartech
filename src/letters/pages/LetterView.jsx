@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSession } from '../context'
 import { useFixedDoc, useLiveDoc } from '../data'
 import { cancelLetter } from '../api'
-import { formatDateTime } from '../lib'
+import { formatDateTime, letterTitle } from '../lib'
 import { useAction } from '../hooks'
 import LetterSheet from '../components/LetterSheet'
 import Icon from '../components/Icon'
@@ -42,7 +42,7 @@ export default function LetterView({ id }) {
           back={{ href: '#/register', label: 'Register' }}
           badge={<Badge status={letter.status}>{cancelled ? 'Cancelled' : 'Issued'}</Badge>}
           title={letter.ref}
-          lead={letter.subject}
+          lead={letterTitle(letter)}
           actions={
             <>
               {isAdmin && !cancelled && (

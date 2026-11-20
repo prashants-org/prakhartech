@@ -115,9 +115,8 @@ img { max-width: 100%; }
   color: #fff;
   background: var(--side-bg);
 }
-/* The whole mark, faint, in the empty space between the links and the user card. */
-.lt-side-mark { position: absolute; left: 50%; bottom: 110px; width: 150px; transform: translateX(-50%); opacity: 0.07; filter: brightness(0) invert(1); pointer-events: none; }
-@media (max-height: 700px) { .lt-side-mark { display: none; } }
+/* Same watermark as the sign-in page: the mark, large and faint, running off the bottom-right corner. */
+.lt-side-mark { position: absolute; right: -90px; bottom: -70px; width: 360px; opacity: 0.07; pointer-events: none; }
 .lt-side-top { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 20px 18px; }
 .lt-brand { display: flex; align-items: center; gap: 12px; min-width: 0; text-decoration: none; color: #fff; }
 .lt-brand-tile { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: #fff; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22); }

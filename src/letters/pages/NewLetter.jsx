@@ -4,7 +4,7 @@ import { useFixedDoc, useLiveDoc } from '../data'
 import { issueLetter } from '../api'
 import { emptyLetter } from '../defaults'
 import { freshFrom, loadDraft, saveDraft } from '../drafts'
-import { applyTemplate, findBlanks, formatLetterDate, formatRef, htmlToText, isBlank, isDraftEmpty, istYear } from '../lib'
+import { applyTemplate, findBlanks, isBlankLayout, formatLetterDate, formatRef, htmlToText, isBlank, isDraftEmpty, istYear } from '../lib'
 import { useAction, useImageAspect, useMySignature } from '../hooks'
 import { MAX_HEIGHT, WIDTH_RANGE, maxWidth, measureTextEnd, placeSignature, placeStamp, withFit } from '../placement'
 import { go } from '../router'
@@ -24,8 +24,8 @@ const FORMATS = [
 function missingParts(draft) {
   const body = htmlToText(draft.bodyHtml).trim()
   return [
-    isBlank(draft.recipient) && 'the recipient',
-    isBlank(draft.subject) && 'the subject',
+    !isBlankLayout(draft) && isBlank(draft.recipient) && 'the recipient',
+    !isBlankLayout(draft) && isBlank(draft.subject) && 'the subject',
     (isBlank(body) || body === 'Dear Sir / Madam,') && 'the letter text',
     isBlank(draft.signatoryName) && 'the signatory name',
   ].filter(Boolean)
@@ -120,7 +120,7 @@ export default function NewLetter() {
           actions={
             <>
               <Button variant="ghost" icon="file" onClick={clearDraft}>
-                New blank letter
+                Start a new letter
               </Button>
               <Button variant="ghost" icon="upload" onClick={() => go('/templates/new/draft')} title="Save this letter's text as a template others can reuse">
                 Save as template
@@ -231,7 +231,7 @@ export default function NewLetter() {
 
       {clearing && (
         <Dialog
-          title="Start a new blank letter?"
+          title="Start a new letter?"
           onClose={() => setClearing(false)}
           actions={
             <>

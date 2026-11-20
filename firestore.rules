@@ -148,8 +148,9 @@ service cloud.firestore {
 
     // Ready-made letter text. Anyone can add one; the writer or an admin can change or delete it.
     function validLetterTemplate(d) {
-      return d.keys().hasOnly(['name', 'category', 'description', 'recipient', 'subject', 'bodyHtml', 'closing',
+      return d.keys().hasOnly(['name', 'category', 'description', 'recipient', 'subject', 'bodyHtml', 'closing', 'layout',
                                'createdAt', 'createdBy', 'updatedAt', 'updatedBy'])
+        && (!('layout' in d) || d.layout == 'blank')
         && d.name is string && d.name.size() > 0 && d.name.size() <= 80
         && d.category is string && d.category.size() > 0 && d.category.size() <= 40
         && d.description is string && d.description.size() <= 160

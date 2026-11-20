@@ -85,7 +85,14 @@ export function downloadFile(name, content, type) {
 // ── Letter templates ──
 
 // The parts of a letter a template fills in. Who signs it, and the signature/stamp, stay as they are.
-export const TEMPLATE_FIELDS = ['recipient', 'subject', 'bodyHtml', 'closing']
+export const TEMPLATE_FIELDS = ['recipient', 'subject', 'bodyHtml', 'closing', 'layout']
+
+/** A "blank" letter has no To and Subject lines: just the text, closing and signature. */
+export const isBlankLayout = (letter) => letter?.layout === 'blank'
+
+/** What to call a letter in lists: its subject, or the start of its text for a blank letter. */
+export const letterTitle = (letter) =>
+  letter.subject || firstLine(htmlToText((letter.bodyHtml || '').replace(/<br\s*\/?>|<\/(p|div|li|h\d)>/gi, '$&\n'))).slice(0, 90) || 'Letter'
 
 const BLANK = /\[[^\]\n]{1,80}\]/g
 
