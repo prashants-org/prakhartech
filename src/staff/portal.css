@@ -3,7 +3,9 @@
 .sp { min-height: 100vh; display: flex; flex-direction: column; background: var(--page); }
 .sp-wrap { width: min(1080px, 100% - 40px); margin-inline: auto; }
 
-.sp-top { position: relative; overflow: hidden; padding-bottom: 92px; background: var(--side-bg); color: #fff; }
+/* The navy band fills about half the screen with the greeting centred in it, and ends halfway down
+   the cards, so the page isn't top-heavy with an empty bottom half. */
+.sp-top { position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 54vh; padding-bottom: 150px; background: var(--side-bg); color: #fff; }
 .sp-top-mark { position: absolute; right: -60px; bottom: -110px; width: 380px; opacity: 0.07; pointer-events: none; }
 .sp-top-inner { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
 .sp-brand { display: flex; align-items: center; gap: 12px; color: #fff; text-decoration: none; }
@@ -19,11 +21,11 @@
 .sp-user-text small { font-size: 0.76rem; color: rgba(255, 255, 255, 0.6); }
 .sp-icon-btn { display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 10px; background: none; color: rgba(255, 255, 255, 0.75); cursor: pointer; }
 .sp-icon-btn:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
-.sp-hello { position: relative; padding-top: 44px; text-align: center; }
+.sp-hello { position: relative; flex: 1; display: grid; align-content: center; padding: 40px 0 8px; text-align: center; }
 .sp-hello h1 { margin: 0; color: #fff; font-size: clamp(1.7rem, 3.4vw, 2.4rem); line-height: 1.15; letter-spacing: -0.03em; }
 .sp-hello p { margin: 10px auto 0; max-width: 520px; color: rgba(255, 255, 255, 0.72); }
 
-.sp-main { position: relative; flex: 1; margin-top: -60px; padding-bottom: 40px; }
+.sp-main { position: relative; flex: 1; margin-top: -130px; padding-bottom: 40px; }
 /* Two equal columns; a single last card sits centred under them, so the page stays symmetric. */
 .sp-tools { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .sp-tools.is-odd > .sp-tool:last-child { grid-column: 1 / -1; justify-self: center; width: calc(50% - 10px); }
@@ -49,7 +51,8 @@
   .sp-tools { grid-template-columns: minmax(0, 1fr); }
   .sp-tools.is-odd > .sp-tool:last-child { width: 100%; }
   .sp-user-text { display: none; }
-  .sp-top { padding-bottom: 80px; }
+  .sp-top { min-height: 0; padding-bottom: 96px; }
   .sp-hello { padding-top: 32px; }
+  .sp-main { margin-top: -64px; }
   .sp-tool { padding: 20px; }
 }
