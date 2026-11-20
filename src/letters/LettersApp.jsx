@@ -148,7 +148,9 @@ function Shell() {
   const path = useHashPath()
   const { user, profile, isAdmin } = useSession()
   const { active, page } = route(path.split('/').filter(Boolean), isAdmin)
-  const [menuOpen, setMenuOpen] = useState(false)
+  // The phone menu is open for the page it was opened on, so going to another page closes it.
+  const [menuFor, setMenuFor] = useState(null)
+  const menuOpen = menuFor === path
   const name = profile.name || user.displayName || user.email
   const initials = name
     .split(/[\s@.]+/)
@@ -157,10 +159,9 @@ function Shell() {
     .map((w) => w[0].toUpperCase())
     .join('')
 
-  // Each page starts at the top, with the phone menu closed.
+  // Each page starts at the top.
   useEffect(() => {
     window.scrollTo(0, 0)
-    setMenuOpen(false)
   }, [path])
 
   const link = (n) => (
@@ -188,7 +189,7 @@ function Shell() {
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
             aria-controls="lt-side-nav"
-            onClick={() => setMenuOpen((o) => !o)}
+            onClick={() => setMenuFor(menuOpen ? null : path)}
           >
             <Icon name={menuOpen ? 'x' : 'menu'} />
           </button>
