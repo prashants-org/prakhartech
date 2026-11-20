@@ -1,12 +1,15 @@
 rules_version = '2';
 
-// Security rules for the Prakhar Technology letter system (/letters).
+// Security rules for the Prakhar Technology staff tools: the letter system (/letters) and
+// website enquiries (/staff/#/enquiries).
 // Paste into Firebase console → Firestore Database → Rules, then Publish.
 //
 // Who can do what
 //   allowedUsers/{email}  managed only in the Firebase console. role: 'admin' | 'staff'
 //   staff                 issue letters, read the register, add their own signature,
 //                         write letter templates and change their own
+//   website visitors      send an enquiry or quote request (create only, never read)
+//   staff, enquiries      read every enquiry, change its status and owner, add comments
 //   admin                 everything staff can, plus cancel letters, manage designs and the stamp,
 //                         change any letter template, and back up / restore
 //
@@ -174,6 +177,59 @@ service cloud.firestore {
         && request.resource.data.createdAt == resource.data.createdAt
         && request.resource.data.createdBy == resource.data.createdBy;
       allow delete: if isMember() && (isAdmin() || isMe(resource.data.createdBy));
+    }
+
+    // ── Website enquiries and quote requests ──
+    // Anyone may send one from the website (no sign-in), but only in this exact shape and always
+    // as "new". Staff can read them, change the status and who is looking after it. Nothing is
+    // deleted: junk is marked as spam.
+    function textUpTo(d, k, max) { return d[k] is string && d[k].size() <= max; }
+    function validEnquiry(d) {
+      return d.keys().hasOnly(['kind', 'subject', 'source', 'page', 'name', 'email', 'phone', 'company', 'fields', 'status', 'emailed', 'createdAt'])
+        && d.keys().hasAll(['kind', 'subject', 'source', 'page', 'name', 'email', 'phone', 'company', 'fields', 'status', 'emailed', 'createdAt'])
+        && d.kind in ['enquiry', 'quote']
+        && textUpTo(d, 'subject', 300) && d.subject.size() > 0
+        && textUpTo(d, 'source', 60) && textUpTo(d, 'page', 200)
+        && textUpTo(d, 'name', 200) && textUpTo(d, 'email', 254) && textUpTo(d, 'phone', 40) && textUpTo(d, 'company', 200)
+        && (d.email.size() > 0 || d.phone.size() > 0)
+        && d.fields is map && d.fields.size() <= 12
+        && d.status == 'new'
+        && d.emailed is bool
+        && d.createdAt == request.time;
+    }
+    match /enquiries/{id} {
+      allow create: if validEnquiry(request.resource.data);
+      allow create: if restoring(request.resource.data);
+      allow read: if isMember();
+      allow update: if isMember()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'assignedTo', 'updatedAt', 'updatedBy'])
+        && request.resource.data.status in ['new', 'in-progress', 'quoted', 'won', 'lost', 'spam']
+        && (request.resource.data.get('assignedTo', null) == null
+            || (request.resource.data.assignedTo is map
+                && request.resource.data.assignedTo.keys().hasOnly(['email', 'name'])
+                && request.resource.data.assignedTo.email is string))
+        && request.resource.data.updatedAt == request.time
+        && isMe(request.resource.data.updatedBy);
+      allow delete: if false;
+    }
+
+    // Staff comments on an enquiry: notes, replies sent to the customer, and status changes.
+    // Kept as a record, so never edited or deleted.
+    match /enquiryNotes/{id} {
+      allow read: if isMember();
+      allow create: if restoring(request.resource.data);
+      allow create: if isMember()
+        && request.resource.data.keys().hasOnly(['enquiryId', 'kind', 'channel', 'text', 'at', 'by'])
+        && request.resource.data.enquiryId is string
+        && exists(/databases/$(database)/documents/enquiries/$(request.resource.data.enquiryId))
+        && request.resource.data.kind in ['note', 'reply', 'status']
+        && (request.resource.data.get('channel', null) == null || request.resource.data.channel in ['email', 'whatsapp', 'phone'])
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 5000
+        && request.resource.data.at == request.time
+        && isMe(request.resource.data.by);
+      allow update, delete: if false;
     }
 
     // Who did what and when: letters, designs, stamp, letter templates, backups and restores.

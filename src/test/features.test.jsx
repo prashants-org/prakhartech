@@ -8,6 +8,10 @@ import { validateEnquiry } from '../lib/enquiry'
 import { estimateSavings, formatINRCompact } from '../lib/fleetSavings'
 import { headFor, renderHeadTags } from '../lib/seo'
 import { findRoute } from '../routes'
+import { saveEnquiry } from '../staff/saveEnquiry'
+
+// The copy saved for the staff portal goes to Firebase; here it is only recorded.
+vi.mock('../staff/saveEnquiry', () => ({ saveEnquiry: vi.fn(async () => {}) }))
 
 const renderAt = (route) =>
   render(
@@ -53,6 +57,20 @@ describe('Enquiry form', () => {
     const [url, init] = fetch.mock.calls[0]
     expect(url).toBe(`https://formsubmit.co/ajax/${contactInfo.enquiryEmail}`)
     expect(JSON.parse(init.body)).toMatchObject({ Name: 'Asha Patil', Email: 'asha@example.com' })
+    // A copy is saved for the staff portal, noting that the email went out.
+    expect(saveEnquiry).toHaveBeenCalledWith(expect.objectContaining({ emailed: true, replyTo: 'asha@example.com' }))
+  })
+
+  it('still counts as sent when the email fails but the copy for the staff portal is saved', async () => {
+    fetch.mockImplementation(async () => ({ ok: false, json: async () => ({}) }))
+    renderAt('/')
+    await userEvent.click((await screen.findAllByRole('button', { name: /send an enquiry/i }))[0])
+    const dialog = await screen.findByRole('dialog', { name: /enquiry form/i })
+    await userEvent.type(within(dialog).getByLabelText(/full name/i), 'Asha Patil')
+    await userEvent.type(within(dialog).getByLabelText(/email address/i), 'asha@example.com')
+    await userEvent.click(within(dialog).getByRole('button', { name: /send enquiry/i }))
+    expect(await within(dialog).findByText(/enquiry sent/i)).toBeInTheDocument()
+    expect(saveEnquiry).toHaveBeenLastCalledWith(expect.objectContaining({ emailed: false }))
   })
 
   it('closes on Escape', async () => {

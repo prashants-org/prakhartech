@@ -18,6 +18,17 @@ export const STAFF_TOOLS = [
     ],
   },
   {
+    id: 'enquiries',
+    name: 'Enquiries',
+    icon: 'inbox',
+    href: '/staff/#/enquiries',
+    description: 'Every enquiry and quote request from the website: reply, comment and track each one until it is won or closed.',
+    links: [
+      { label: 'Open', href: '/staff/#/enquiries' },
+      { label: 'Quote requests', href: '/staff/#/enquiries?kind=quote' },
+    ],
+  },
+  {
     id: 'firebase',
     name: 'Firebase console',
     icon: 'database',

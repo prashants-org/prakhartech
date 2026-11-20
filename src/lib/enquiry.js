@@ -29,9 +29,26 @@ export function validateEnquiry(values, { requirePhoneOrEmail = false } = {}) {
 // Sends an enquiry email via FormSubmit. `fields` are shown in the email as label → value.
 // `honeypot` is the value of the hidden bot-trap field: if a bot filled it,
 // we pretend success and send nothing.
+//
+// It is also saved for the staff portal (Enquiries), so every enquiry can be tracked there.
+// The enquiry counts as sent if either the email or the saved copy got through.
 export async function submitEnquiry({ subject, fields, replyTo, honeypot, source }) {
   if (honeypot) return true
 
+  const emailed = await sendEmail({ subject, fields, replyTo }).catch(() => false)
+  const page = typeof window !== 'undefined' ? window.location.pathname : ''
+  const saved = await import('../staff/saveEnquiry')
+    .then(({ saveEnquiry }) => saveEnquiry({ subject, fields, replyTo, source, page, emailed }))
+    .then(
+      () => true,
+      () => false,
+    )
+  const ok = emailed || saved
+  if (ok) track(source === 'quote-basket' ? 'quote_submit' : 'enquiry_submit', { source })
+  return ok
+}
+
+async function sendEmail({ subject, fields, replyTo }) {
   const res = await fetch(ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -45,7 +62,5 @@ export async function submitEnquiry({ subject, fields, replyTo, honeypot, source
     }),
   })
   const data = await res.json().catch(() => ({}))
-  const ok = res.ok && String(data.success) === 'true'
-  if (ok) track(source === 'quote-basket' ? 'quote_submit' : 'enquiry_submit', { source })
-  return ok
+  return res.ok && String(data.success) === 'true'
 }

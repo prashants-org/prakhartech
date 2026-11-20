@@ -15,6 +15,8 @@ export const COLLECTIONS = [
   { name: 'assets', label: 'Signatures and stamps' },
   { name: 'settings', label: 'Settings (current design and stamp)' },
   { name: 'letterTemplates', label: 'Saved letter templates' },
+  { name: 'enquiries', label: 'Website enquiries and quotes' },
+  { name: 'enquiryNotes', label: 'Comments on enquiries' },
   { name: 'auditLog', label: 'History' },
   { name: 'allowedUsers', label: 'Allowed users (reference only)', restore: false },
 ]

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
 import { auth, db } from '../letters/firebase'
@@ -10,6 +10,12 @@ import { errorText } from '../letters/errors'
 import SignIn from '../letters/pages/SignIn'
 import { setStaffRole } from './flag'
 import { toolsFor } from './tools'
+import { whoFrom } from '../letters/api'
+import { useLiveQuery } from '../letters/data'
+import { useHashPath } from '../letters/router'
+import { enquiriesQuery } from './enquiries'
+import Enquiries from './pages/Enquiries'
+import EnquiryView from './pages/EnquiryView'
 
 // The navy panel on the sign-in screen.
 const FEATURES = [
@@ -76,17 +82,32 @@ function greeting(date = new Date()) {
 }
 
 function Portal({ user, profile }) {
+  const path = useHashPath()
+  const [route, search = ''] = path.split('?')
+  const parts = route.split('/').filter(Boolean)
+  const section = parts[0] === 'enquiries' ? 'enquiries' : 'home'
+  const who = useMemo(() => whoFrom(user, profile), [user, profile])
   const name = profile.name || user.displayName || user.email
   const first = name.split(/[\s@]+/)[0]
   const isAdmin = profile.role === 'admin'
   const tools = toolsFor(profile.role)
+  // How many enquiries nobody has answered yet, shown on the Enquiries tab and card.
+  const { data: enquiries } = useLiveQuery(enquiriesQuery, 'enquiries')
+  const newCount = (enquiries || []).filter((e) => e.status === 'new').length
+
+  const tab = (href, label, key, count) => (
+    <a href={href} className={section === key ? 'is-active' : undefined} aria-current={section === key ? 'page' : undefined}>
+      {label}
+      {count > 0 && <span className="sp-count">{count}</span>}
+    </a>
+  )
 
   return (
-    <div className="sp">
+    <div className={`sp${section === 'home' ? '' : ' sp--inner'}`}>
       <header className="sp-top">
         <img className="sp-top-mark" src={ICON_REVERSED} alt="" aria-hidden="true" />
         <div className="sp-wrap sp-top-inner">
-          <a href="/staff/" className="sp-brand">
+          <a href="#/" className="sp-brand">
             <span className="sp-brand-tile">
               <img src={ICON} alt="" />
             </span>
@@ -95,6 +116,10 @@ function Portal({ user, profile }) {
               <small>Staff portal</small>
             </span>
           </a>
+          <nav className="sp-nav" aria-label="Staff portal">
+            {tab('#/', 'Tools', 'home')}
+            {tab('#/enquiries', 'Enquiries', 'enquiries', newCount)}
+          </nav>
           <div className="sp-user">
             <span className="sp-avatar" aria-hidden="true">
               {user.photoURL ? <img src={user.photoURL} alt="" referrerPolicy="no-referrer" /> : first[0]?.toUpperCase()}
@@ -108,58 +133,67 @@ function Portal({ user, profile }) {
             </button>
           </div>
         </div>
-        <div className="sp-wrap sp-hello">
-          <h1>
-            {greeting()}, {first}
-          </h1>
-          <p>Your internal tools. Bookmark this page: it’s the one address to remember.</p>
-        </div>
+        {section === 'home' && (
+          <div className="sp-wrap sp-hello">
+            <h1>
+              {greeting()}, {first}
+            </h1>
+            <p>Your internal tools. Bookmark this page: it’s the one address to remember.</p>
+          </div>
+        )}
       </header>
 
-      <main className="sp-wrap sp-main">
-        <ul className={`sp-tools${tools.length % 2 ? ' is-odd' : ''}`}>
-          {tools.map((t) => {
-            const ext = t.external ? { target: '_blank', rel: 'noreferrer' } : {}
-            return (
-              <li key={t.id} className="sp-tool">
-                <div className="sp-tool-head">
-                  <span className="sp-tool-icon">
-                    <Icon name={t.icon} size={22} />
-                  </span>
-                  <div>
-                    <h2>{t.name}</h2>
-                    {t.roles?.includes('admin') && <span className="sp-tag">Admins</span>}
+      {section === 'enquiries' ? (
+        <main className="sp-wrap sp-page" key={route}>
+          {parts[1] ? <EnquiryView id={parts[1]} who={who} /> : <Enquiries key={path} who={who} initialKind={new URLSearchParams(search).get('kind')} />}
+        </main>
+      ) : (
+        <main className="sp-wrap sp-main">
+          <ul className={`sp-tools${tools.length % 2 ? ' is-odd' : ''}`}>
+            {tools.map((t) => {
+              const ext = t.external ? { target: '_blank', rel: 'noreferrer' } : {}
+              return (
+                <li key={t.id} className="sp-tool">
+                  <div className="sp-tool-head">
+                    <span className="sp-tool-icon">
+                      <Icon name={t.icon} size={22} />
+                    </span>
+                    <div>
+                      <h2>{t.name}</h2>
+                      {t.roles?.includes('admin') && <span className="sp-tag">Admins</span>}
+                      {t.id === 'enquiries' && newCount > 0 && <span className="sp-tag sp-tag--new">{newCount} new</span>}
+                    </div>
                   </div>
-                </div>
-                <p>{t.description}</p>
-                {t.links?.length > 0 && (
-                  <div className="sp-links">
-                    {t.links.map((l) => (
-                      <a key={l.href} href={l.href} {...ext}>
-                        {l.label}
-                      </a>
-                    ))}
-                  </div>
-                )}
-                <a href={t.href} className="lt-btn lt-btn--primary sp-open" {...ext}>
-                  Open {t.name}
-                  <Icon name={t.external ? 'external' : 'back'} size={16} className={t.external ? undefined : 'lt-flip'} />
-                </a>
-              </li>
-            )
-          })}
-        </ul>
+                  <p>{t.description}</p>
+                  {t.links?.length > 0 && (
+                    <div className="sp-links">
+                      {t.links.map((l) => (
+                        <a key={l.href} href={l.href} {...ext}>
+                          {l.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                  <a href={t.href} className="lt-btn lt-btn--primary sp-open" {...ext}>
+                    Open {t.name}
+                    <Icon name={t.external ? 'external' : 'back'} size={16} className={t.external ? undefined : 'lt-flip'} />
+                  </a>
+                </li>
+              )
+            })}
+          </ul>
 
-        <div className="sp-foot">
-          <a href="/" className="sp-site">
-            <Icon name="globe" size={16} />
-            Go to the public website
-          </a>
-          <span>
-            On the website, a <b>Staff</b> button appears at the top for you on this browser.
-          </span>
-        </div>
-      </main>
+          <div className="sp-foot">
+            <a href="/" className="sp-site">
+              <Icon name="globe" size={16} />
+              Go to the public website
+            </a>
+            <span>
+              On the website, a <b>Staff</b> button appears at the top for you on this browser.
+            </span>
+          </div>
+        </main>
+      )}
       <footer className="sp-legal">© {new Date().getFullYear()} Prakhar Technology. All rights reserved.</footer>
     </div>
   )
