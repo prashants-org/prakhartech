@@ -307,8 +307,16 @@ img { max-width: 100%; }
 .lt-dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; padding: 16px 24px 22px; }
 
 /* ── Sign-in and other screens before the app opens (components/Gate.jsx) ── */
-.lt-login { min-height: 100vh; display: grid; grid-template-columns: minmax(380px, 46%) 1fr; background: #fff; }
+.lt-login {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(380px, 46%) 1fr;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: "brand panel" "brand legal";
+  background: #fff;
+}
 .lt-login-brand {
+  grid-area: brand;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -356,11 +364,11 @@ img { max-width: 100%; }
 .lt-login-foot { position: relative; margin: 0; font-size: 0.85rem; color: rgba(255, 255, 255, 0.55); letter-spacing: 0.04em; }
 
 .lt-login-panel {
+  grid-area: panel;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 28px;
   padding: 48px 24px;
   background: linear-gradient(180deg, #fff 0%, var(--soft) 100%);
 }
@@ -374,7 +382,15 @@ img { max-width: 100%; }
 .lt-google-btn { color: var(--ink); background: #fff; border-color: rgba(148, 163, 184, 0.5); box-shadow: var(--card-shadow); }
 .lt-google-btn:hover:not(:disabled) { border-color: var(--accent); box-shadow: var(--shadow-soft); }
 .lt-login-note { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 4px 0 0; font-size: 0.84rem; color: var(--muted); }
-.lt-login-legal { margin: 0; font-size: 0.8rem; color: var(--muted); }
+/* Copyright: bottom of the sign-in side on desktop, last thing on the page on phones. */
+.lt-login-legal {
+  grid-area: legal;
+  padding: 0 24px clamp(32px, 5vw, 64px);
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: var(--soft);
+}
 
 /* ── Letter editor and viewer ── */
 .lt-desk { display: grid; gap: 20px; }
@@ -482,8 +498,9 @@ img { max-width: 100%; }
   .lt-bar { position: static; }
   .lt-preview-col { position: static; }
   .lt-design-grid, .lt-grid-2 { grid-template-columns: 1fr; }
-  .lt-login { grid-template-columns: 1fr; }
-  .lt-login-panel { order: -1; min-height: auto; padding: 40px 20px 32px; }
+  .lt-login { grid-template-columns: 1fr; grid-template-rows: auto; grid-template-areas: "panel" "brand" "legal"; }
+  .lt-login-panel { padding: 40px 20px 32px; }
+  .lt-login-legal { padding: 18px 20px 22px; background: var(--ink); color: rgba(255, 255, 255, 0.6); }
   .lt-login-brand { padding: 36px 24px; }
   .lt-login-logo { height: 120px; margin-bottom: 24px; }
   .lt-main { padding-top: 24px; }

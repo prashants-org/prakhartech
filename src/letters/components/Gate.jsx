@@ -46,8 +46,9 @@ export default function Gate({ title, lead, children }) {
           {lead && <p className="lt-login-lead">{lead}</p>}
           <div className="lt-login-body">{children}</div>
         </div>
-        <p className="lt-login-legal">© {new Date().getFullYear()} Prakhar Technology, Pune</p>
       </main>
+      {/* Bottom of the page, same wording as the website footer (components/Layout.jsx). */}
+      <footer className="lt-login-legal">© {new Date().getFullYear()} Prakhar Technology. All rights reserved.</footer>
     </div>
   )
 }
