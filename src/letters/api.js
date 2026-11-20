@@ -126,3 +126,35 @@ export async function saveStamp({ who, image, settings }) {
 export async function setUpSystem({ who, data }) {
   return createTemplate({ who, data, version: 1, note: 'First design', makeCurrent: true, settings: null })
 }
+
+// ── Letter templates (ready-made letter text) ──
+
+/** Creates a template, or updates one when `id` is given. Only the creator or an admin may update it. */
+export async function saveLetterTemplate({ who, id, original, data }) {
+  const ref = id ? doc(db, 'letterTemplates', id) : doc(collection(db, 'letterTemplates'))
+  const clean = {
+    name: data.name.trim(),
+    category: data.category.trim(),
+    description: (data.description || '').trim(),
+    recipient: (data.recipient || '').trim(),
+    subject: (data.subject || '').trim(),
+    bodyHtml: sanitizeHtml(data.bodyHtml),
+    closing: (data.closing || '').trim(),
+    createdAt: id ? original.createdAt : serverTimestamp(),
+    createdBy: id ? original.createdBy : who,
+    updatedAt: serverTimestamp(),
+    updatedBy: who,
+  }
+  const batch = writeBatch(db)
+  batch.set(ref, clean)
+  addAudit(batch, who, 'templates', id ? 'template.updated' : 'template.created', { templateId: ref.id, name: clean.name })
+  await batch.commit()
+  return ref.id
+}
+
+export async function deleteLetterTemplate({ who, template }) {
+  const batch = writeBatch(db)
+  batch.delete(doc(db, 'letterTemplates', template.id))
+  addAudit(batch, who, 'templates', 'template.deleted', { templateId: template.id, name: template.name })
+  await batch.commit()
+}

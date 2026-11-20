@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { firstLine, formatRef, istYear, letterId, sanitizeHtml, toCsv } from './lib'
+import { applyTemplate, findBlanks, firstLine, formatRef, isDraftEmpty, istYear, letterId, sanitizeHtml, toCsv } from './lib'
 
 describe('letter reference numbers', () => {
   it('pads the sequence to four digits', () => {
@@ -39,5 +39,40 @@ describe('helpers', () => {
 
   it('quotes CSV cells that need it', () => {
     expect(toCsv([['a', 'b,c', 'say "hi"']])).toBe('a,"b,c","say ""hi"""')
+  })
+})
+
+describe('letter templates', () => {
+  it('finds unfilled blanks once each', () => {
+    const letter = { recipient: '[Full name]\nPune', subject: 'Offer – [Designation]', bodyHtml: '<p>Dear [Full name], salary ₹[Amount].</p>', closing: 'Yours,' }
+    expect(findBlanks(letter)).toEqual(['[Full name]', '[Designation]', '[Amount]'])
+    expect(findBlanks({ ...letter, recipient: 'Asha', subject: 'Offer', bodyHtml: '<p>Done</p>' })).toEqual([])
+  })
+
+  it('replaces only the letter text, keeping the signatory and placements', () => {
+    const draft = { recipient: 'x', subject: 'y', bodyHtml: '<p>z</p>', closing: 'c', signatoryName: 'Me', signature: { x: 1 } }
+    const next = applyTemplate(draft, { recipient: 'A', subject: 'B', bodyHtml: '<p>C</p>', closing: 'D', name: 'ignored' })
+    expect(next).toEqual({ recipient: 'A', subject: 'B', bodyHtml: '<p>C</p>', closing: 'D', signatoryName: 'Me', signature: { x: 1 } })
+  })
+
+  it('knows when a draft is still blank', () => {
+    const blank = { recipient: '', subject: '', bodyHtml: '<p>Dear Sir / Madam,</p><p><br></p>', closing: 'Yours sincerely,' }
+    expect(isDraftEmpty({ ...blank, bodyHtml: '<p>Dear Sir / Madam,</p>' }, blank)).toBe(true)
+    expect(isDraftEmpty({ ...blank, subject: 'Hello' }, blank)).toBe(false)
+  })
+})
+
+describe('built-in templates', () => {
+  it('each has the fields a letter needs and a known category', async () => {
+    const { BUILTIN_TEMPLATES, CATEGORIES } = await import('./builtinTemplates')
+    const ids = new Set()
+    for (const t of BUILTIN_TEMPLATES) {
+      expect(ids.has(t.id)).toBe(false)
+      ids.add(t.id)
+      expect(CATEGORIES).toContain(t.category)
+      for (const k of ['name', 'description', 'recipient', 'subject', 'bodyHtml', 'closing']) expect(t[k], `${t.id}.${k}`).toBeTruthy()
+      expect(sanitizeHtml(t.bodyHtml)).toBe(t.bodyHtml)
+    }
+    expect(BUILTIN_TEMPLATES.length).toBeGreaterThan(30)
   })
 })

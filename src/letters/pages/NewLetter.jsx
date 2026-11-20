@@ -3,36 +3,15 @@ import { useSession } from '../context'
 import { useFixedDoc, useLiveDoc } from '../data'
 import { issueLetter } from '../api'
 import { emptyLetter } from '../defaults'
-import { formatLetterDate, formatRef, htmlToText, isBlank, istYear } from '../lib'
+import { freshFrom, loadDraft, saveDraft } from '../drafts'
+import { applyTemplate, findBlanks, formatLetterDate, formatRef, htmlToText, isBlank, isDraftEmpty, istYear } from '../lib'
 import { useAction, useImageAspect, useMySignature } from '../hooks'
 import { MAX_HEIGHT, WIDTH_RANGE, maxWidth, measureTextEnd, placeSignature, placeStamp, withFit } from '../placement'
 import { go } from '../router'
 import LetterSheet from '../components/LetterSheet'
+import TemplatePicker from '../components/TemplatePicker'
 import Icon from '../components/Icon'
 import { Button, Dialog, Loading, Notice, PageHeader } from '../components/ui'
-
-const draftKey = (email) => `pt-letters-draft:${email}`
-
-function loadDraft(email, profile) {
-  try {
-    const saved = JSON.parse(localStorage.getItem(draftKey(email)))
-    if (saved && typeof saved === 'object') return { ...emptyLetter(profile), ...saved }
-  } catch {
-    /* no saved draft */
-  }
-  return emptyLetter(profile)
-}
-
-function saveDraft(email, draft) {
-  try {
-    localStorage.setItem(draftKey(email), JSON.stringify(draft))
-  } catch {
-    /* storage unavailable: the draft just isn't kept */
-  }
-}
-
-/** A blank letter that keeps who signs it, since that rarely changes between letters. */
-const freshFrom = (draft, profile) => ({ ...emptyLetter(profile), signatoryName: draft.signatoryName, designation: draft.designation })
 
 const FORMATS = [
   ['bold', 'B', 'Bold'],
@@ -56,6 +35,8 @@ export default function NewLetter() {
   const { who, profile, settings } = useSession()
   const [draft, setDraft] = useState(() => loadDraft(who.email, profile))
   const [confirming, setConfirming] = useState(false)
+  const [picking, setPicking] = useState(false)
+  const [replacing, setReplacing] = useState(null) // a template waiting for "replace your draft?"
   const action = useAction()
 
   const template = useFixedDoc('templates', settings.templateId)
@@ -86,11 +67,20 @@ export default function NewLetter() {
     stamp: draft.stamp && stamp?.id === draft.stamp.assetId ? stamp.image : null,
   }
 
+  const blanks = findBlanks(draft)
+
   const startIssue = () => {
     const missing = missingParts(draft)
     if (missing.length) return action.fail(`Please fill in ${missing.join(', ')} before issuing.`)
+    if (blanks.length) return action.fail(`Please fill in the blanks left from the template: ${blanks.join(', ')}.`)
     action.reset()
     setConfirming(true)
+  }
+
+  const pickTemplate = (t) => {
+    setPicking(false)
+    if (isDraftEmpty(draft, emptyLetter(profile))) replace(applyTemplate(draft, t))
+    else setReplacing(t)
   }
 
   const issue = () =>
@@ -131,8 +121,14 @@ export default function NewLetter() {
           lead="Type straight onto the letterhead. Your draft stays on this computer until you issue it."
           actions={
             <>
-              <Button variant="secondary" icon="file" onClick={clearDraft}>
+              <Button variant="ghost" icon="file" onClick={clearDraft}>
                 New blank letter
+              </Button>
+              <Button variant="ghost" icon="upload" onClick={() => go('/templates/new/draft')} title="Save this letter's text as a template others can reuse">
+                Save as template
+              </Button>
+              <Button variant="secondary" icon="list" onClick={() => setPicking(true)}>
+                Use a template
               </Button>
               <Button variant="primary" icon="check" onClick={startIssue}>
                 Issue letter
@@ -157,6 +153,12 @@ export default function NewLetter() {
               <Icon name="palette" size={15} />
               {template.name} v{template.version}
             </span>
+            {blanks.length > 0 && (
+              <span className="lt-chip lt-chip--warn" title={blanks.join('\n')}>
+                <Icon name="pen" size={15} />
+                <b>{blanks.length}</b> {blanks.length === 1 ? 'blank' : 'blanks'} in [brackets] to fill in
+              </span>
+            )}
           </div>
         </div>
         <div className="lt-bar-row">
@@ -224,6 +226,33 @@ export default function NewLetter() {
           </p>
           <p>Once issued it cannot be edited. If something is wrong, an admin can cancel it and you can issue a new one.</p>
           {action.error && <Notice kind="error">{action.error}</Notice>}
+        </Dialog>
+      )}
+
+      {picking && <TemplatePicker onPick={pickTemplate} onClose={() => setPicking(false)} />}
+
+      {replacing && (
+        <Dialog
+          title="Replace your draft?"
+          onClose={() => setReplacing(null)}
+          actions={
+            <>
+              <Button variant="secondary" onClick={() => setReplacing(null)}>
+                Keep my draft
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  replace(applyTemplate(draft, replacing))
+                  setReplacing(null)
+                }}
+              >
+                Use “{replacing.name}”
+              </Button>
+            </>
+          }
+        >
+          <p>The recipient, subject and text you have typed will be replaced by the template. Your name, designation, signature and stamp stay as they are.</p>
         </Dialog>
       )}
     </div>

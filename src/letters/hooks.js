@@ -4,6 +4,8 @@ import { collection, query, where } from 'firebase/firestore'
 import { db } from './firebase'
 import { useLiveQuery } from './data'
 import { errorText } from './errors'
+import { letterTemplatesQuery } from './queries'
+import { BUILTIN_TEMPLATES, CATEGORIES } from './builtinTemplates'
 
 const IDLE = { busy: false, error: '', done: false }
 
@@ -56,4 +58,16 @@ export function useMySignature(email) {
     for (const s of data) if (!newest || (s.createdAt?.toMillis?.() || 0) > (newest.createdAt?.toMillis?.() || 0)) newest = s
     return newest
   }, [data])
+}
+
+/** Built-in and saved letter templates together, sorted by category then name. */
+export function useLetterTemplates() {
+  const { data, error } = useLiveQuery(letterTemplatesQuery, 'letter-templates')
+  const all = useMemo(() => {
+    // If saved templates can't be read, the built-in ones are still offered.
+    if (!data && !error) return undefined
+    const order = (c) => (CATEGORIES.includes(c) ? CATEGORIES.indexOf(c) : CATEGORIES.length)
+    return [...BUILTIN_TEMPLATES, ...(data || [])].sort((a, b) => order(a.category) - order(b.category) || a.category.localeCompare(b.category) || a.name.localeCompare(b.name))
+  }, [data, error])
+  return { templates: all, error }
 }

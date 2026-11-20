@@ -4,3 +4,4 @@ import { db } from './firebase'
 export const templatesQuery = query(collection(db, 'templates'), orderBy('createdAt', 'desc'))
 export const lettersQuery = query(collection(db, 'letters'), orderBy('issuedAt', 'desc'))
 export const historyQuery = query(collection(db, 'auditLog'), orderBy('at', 'desc'), limit(300))
+export const letterTemplatesQuery = query(collection(db, 'letterTemplates'), orderBy('name'))

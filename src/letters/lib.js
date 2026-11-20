@@ -81,3 +81,29 @@ export function downloadFile(name, content, type) {
   a.remove()
   setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
+
+// ── Letter templates ──
+
+// The parts of a letter a template fills in. Who signs it, and the signature/stamp, stay as they are.
+export const TEMPLATE_FIELDS = ['recipient', 'subject', 'bodyHtml', 'closing']
+
+const BLANK = /\[[^\]\n]{1,80}\]/g
+
+/** Unfilled [blanks] left from a template, in the order they appear, without repeats. */
+export function findBlanks(letter) {
+  const text = [letter.recipient, letter.subject, htmlToText(letter.bodyHtml), letter.closing, letter.signatoryName, letter.designation].join('\n')
+  return [...new Set(text.match(BLANK) || [])]
+}
+
+/** A draft with a template's text in place of its own. */
+export function applyTemplate(draft, template) {
+  return { ...draft, ...Object.fromEntries(TEMPLATE_FIELDS.map((k) => [k, template[k] ?? ''])) }
+}
+
+/** True when nothing has been typed into the letter yet (so a template can replace it silently). */
+export function isDraftEmpty(draft, blank) {
+  return TEMPLATE_FIELDS.every((k) => (k === 'bodyHtml' ? htmlToText(draft[k]).trim() === htmlToText(blank[k]).trim() : (draft[k] || '').trim() === (blank[k] || '').trim()))
+}
+
+/** Built-in templates can only be copied; a saved one can be changed by whoever wrote it or an admin. */
+export const canManageTemplate = (t, who, isAdmin) => !t.builtIn && (isAdmin || t.createdBy?.email === who.email)

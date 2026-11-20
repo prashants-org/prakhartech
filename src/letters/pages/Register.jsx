@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useSession } from '../context'
 import { useLiveQuery } from '../data'
 import { lettersQuery } from '../queries'
 import { downloadFile, firstLine, formatDateTime, htmlToText, toCsv } from '../lib'
@@ -27,15 +28,10 @@ function exportCsv(letters) {
   downloadFile(`letter-register-${today()}.csv`, toCsv(rows), 'text/csv;charset=utf-8')
 }
 
-function exportBackup(letters) {
-  const plain = (v) => (v?.toDate ? v.toDate().toISOString() : v)
-  const data = letters.map((l) => Object.fromEntries(Object.entries(l).map(([k, v]) => [k, plain(v)])))
-  downloadFile(`letters-backup-${today()}.json`, JSON.stringify({ exportedAt: new Date().toISOString(), letters: data }, null, 2), 'application/json')
-}
-
 const matches = (l, q) => [l.ref, l.recipient, l.subject, l.issuedBy?.name, l.issuedBy?.email, l.signatoryName].some((v) => v?.toLowerCase().includes(q))
 
 export default function Register() {
+  const { isAdmin } = useSession()
   const { data: letters, error } = useLiveQuery(lettersQuery, 'all-letters')
   const [search, setSearch] = useState('')
   const [year, setYear] = useState('all')
@@ -59,14 +55,9 @@ export default function Register() {
         title="Issued letters"
         lead="Every letter issued on the letterhead, newest first. Open one to read, reprint or cancel it."
         actions={
-          <>
-            <Button variant="secondary" icon="download" onClick={() => exportCsv(shown)}>
-              Export list (CSV)
-            </Button>
-            <Button variant="secondary" icon="download" onClick={() => exportBackup(letters)}>
-              Full backup
-            </Button>
-          </>
+          <Button variant="secondary" icon="download" onClick={() => exportCsv(shown)}>
+            Export list (CSV)
+          </Button>
         }
       />
 
@@ -140,7 +131,7 @@ export default function Register() {
           </div>
         )}
         <div className="lt-table-foot">
-          Showing {shown.length} of {letters.length} letters. Download a full backup now and then: the free Firebase plan has no automatic backups.
+          Showing {shown.length} of {letters.length} letters.{isAdmin && (<> Admins: take a full backup now and then from the <a href="#/backup">Backup</a> page.</>)}
         </div>
       </Card>
     </>

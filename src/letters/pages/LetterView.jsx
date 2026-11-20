@@ -67,6 +67,7 @@ export default function LetterView({ id }) {
           items={[
             ['Issued', `${formatDateTime(letter.issuedAt)} by ${letter.issuedBy?.name} (${letter.issuedBy?.email})`],
             ['Design', `${template.name} v${template.version}`],
+            letter.restoredAt && ['Restored', `${formatDateTime(letter.restoredAt)} by ${letter.restoredBy?.name}, from a backup`],
             cancelled && ['Cancelled', `${formatDateTime(letter.cancelledAt)} by ${letter.cancelledBy?.name}: “${letter.cancelReason}”`],
           ]}
         />

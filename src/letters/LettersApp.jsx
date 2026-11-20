@@ -21,6 +21,9 @@ import LetterView from './pages/LetterView'
 import SignatureStamp from './pages/SignatureStamp'
 import Designs from './pages/Designs'
 import DesignEditor from './pages/DesignEditor'
+import LetterTemplates from './pages/LetterTemplates'
+import TemplateEditor from './pages/TemplateEditor'
+import Backup from './pages/Backup'
 
 export default function LettersApp() {
   const [state, setState] = useState({ status: 'loading' })
@@ -115,8 +118,10 @@ function FirstRun({ session }) {
 const NAV = [
   { key: 'new', label: 'New letter', icon: 'plus' },
   { key: 'register', label: 'Register', icon: 'list' },
+  { key: 'templates', label: 'Templates', icon: 'file' },
   { key: 'signature', label: 'Signature & stamp', icon: 'pen' },
   { key: 'designs', label: 'Designs', icon: 'palette', admin: true },
+  { key: 'backup', label: 'Backup', icon: 'download', admin: true },
 ]
 
 /** Works out the page for a hash path, and which nav item it belongs to. */
@@ -124,7 +129,13 @@ function route(parts, isAdmin) {
   const [section, a, b] = parts
   if (section === 'register') return { active: 'register', page: <Register /> }
   if (section === 'letter' && a) return { active: 'register', page: <LetterView id={a} /> }
+  if (section === 'templates') {
+    if (a === 'new') return { active: 'templates', page: <TemplateEditor key={`new-${b}`} mode={b === 'draft' ? 'draft' : 'new'} /> }
+    if ((a === 'edit' || a === 'copy') && b) return { active: 'templates', page: <TemplateEditor key={`${a}-${b}`} mode={a} id={b} /> }
+    return { active: 'templates', page: <LetterTemplates /> }
+  }
   if (section === 'signature') return { active: 'signature', page: <SignatureStamp /> }
+  if (section === 'backup' && isAdmin) return { active: 'backup', page: <Backup /> }
   if (section === 'designs' && isAdmin) {
     if (a === 'edit' && b) return { active: 'designs', page: <DesignEditor key={b} mode="edit" baseId={b} /> }
     if (a === 'new') return { active: 'designs', page: <DesignEditor key="new" mode="new-image" /> }
