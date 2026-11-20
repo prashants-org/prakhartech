@@ -3,7 +3,7 @@ import JsonLd from '../components/JsonLd'
 import CtaBand from '../components/ui/CtaBand'
 import PageHero from '../components/ui/PageHero'
 import SectionHead from '../components/ui/SectionHead'
-import { contactInfo } from '../data/contactInfo'
+import { useContactInfo } from '../site/siteContent'
 import { faqSchema } from '../lib/structuredData'
 
 const faqs = [
@@ -98,6 +98,7 @@ const categories = [
 ]
 
 function Faq() {
+  const contactInfo = useContactInfo()
   return (
     <>
       <JsonLd data={faqSchema(faqs.map((f) => ({ q: f.question, a: f.answer })))} />

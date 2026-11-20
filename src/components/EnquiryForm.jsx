@@ -1,10 +1,11 @@
 import { useEnquiryForm } from '../hooks/useEnquiryForm'
-import { contactInfo } from '../data/contactInfo'
+import { useContactInfo } from '../site/siteContent'
 import FieldError from './FieldError'
 
 const EMPTY = { name: '', email: '', phone: '', company: '', interest: '', message: '' }
 
 function EnquiryForm({ defaultInterest = '', defaultMessage = '', source = 'enquiry-modal' }) {
+  const contactInfo = useContactInfo()
   const form = useEnquiryForm({
     initial: { ...EMPTY, interest: defaultInterest, message: defaultMessage },
     source,

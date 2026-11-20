@@ -1,7 +1,7 @@
 import '../styles/elide.css'
 import { Link } from 'react-router-dom'
 import FieldError from '../components/FieldError'
-import { contactInfo } from '../data/contactInfo'
+import { useContactInfo } from '../site/siteContent'
 import { useEnquiryForm } from '../hooks/useEnquiryForm'
 import ElideRelated from '../components/ElideRelated'
 import ElideVideoGallery from '../components/ElideVideoGallery'
@@ -34,6 +34,7 @@ const STEPS = [
 const EMPTY_FORM = { name: '', email: '', phone: '', company: '', interest: '', message: '' }
 
 function ElideFireball() {
+  const contactInfo = useContactInfo()
   const form = useEnquiryForm({
     initial: EMPTY_FORM,
     source: 'elide-page',
@@ -246,8 +247,8 @@ function ElideFireball() {
               <a href={`mailto:${contactInfo.enquiryEmail}`} className="ef-contact-pill">
                 ✉ {contactInfo.enquiryEmail}
               </a>
-              <a href="tel:+919309847652" className="ef-contact-pill">
-                📞 +91-9309847652
+              <a href={`tel:${contactInfo.phone}`} className="ef-contact-pill">
+                📞 {contactInfo.phoneDisplay}
               </a>
             </div>
           </div>

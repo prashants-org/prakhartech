@@ -1,7 +1,7 @@
 rules_version = '2';
 
-// Security rules for the Prakhar Technology staff tools: the letter system (/letters) and
-// website enquiries (/staff/#/enquiries).
+// Security rules for the Prakhar Technology staff tools: the letter system (/letters), website
+// enquiries (/staff/#/enquiries) and the website's editable content (/staff/#/website).
 // Paste into Firebase console → Firestore Database → Rules, then Publish.
 //
 // Who can do what
@@ -10,6 +10,9 @@ rules_version = '2';
 //                         write letter templates and change their own
 //   website visitors      send an enquiry or quote request (create only, never read)
 //   staff, enquiries      read every enquiry, change its status and owner, add comments
+//   site editors          change the website's client logos and contact details (site/*):
+//                         admins, and staff whose allowedUsers record has siteEditor: true
+//   everyone              read the website content (site/*), which the public pages show
 //   admin                 everything staff can, plus cancel letters, manage designs and the stamp,
 //                         change any letter template, and back up / restore
 //
@@ -32,6 +35,9 @@ service cloud.firestore {
     function userPath() { return /databases/$(database)/documents/allowedUsers/$(myEmail()); }
     function isMember() { return signedIn() && exists(userPath()); }
     function isAdmin() { return isMember() && get(userPath()).data.role == 'admin'; }
+    function isSiteEditor() {
+      return isMember() && (get(userPath()).data.role == 'admin' || get(userPath()).data.get('siteEditor', false) == true);
+    }
     function isMe(who) { return who is map && who.email == myEmail(); }
     function settingsPath() { return /databases/$(database)/documents/settings/current; }
     function templatePath(id) { return /databases/$(database)/documents/templates/$(id); }
@@ -232,7 +238,40 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
-    // Who did what and when: letters, designs, stamp, letter templates, backups and restores.
+    // ── Website content: client logos and contact details ──
+    // Shown on the public website, so anyone may read them. Only site editors may change them, in
+    // this shape. Never deleted: the website falls back to the details built into it if missing.
+    function validContact(d) {
+      return d.keys().hasOnly(['phone', 'whatsapp', 'email', 'responseTime', 'hours', 'salesName', 'salesPhone', 'salesEmail',
+                               'officeTitle', 'address', 'updatedAt', 'updatedBy'])
+        && textUpTo(d, 'phone', 40) && d.phone.size() > 0
+        && textUpTo(d, 'whatsapp', 40)
+        && textUpTo(d, 'email', 120) && d.email.size() > 0
+        && textUpTo(d, 'responseTime', 80) && d.responseTime.size() > 0
+        && textUpTo(d, 'hours', 120)
+        && textUpTo(d, 'salesName', 80) && textUpTo(d, 'salesPhone', 40) && textUpTo(d, 'salesEmail', 120)
+        && textUpTo(d, 'officeTitle', 80)
+        && textUpTo(d, 'address', 400) && d.address.size() > 0;
+    }
+    // Each logo is {id, name, logo}; the page checks every one again before showing it.
+    function validClients(d) {
+      return d.keys().hasOnly(['items', 'updatedAt', 'updatedBy'])
+        && d.items is list
+        && d.items.size() >= 1
+        && d.items.size() <= 60;
+    }
+    match /site/{id} {
+      allow read: if true;
+      allow create: if restoring(request.resource.data);
+      allow create, update: if isSiteEditor()
+        && request.resource.data.updatedAt == request.time
+        && isMe(request.resource.data.updatedBy)
+        && ((id == 'contact' && validContact(request.resource.data))
+            || (id == 'clients' && validClients(request.resource.data)));
+      allow delete: if false;
+    }
+
+    // Who did what and when: letters, designs, stamp, letter templates, website content, backups and restores.
     match /auditLog/{id} {
       allow read: if isAdmin();
       allow create: if restoring(request.resource.data);
@@ -241,6 +280,7 @@ service cloud.firestore {
         && isMe(request.resource.data.by)
         && request.resource.data.action is string
         && (request.resource.data.area in ['letters', 'design', 'stamp', 'templates']
+            || (request.resource.data.area == 'site' && isSiteEditor())
             || (request.resource.data.area == 'backup' && isAdmin()));
       allow update, delete: if false;
     }

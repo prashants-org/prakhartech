@@ -1,7 +1,7 @@
 import '../styles/stationery.css'
 import { openEnquiry } from '../lib/enquiry'
-import { CLIENTS } from '../data/clients'
-import { contactInfo } from '../data/contactInfo'
+import { useClients } from '../site/siteContent'
+import { useContactInfo } from '../site/siteContent'
 import AddToQuoteButton from '../components/quote/AddToQuoteButton'
 import { quoteId } from '../components/quote/quoteStore'
 import CtaBand from '../components/ui/CtaBand'
@@ -133,6 +133,9 @@ const PRODUCT_SHOWCASE = [
 ]
 
 function Stationery() {
+  const contactInfo = useContactInfo()
+  const clients = useClients()
+  const half = Math.ceil(clients.length / 2)
   return (
     <div className="st-page">
 
@@ -324,10 +327,10 @@ function Stationery() {
           <p>Serving 20+ corporate clients across manufacturing, finance, and industry in Pune.</p>
         </div>
         <div className="st-marquee-wrap">
-          {[CLIENTS.slice(0, 11), CLIENTS.slice(11)].map((row, rowIdx) => (
+          {[clients.slice(0, half), clients.slice(half)].map((row, rowIdx) => (
             <div key={rowIdx} className={`st-marquee-track${rowIdx === 1 ? ' st-marquee-track--reverse' : ''}`}>
               {[...row, ...row].map((c, i) => (
-                <div key={`${c.name}-${i}`} className="st-marquee-card">
+                <div key={`${c.id}-${i}`} className="st-marquee-card">
                   {c.logo ? (
                     <img
                       src={asset(c.logo)}
@@ -357,7 +360,7 @@ function Stationery() {
       {/* ── CTA ── */}
       <CtaBand
         title="Ready to simplify your office procurement?"
-        text={`Call ${contactInfo.salesContact.name} on ${contactInfo.salesContact.phoneDisplay}, or add products to your quote basket and send one request.`}
+        text={`Call ${contactInfo.salesContact.name && contactInfo.salesContact.phone ? `${contactInfo.salesContact.name} on ${contactInfo.salesContact.phoneDisplay}` : `us on ${contactInfo.phoneDisplay}`}, or add products to your quote basket and send one request.`}
       />
 
     </div>

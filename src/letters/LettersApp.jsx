@@ -10,7 +10,7 @@ import { urlToDataUrl } from './images'
 import { useAction, useSavedDrafts } from './hooks'
 import { go, useHashPath } from './router'
 import { setStaffRole } from '../staff/flag'
-import { PORTAL_HREF, toolsFor } from '../staff/tools'
+import { PORTAL_HREF, accessOf, toolsFor } from '../staff/tools'
 import Icon from './components/Icon'
 import Gate from './components/Gate'
 import { ICON, ICON_REVERSED, LOGO } from './brand'
@@ -46,7 +46,7 @@ export default function LettersApp() {
             setStaffRole(null)
             return setState({ status: 'denied', user })
           }
-          setStaffRole(snap.data().role || 'staff')
+          setStaffRole(accessOf(snap.data()))
           setState({ status: 'ready', user, profile: snap.data() })
         } catch (error) {
           setState({ status: 'error', user, error })
@@ -232,7 +232,7 @@ function Shell() {
               <Icon name="grid" size={18} />
               Staff portal
             </a>
-            {toolsFor(profile.role)
+            {toolsFor(accessOf(profile))
               .filter((t) => t.id !== 'letters')
               .map((t) => (
                 <a key={t.id} href={t.href} {...(t.external ? { target: '_blank', rel: 'noreferrer' } : {})}>

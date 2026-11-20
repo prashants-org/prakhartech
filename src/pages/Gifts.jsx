@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import FieldError from '../components/FieldError'
 import AddToQuoteButton from '../components/quote/AddToQuoteButton'
 import { quoteId } from '../components/quote/quoteStore'
-import { contactInfo } from '../data/contactInfo'
+import { useContactInfo } from '../site/siteContent'
 import { useEnquiryForm } from '../hooks/useEnquiryForm'
 import { GIFT_PRODUCTS as PRODUCTS } from '../data/gifts'
 import LandingHero, { HeroCard } from '../components/ui/LandingHero'
@@ -69,6 +69,7 @@ function MosaicTile({ product, index, flat }) {
 }
 
 function Gifts() {
+  const contactInfo = useContactInfo()
   const [activeCategory, setActiveCategory] = useState('All')
   const form = useEnquiryForm({
     initial: EMPTY_FORM,
@@ -220,7 +221,7 @@ function Gifts() {
                   <span className="gf-contact-icon">✉</span><span>{contactInfo.enquiryEmail}</span>
                 </a>
                 <a href={`tel:${contactInfo.phone}`} className="gf-contact-item">
-                  <span className="gf-contact-icon">↗</span><span>{contactInfo.phone}</span>
+                  <span className="gf-contact-icon">↗</span><span>{contactInfo.phoneDisplay}</span>
                 </a>
               </div>
               <div className="gf-guarantee-list">

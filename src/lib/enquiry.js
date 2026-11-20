@@ -1,7 +1,7 @@
-import { contactInfo } from '../data/contactInfo'
+import { FORM_EMAIL } from '../data/contactInfo'
 import { track } from './analytics'
 
-const ENDPOINT = `https://formsubmit.co/ajax/${contactInfo.enquiryEmail}`
+const ENDPOINT = `https://formsubmit.co/ajax/${FORM_EMAIL}`
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 const PHONE_RE = /^[+()\-\s\d]{7,20}$/
 

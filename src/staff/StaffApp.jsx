@@ -9,13 +9,14 @@ import { Button, Loading, Notice } from '../letters/components/ui'
 import { errorText } from '../letters/errors'
 import SignIn from '../letters/pages/SignIn'
 import { setStaffRole } from './flag'
-import { toolsFor } from './tools'
+import { accessOf, canEditSite, toolsFor } from './tools'
 import { whoFrom } from '../letters/api'
 import { useLiveQuery } from '../letters/data'
 import { useHashPath } from '../letters/router'
 import { enquiriesQuery } from './enquiries'
 import Enquiries from './pages/Enquiries'
 import EnquiryView from './pages/EnquiryView'
+import Website from './pages/Website'
 
 // The navy panel on the sign-in screen.
 const FEATURES = [
@@ -46,7 +47,7 @@ export default function StaffApp() {
             setStaffRole(null)
             return setState({ status: 'denied', user })
           }
-          setStaffRole(snap.data().role || 'staff')
+          setStaffRole(accessOf(snap.data()))
           setState({ status: 'ready', user, profile: snap.data() })
         } catch (error) {
           setState({ status: 'error', user, error })
@@ -85,12 +86,13 @@ function Portal({ user, profile }) {
   const path = useHashPath()
   const [route, search = ''] = path.split('?')
   const parts = route.split('/').filter(Boolean)
-  const section = parts[0] === 'enquiries' ? 'enquiries' : 'home'
+  const section = ['enquiries', 'website'].includes(parts[0]) ? parts[0] : 'home'
   const who = useMemo(() => whoFrom(user, profile), [user, profile])
   const name = profile.name || user.displayName || user.email
   const first = name.split(/[\s@]+/)[0]
   const isAdmin = profile.role === 'admin'
-  const tools = toolsFor(profile.role)
+  const access = accessOf(profile)
+  const tools = toolsFor(access)
   // How many enquiries nobody has answered yet, shown on the Enquiries tab and card.
   const { data: enquiries } = useLiveQuery(enquiriesQuery, 'enquiries')
   const newCount = (enquiries || []).filter((e) => e.status === 'new').length
@@ -119,6 +121,7 @@ function Portal({ user, profile }) {
           <nav className="sp-nav" aria-label="Staff portal">
             {tab('#/', 'Tools', 'home')}
             {tab('#/enquiries', 'Enquiries', 'enquiries', newCount)}
+            {canEditSite(profile) && tab('#/website', 'Website', 'website')}
           </nav>
           <div className="sp-user">
             <span className="sp-avatar" aria-hidden="true">
@@ -126,7 +129,7 @@ function Portal({ user, profile }) {
             </span>
             <span className="sp-user-text" title={user.email}>
               <b>{name}</b>
-              <small>{isAdmin ? 'Admin' : 'Staff'}</small>
+              <small>{isAdmin ? 'Admin' : access === 'editor' ? 'Staff · Website editor' : 'Staff'}</small>
             </span>
             <button type="button" className="sp-icon-btn" title="Sign out" aria-label="Sign out" onClick={() => signOut(auth)}>
               <Icon name="logout" />
@@ -147,6 +150,10 @@ function Portal({ user, profile }) {
         <main className="sp-wrap sp-page" key={route}>
           {parts[1] ? <EnquiryView id={parts[1]} who={who} /> : <Enquiries key={path} who={who} initialKind={new URLSearchParams(search).get('kind')} />}
         </main>
+      ) : section === 'website' ? (
+        <main className="sp-wrap sp-page" key={route}>
+          <Website who={who} tab={parts[1] === 'contact' ? 'contact' : 'logos'} allowed={canEditSite(profile)} />
+        </main>
       ) : (
         <main className="sp-wrap sp-main">
           <ul className={`sp-tools${tools.length % 2 ? ' is-odd' : ''}`}>
@@ -160,7 +167,7 @@ function Portal({ user, profile }) {
                     </span>
                     <div>
                       <h2>{t.name}</h2>
-                      {t.roles?.includes('admin') && <span className="sp-tag">Admins</span>}
+                      {t.badge && <span className="sp-tag">{t.badge}</span>}
                       {t.id === 'enquiries' && newCount > 0 && <span className="sp-tag sp-tag--new">{newCount} new</span>}
                     </div>
                   </div>

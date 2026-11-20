@@ -2,6 +2,7 @@ import '../styles/elide.css'
 import JsonLd from '../components/JsonLd'
 import { faqSchema } from '../lib/structuredData'
 import { openEnquiry } from '../lib/enquiry'
+import { useContactInfo } from '../site/siteContent'
 import ElideRelated from '../components/ElideRelated'
 import { Link } from 'react-router-dom'
 import CtaBand from '../components/ui/CtaBand'
@@ -48,6 +49,7 @@ const FAQS = [
 ]
 
 function ElideFaq() {
+  const contactInfo = useContactInfo()
   return (
     <>
       <JsonLd data={faqSchema(FAQS)} />
@@ -77,8 +79,8 @@ function ElideFaq() {
                 Ask a question
               </button>
               <div className="ef-faq-contact">
-                <a href="mailto:info@prakhartech.com">✉ info@prakhartech.com</a>
-                <a href="tel:+919309847652">📞 +91-9309847652</a>
+                <a href={`mailto:${contactInfo.enquiryEmail}`}>✉ {contactInfo.enquiryEmail}</a>
+                <a href={`tel:${contactInfo.phone}`}>📞 {contactInfo.phoneDisplay}</a>
               </div>
             </div>
           </div>

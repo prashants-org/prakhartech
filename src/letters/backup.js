@@ -17,6 +17,7 @@ export const COLLECTIONS = [
   { name: 'letterTemplates', label: 'Saved letter templates' },
   { name: 'enquiries', label: 'Website enquiries and quotes' },
   { name: 'enquiryNotes', label: 'Comments on enquiries' },
+  { name: 'site', label: 'Website content (client logos, contact details)' },
   { name: 'auditLog', label: 'History' },
   { name: 'allowedUsers', label: 'Allowed users (reference only)', restore: false },
 ]

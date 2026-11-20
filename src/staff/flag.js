@@ -6,7 +6,7 @@
 const KEY = 'pt-staff'
 const CHANGED = 'pt-staff-changed'
 
-/** The role ('admin' or 'staff') noted in this browser, or null. */
+/** The access level ('admin', 'editor' or 'staff', see accessOf in tools.js) noted in this browser, or null. */
 export function staffRole() {
   try {
     return localStorage.getItem(KEY)

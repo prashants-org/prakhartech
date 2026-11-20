@@ -2,23 +2,24 @@ import { useState } from 'react'
 import EnquiryButton from '../components/ui/EnquiryButton'
 import PageHero from '../components/ui/PageHero'
 import SectionHead from '../components/ui/SectionHead'
-import { contactInfo } from '../data/contactInfo'
+import { useContactInfo } from '../site/siteContent'
 import { track } from '../lib/analytics'
 
 // The contact page has no closing CTA band: the whole page is the call to action.
 function Contact() {
+  const contactInfo = useContactInfo()
   const mapLocations = contactInfo.locations.filter((location) => location.address)
   const [selectedAddress, setSelectedAddress] = useState(mapLocations[0]?.address || '')
   const hasMultipleLocations = mapLocations.length > 1
   const mapLocationLabel = mapLocations[0]?.title || 'Head Office'
-  const wa = `https://wa.me/${contactInfo.phone.replace(/[^0-9]/g, '')}`
+  const wa = `https://wa.me/${contactInfo.whatsapp}`
 
   return (
     <>
       <PageHero
         kicker="Contact"
         title="Talk to our team"
-        lead={`Call, WhatsApp or email us, or visit our office at Phoenix Market City, Viman Nagar, Pune. We reply ${contactInfo.responseTime}.`}
+        lead={`Call, WhatsApp or email us, or visit our office at ${contactInfo.addressOneLine}. We reply ${contactInfo.responseTime}.`}
       >
         <EnquiryButton />
         <a className="btn btn--secondary" href={wa} target="_blank" rel="noopener noreferrer" onClick={() => track('whatsapp_click', { placement: 'contact-hero' })}>
@@ -42,18 +43,31 @@ function Contact() {
                 <h3>Enquiries</h3>
                 <p><a href={`mailto:${contactInfo.enquiryEmail}`}>{contactInfo.enquiryEmail}</a></p>
               </div>
-              <div>
-                <h3>Sales</h3>
-                <p>
-                  {contactInfo.salesContact.name} · <a href={`tel:${contactInfo.salesContact.phone}`}>{contactInfo.salesContact.phoneDisplay}</a>
-                  <br />
-                  <a href={`mailto:${contactInfo.salesEmail}`}>{contactInfo.salesEmail}</a>
-                </p>
-              </div>
-              <div>
-                <h3>Office hours</h3>
-                <p>Monday to Saturday, 9:00 am – 6:00 pm</p>
-              </div>
+              {(contactInfo.salesContact.name || contactInfo.salesContact.phone || contactInfo.salesEmail) && (
+                <div>
+                  <h3>Sales</h3>
+                  <p>
+                    {[
+                      contactInfo.salesContact.name,
+                      contactInfo.salesContact.phone && <a key="tel" href={`tel:${contactInfo.salesContact.phone}`}>{contactInfo.salesContact.phoneDisplay}</a>,
+                    ]
+                      .filter(Boolean)
+                      .flatMap((part, i) => (i ? [' · ', part] : [part]))}
+                    {contactInfo.salesEmail && (
+                      <>
+                        <br />
+                        <a href={`mailto:${contactInfo.salesEmail}`}>{contactInfo.salesEmail}</a>
+                      </>
+                    )}
+                  </p>
+                </div>
+              )}
+              {contactInfo.hours && (
+                <div>
+                  <h3>Office hours</h3>
+                  <p>{contactInfo.hours}</p>
+                </div>
+              )}
             </div>
           </div>
           <div className="contact-visual">

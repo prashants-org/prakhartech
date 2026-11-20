@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { contactInfo } from '../data/contactInfo'
+import { useContactInfo } from '../site/siteContent'
 import { navGroups } from '../data/navigation'
 import { trackPageview, track } from '../lib/analytics'
 import { applyHead, headFor } from '../lib/seo'
@@ -18,14 +18,15 @@ const PhoneIcon = ({ size = 15 }) => (
   <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.01 2.18 2 2 0 012 0h3a2 2 0 012 1.72c.13 1 .36 1.97.71 2.91a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.17-1.17a2 2 0 012.11-.45c.94.35 1.91.58 2.91.71A2 2 0 0122 14.92z"/></svg>
 )
 
-function whatsappLink(route) {
+function whatsappLink(route, number) {
   const section = SECTIONS[route.section] ?? SECTIONS.company
   const about = route.section === 'company' ? 'your products and services' : section.label
   const text = `Hi Prakhar Technology, I'm interested in ${about}. (Sent from ${route.path === '*' ? 'your website' : `prakhartech.com${route.path}`})`
-  return `https://wa.me/${contactInfo.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(text)}`
+  return `https://wa.me/${number}?text=${encodeURIComponent(text)}`
 }
 
 function Layout() {
+  const contactInfo = useContactInfo()
   const location = useLocation()
   const [enquiry, setEnquiry] = useState(null) // null = closed, else { interest, message, source }
   const route = findRoute(location.pathname)
@@ -86,11 +87,11 @@ function Layout() {
               <a
                 href={`tel:${contactInfo.phone}`}
                 className="callout topbar-phone"
-                aria-label={`Call us at ${contactInfo.phone}`}
+                aria-label={`Call us at ${contactInfo.phoneDisplay}`}
                 onClick={() => track('call_click', { placement: 'header', section: route.section })}
               >
                 <PhoneIcon />
-                {contactInfo.phone}
+                {contactInfo.phoneDisplay}
               </a>
               <button type="button" className="primary-btn" onClick={() => openEnquiry({ source: 'header' })}>
                 {ctaLabel}
@@ -116,11 +117,18 @@ function Layout() {
               <p className="footer-brand-name">Prakhar Technology</p>
               <p>GPS fleet tracking, Elide Fire Ball fire safety and workplace supplies for businesses across India.</p>
               <address className="footer-address">
-                <p>LG 03, Phoenix Market City,<br />East Court, Viman Nagar,<br />Pune – 411014, Maharashtra</p>
+                <p>
+                  {contactInfo.address.map((line, i) => (
+                    <span key={line}>
+                      {i > 0 && <br />}
+                      {line}
+                    </span>
+                  ))}
+                </p>
               </address>
               <div className="footer-contact-block">
                 <a href={`tel:${contactInfo.phone}`} className="footer-contact-link" onClick={() => track('call_click', { placement: 'footer' })}>
-                  <PhoneIcon size={14} /> {contactInfo.phone}
+                  <PhoneIcon size={14} /> {contactInfo.phoneDisplay}
                 </a>
                 <a href={`mailto:${contactInfo.enquiryEmail}`} className="footer-contact-link">
                   <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg> {contactInfo.enquiryEmail}
@@ -152,7 +160,7 @@ function Layout() {
         <div className="float-cta" aria-label="Quick contact">
           <QuoteBasketButton />
           <a
-            href={whatsappLink(route)}
+            href={whatsappLink(route, contactInfo.whatsapp)}
             className="float-btn float-btn--whatsapp"
             target="_blank"
             rel="noopener noreferrer"
@@ -167,7 +175,7 @@ function Layout() {
           <a
             href={`tel:${contactInfo.phone}`}
             className="float-btn float-btn--call"
-            aria-label={`Call ${contactInfo.phone}`}
+            aria-label={`Call ${contactInfo.phoneDisplay}`}
             title="Call us"
             onClick={() => track('call_click', { placement: 'floating', section: route.section })}
           >

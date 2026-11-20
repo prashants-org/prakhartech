@@ -9,7 +9,10 @@ const singleLocationContactInfo = {
   enquiryEmail: 'enquiries@example.com',
   salesContact: { name: 'Sales Person', phone: '1111111111', phoneDisplay: '111 111 1111' },
   salesEmail: 'single@example.com',
-  regions: ['Pune'],
+  whatsapp: '910000000000',
+  hours: 'Weekdays',
+  address: ['Address line 1'],
+  addressOneLine: 'Address line 1',
   locations: [
     {
       title: 'Head Office',
@@ -22,8 +25,8 @@ const singleLocationContactInfo = {
 describe('Contact map header', () => {
   it('shows a text label when only one location is available', async () => {
     vi.resetModules()
-    vi.mock('../data/contactInfo', () => ({
-      contactInfo: singleLocationContactInfo
+    vi.mock('../site/siteContent', () => ({
+      useContactInfo: () => singleLocationContactInfo
     }))
 
     const { default: Contact } = await import('../pages/Contact')

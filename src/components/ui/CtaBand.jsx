@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom'
-import { contactInfo } from '../../data/contactInfo'
+import { useContactInfo } from '../../site/siteContent'
 import { track } from '../../lib/analytics'
 import { openEnquiry } from '../../lib/enquiry'
 import { findRoute, SECTIONS } from '../../routes'
@@ -7,10 +7,11 @@ import { findRoute, SECTIONS } from '../../routes'
 // The closing call to action on every page. Wording and colour default to the
 // page's business line (routes.js → SECTIONS); pass props to tailor them.
 function CtaBand({ title, text, label, interest, message }) {
+  const contactInfo = useContactInfo()
   const route = findRoute(useLocation().pathname)
   const key = route.section ?? 'company'
   const section = SECTIONS[key] ?? SECTIONS.company
-  const wa = `https://wa.me/${contactInfo.phone.replace(/[^0-9]/g, '')}`
+  const wa = `https://wa.me/${contactInfo.whatsapp}`
 
   return (
     <section className={`cta2 cta2--${key}`} aria-labelledby="cta2-title">
