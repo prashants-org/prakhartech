@@ -1,0 +1,51 @@
+/* Staff menu in the public website's header (only loaded for signed-in staff). */
+.sl { position: relative; }
+.sl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--brand-navy);
+  background: rgba(37, 61, 97, 0.07);
+  border: 1px solid rgba(37, 61, 97, 0.18);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.sl-btn:hover, .sl-btn[aria-expanded='true'] { background: rgba(37, 61, 97, 0.12); border-color: rgba(37, 61, 97, 0.35); }
+.sl-btn .lt-icon { flex: none; }
+.sl-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 80;
+  width: min(340px, calc(100vw - 32px));
+  padding: 8px;
+  background: #fff;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.16);
+  text-align: left;
+}
+.sl-head { display: grid; padding: 10px 12px 12px; border-bottom: 1px solid #e9edf3; margin-bottom: 6px; }
+.sl-head b { font-size: 0.92rem; color: #0f172a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sl-head small { font-size: 0.78rem; color: #64748b; }
+.sl-tools { list-style: none; margin: 0; padding: 0; }
+.sl-tool { display: flex; gap: 12px; padding: 10px 12px; border-radius: 12px; color: inherit; text-decoration: none; transition: background 0.15s; }
+.sl-tool:hover { background: #f4f6fa; }
+.sl-tool-icon { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: rgba(37, 61, 97, 0.08); color: var(--brand-navy); }
+.sl-tool-text { display: grid; gap: 2px; min-width: 0; }
+.sl-tool-text b { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: #0f172a; }
+.sl-tool-text small { font-size: 0.78rem; line-height: 1.45; color: #64748b; }
+.sl-portal { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 6px; padding: 11px; border-top: 1px solid #e9edf3; font-size: 0.86rem; font-weight: 600; color: var(--brand-navy); text-decoration: none; }
+.sl-portal:hover { text-decoration: underline; }
+.sl .lt-flip { transform: scaleX(-1); }
+@media (max-width: 640px) {
+  .sl-btn { padding: 8px 10px; }
+  .sl-btn-label { display: none; }
+  /* Full width under the header, so it never runs off the screen. */
+  .sl-menu { position: fixed; top: 64px; left: 16px; right: 16px; width: auto; max-height: calc(100vh - 80px); overflow-y: auto; }
+}

@@ -1,0 +1,55 @@
+/* Staff portal (/staff/). Builds on the letter system's styles (letters/styles/app.css):
+   a navy band like the sidebar, then the tools as equal cards. */
+.sp { min-height: 100vh; display: flex; flex-direction: column; background: var(--page); }
+.sp-wrap { width: min(1080px, 100% - 40px); margin-inline: auto; }
+
+.sp-top { position: relative; overflow: hidden; padding-bottom: 92px; background: var(--side-bg); color: #fff; }
+.sp-top-mark { position: absolute; right: -60px; bottom: -110px; width: 380px; opacity: 0.07; pointer-events: none; }
+.sp-top-inner { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
+.sp-brand { display: flex; align-items: center; gap: 12px; color: #fff; text-decoration: none; }
+.sp-brand-tile { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: #fff; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22); }
+.sp-brand-tile img { height: 30px; width: auto; display: block; }
+.sp-brand b { display: block; font-size: 1rem; line-height: 1.2; }
+.sp-brand small { display: block; font-size: 0.78rem; color: rgba(255, 255, 255, 0.6); }
+.sp-user { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 6px 6px 6px 8px; border-radius: 14px; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.1); }
+.sp-avatar { flex: none; display: grid; place-items: center; width: 34px; height: 34px; overflow: hidden; border-radius: 50%; background: rgba(255, 255, 255, 0.16); font-weight: 700; font-size: 0.85rem; }
+.sp-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.sp-user-text { display: grid; min-width: 0; line-height: 1.25; }
+.sp-user-text b { font-size: 0.88rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sp-user-text small { font-size: 0.76rem; color: rgba(255, 255, 255, 0.6); }
+.sp-icon-btn { display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 10px; background: none; color: rgba(255, 255, 255, 0.75); cursor: pointer; }
+.sp-icon-btn:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+.sp-hello { position: relative; padding-top: 44px; text-align: center; }
+.sp-hello h1 { margin: 0; color: #fff; font-size: clamp(1.7rem, 3.4vw, 2.4rem); line-height: 1.15; letter-spacing: -0.03em; }
+.sp-hello p { margin: 10px auto 0; max-width: 520px; color: rgba(255, 255, 255, 0.72); }
+
+.sp-main { position: relative; flex: 1; margin-top: -60px; padding-bottom: 40px; }
+/* Two equal columns; a single last card sits centred under them, so the page stays symmetric. */
+.sp-tools { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.sp-tools.is-odd > .sp-tool:last-child { grid-column: 1 / -1; justify-self: center; width: calc(50% - 10px); }
+.sp-tools.is-odd > .sp-tool:only-child { width: min(520px, 100%); }
+.sp-tool { display: flex; flex-direction: column; gap: 14px; padding: 24px; background: #fff; border: 1px solid var(--line-soft); border-radius: var(--radius); box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 12px 32px rgba(15, 23, 42, 0.08); }
+.sp-tool-head { display: flex; align-items: center; gap: 14px; }
+.sp-tool-head h2 { margin: 0; font-size: 1.15rem; }
+.sp-tool-icon { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--accent-soft); color: var(--accent); }
+.sp-tag { display: inline-block; margin-top: 3px; padding: 1px 8px; border-radius: 999px; background: #fdf0f0; color: #912018; font-size: 0.72rem; font-weight: 600; }
+.sp-tool > p { margin: 0; color: var(--ink-2); line-height: 1.6; }
+.sp-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.sp-links a { padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: 0.82rem; font-weight: 600; color: var(--ink-2); text-decoration: none; transition: border-color 0.2s, color 0.2s, background 0.2s; }
+.sp-links a:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.sp-open { margin-top: auto; align-self: stretch; justify-content: center; }
+.lt-flip { transform: scaleX(-1); }
+
+.sp-foot { display: grid; justify-items: center; gap: 8px; margin-top: 32px; text-align: center; font-size: 0.86rem; color: var(--muted); }
+.sp-site { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; text-decoration: none; }
+.sp-site:hover { text-decoration: underline; }
+.sp-legal { padding: 18px 20px 24px; text-align: center; font-size: 0.82rem; color: var(--muted); border-top: 1px solid var(--line-soft); }
+
+@media (max-width: 760px) {
+  .sp-tools { grid-template-columns: minmax(0, 1fr); }
+  .sp-tools.is-odd > .sp-tool:last-child { width: 100%; }
+  .sp-user-text { display: none; }
+  .sp-top { padding-bottom: 80px; }
+  .sp-hello { padding-top: 32px; }
+  .sp-tool { padding: 20px; }
+}

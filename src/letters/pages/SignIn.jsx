@@ -13,7 +13,8 @@ const USE_REDIRECT = new Set(['auth/popup-blocked', 'auth/operation-not-supporte
 // "opening" is never reset here: this screen goes away once the app is ready.
 const LABEL = { idle: 'Continue with Google', google: 'Waiting for Google…', opening: 'Signing you in…' }
 
-export default function SignIn() {
+/** Google sign-in. The title, lead and panel text can be changed for other staff tools. */
+export default function SignIn({ title = 'Sign in to Letters', lead = 'Use your Google account to issue letters on the company letterhead.', ...gate }) {
   const [error, setError] = useState('')
   const [phase, setPhase] = useState('idle')
 
@@ -36,7 +37,7 @@ export default function SignIn() {
 
   const busy = phase !== 'idle'
   return (
-    <Gate title="Sign in to Letters" lead="Use your Google account to issue letters on the company letterhead.">
+    <Gate title={title} lead={lead} {...gate}>
       <button type="button" className="lt-btn lt-btn--lg lt-google-btn" disabled={busy} aria-busy={busy} onClick={signIn}>
         {busy ? <span className="lt-spinner lt-spinner--sm" aria-hidden="true" /> : <GoogleMark size={20} />}
         <span aria-live="polite">{LABEL[phase]}</span>

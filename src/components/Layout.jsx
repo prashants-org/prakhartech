@@ -9,6 +9,7 @@ import EnquiryForm from './EnquiryForm'
 import Modal from './Modal'
 import ScrollToTop from './ScrollToTop'
 import SiteNav from './SiteNav'
+import StaffLauncher from './StaffLauncher'
 import { QuoteProvider } from './quote/QuoteContext'
 import QuoteDrawer, { QuoteBasketButton } from './quote/QuoteDrawer'
 import { asset } from '../lib/asset'
@@ -81,6 +82,7 @@ function Layout() {
               </div>
             </Link>
             <div className="topbar-actions">
+              <StaffLauncher />
               <a
                 href={`tel:${contactInfo.phone}`}
                 className="callout topbar-phone"

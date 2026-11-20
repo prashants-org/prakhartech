@@ -9,6 +9,8 @@ import { classicDefaults } from './defaults'
 import { urlToDataUrl } from './images'
 import { useAction, useSavedDrafts } from './hooks'
 import { go, useHashPath } from './router'
+import { setStaffRole } from '../staff/flag'
+import { PORTAL_HREF, toolsFor } from '../staff/tools'
 import Icon from './components/Icon'
 import Gate from './components/Gate'
 import { ICON, ICON_REVERSED, LOGO } from './brand'
@@ -33,10 +35,18 @@ export default function LettersApp() {
   useEffect(
     () =>
       onAuthStateChanged(auth, async (user) => {
-        if (!user) return setState({ status: 'signed-out' })
+        // The note lets the public website show this person the staff launcher (see staff/flag.js).
+        if (!user) {
+          setStaffRole(null)
+          return setState({ status: 'signed-out' })
+        }
         try {
           const snap = await getDoc(doc(db, 'allowedUsers', user.email.toLowerCase()))
-          if (!snap.exists()) return setState({ status: 'denied', user })
+          if (!snap.exists()) {
+            setStaffRole(null)
+            return setState({ status: 'denied', user })
+          }
+          setStaffRole(snap.data().role || 'staff')
           setState({ status: 'ready', user, profile: snap.data() })
         } catch (error) {
           setState({ status: 'error', user, error })
@@ -216,6 +226,21 @@ function Shell() {
                 {NAV.filter((n) => n.admin).map(link)}
               </>
             )}
+            {/* The other staff tools, so you can move between them without the public website. */}
+            <p className="lt-nav-label">Staff tools</p>
+            <a href={PORTAL_HREF}>
+              <Icon name="grid" size={18} />
+              Staff portal
+            </a>
+            {toolsFor(profile.role)
+              .filter((t) => t.id !== 'letters')
+              .map((t) => (
+                <a key={t.id} href={t.href} {...(t.external ? { target: '_blank', rel: 'noreferrer' } : {})}>
+                  <Icon name={t.icon} size={18} />
+                  {t.name}
+                  {t.external && <Icon name="external" size={13} className="lt-nav-ext" />}
+                </a>
+              ))}
           </nav>
 
           <div className="lt-side-foot">

@@ -9,21 +9,26 @@ const FEATURES = [
   ['stamp', 'Signature and company stamp', 'Sign and stamp on the letterhead before you issue it.'],
 ]
 
-export default function Gate({ title, lead, children }) {
+const HEADLINE = (
+  <>
+    Every letter numbered, signed and <span>on record.</span>
+  </>
+)
+
+/** `features` and `headline` fill the navy panel; they default to the letter system's. */
+export default function Gate({ title, lead, children, features = FEATURES, headline = HEADLINE, about = 'About the letter system' }) {
   return (
     <div className="lt-login">
-      <aside className="lt-login-brand" aria-label="About the letter system">
+      <aside className="lt-login-brand" aria-label={about}>
         <img className="lt-login-mark" src={ICON_REVERSED} alt="" aria-hidden="true" />
         <div className="lt-login-brand-inner">
           <p className="lt-login-kicker">
             <span className="lt-dot" aria-hidden="true" />
             Prakhar Technology · Staff only
           </p>
-          <h2 className="lt-login-headline">
-            Every letter numbered, signed and <span>on record.</span>
-          </h2>
+          <h2 className="lt-login-headline">{headline}</h2>
           <ul className="lt-login-features">
-            {FEATURES.map(([icon, heading, text]) => (
+            {features.map(([icon, heading, text]) => (
               <li key={heading}>
                 <span className="lt-login-feature-icon">
                   <Icon name={icon} size={18} />

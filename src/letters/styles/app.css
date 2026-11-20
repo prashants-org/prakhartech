@@ -728,3 +728,5 @@ img { max-width: 100%; }
   .lt-row { padding: 12px 16px; }
   .lt-quick { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 16px; }
 }
+
+.lt-nav .lt-nav-ext { margin-left: auto; opacity: 0.6; }

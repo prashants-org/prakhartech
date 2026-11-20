@@ -16,6 +16,8 @@ export default defineConfig(({ isSsrBuild }) => ({
             main: fileURLToPath(new URL("./index.html", import.meta.url)),
             // Staff letter system: a separate app at /letters/, not prerendered
             letters: fileURLToPath(new URL("./letters/index.html", import.meta.url)),
+            // Staff portal: every internal tool in one place, at /staff/, not prerendered
+            staff: fileURLToPath(new URL("./staff/index.html", import.meta.url)),
           },
         },
       },

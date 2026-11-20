@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /letters/
 
 Sitemap: https://www.prakhartech.com/sitemap.xml
