@@ -92,3 +92,25 @@ export function phoneDigits(phone) {
 }
 export const whatsappLink = (e, text = '') => `https://wa.me/${phoneDigits(e.phone)}${text ? `?text=${encodeURIComponent(text)}` : ''}`
 export const telLink = (e) => `tel:+${phoneDigits(e.phone)}`
+
+// ── Showing them ──
+
+/** "5 min ago", "3 h ago", "2 days ago", then the date. */
+export function ago(t, now = Date.now()) {
+  const ms = t?.toMillis?.()
+  if (!ms) return 'Just now'
+  const min = Math.round((now - ms) / 60000)
+  if (min < 1) return 'Just now'
+  if (min < 60) return `${min} min ago`
+  const h = Math.round(min / 60)
+  if (h < 24) return `${h} h ago`
+  const d = Math.round(h / 24)
+  if (d < 7) return d === 1 ? 'Yesterday' : `${d} days ago`
+  return new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' }).format(new Date(ms))
+}
+
+/** A line or two of what they asked for: their message or list of items, else the subject. */
+export function snippet(e, max = 110) {
+  const text = (e.fields?.Message || e.fields?.Items || e.fields?.Notes || e.subject || '').replace(/\s+/g, ' ').trim()
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text
+}
