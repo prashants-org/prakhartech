@@ -1,18 +1,5 @@
-/* Modern design system */
-:root {
-  /* Logo colours: navy "P", maroon "T" */
-  --brand-navy: #253d61;
-  --brand-maroon: #720107;
-  --brand: #2563eb;
-  --brand-dark: #1d4ed8;
-  --accent: #f97316;
-  --ink: #0f172a;
-  --muted: #64748b;
-  --surface: #ffffff;
-  --soft: #f8fafc;
-  --shadow: 0 24px 60px rgba(15, 23, 42, 0.16);
-  --shadow-soft: 0 12px 28px rgba(15, 23, 42, 0.1);
-}
+/* Modern design system. Brand tokens live in styles/tokens.css (shared with the letters app). */
+@import './styles/tokens.css';
 
 .app-shell {
   min-height: 100vh;

@@ -5,10 +5,10 @@ import { createTemplate } from '../api'
 import { SAMPLE_LETTER, classicDefaults, imageDefaults } from '../defaults'
 import { imageFileToDataUrl } from '../images'
 import { formatLetterDate } from '../lib'
+import { useAction } from '../hooks'
 import { go } from '../router'
 import LetterSheet from '../components/LetterSheet'
-import { Loading, Notice } from '../components/ui'
-import { errorText } from '../errors'
+import { Button, Card, Check, Field, FileInput, Loading, Notice, PageHeader } from '../components/ui'
 import { templatesQuery } from '../queries'
 
 // Fields a design keeps (everything else on the saved document is bookkeeping).
@@ -17,6 +17,9 @@ const DESIGN_FIELDS = [
   'primaryColor', 'accentColor', 'bodyFont', 'watermark', 'watermarkOpacity', 'headerHeight', 'footerHeight', 'sideMargin',
 ]
 const pick = (t) => Object.fromEntries(DESIGN_FIELDS.filter((k) => t[k] !== undefined).map((k) => [k, t[k]]))
+
+const LOGO_IMAGE = { accept: 'image/png,image/jpeg,image/svg+xml,image/webp', opts: { maxWidth: 900, maxHeight: 900, keepSvg: true } }
+const PAGE_IMAGE = { accept: 'image/png,image/jpeg,image/webp', opts: { maxWidth: 1654, maxHeight: 2339, format: 'image/jpeg' } }
 
 /** mode: 'edit' (new version of baseId) | 'new-image' */
 export default function DesignEditor({ mode, baseId }) {
@@ -38,175 +41,156 @@ function EditorForm({ start, family, version, base }) {
   const [d, setD] = useState(start)
   const [note, setNote] = useState('')
   const [makeCurrent, setMakeCurrent] = useState(true)
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState('')
+  const action = useAction()
 
   const set = (k, v) => setD((x) => ({ ...x, [k]: v }))
-  const num = (k) => (e) => set(k, Number(e.target.value))
-
-  const upload = (k, opts) => async (e) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    setError('')
-    try {
-      set(k, await imageFileToDataUrl(file, opts))
-    } catch (err) {
-      setError(errorText(err))
-    }
-  }
+  const text = (k) => ({ value: d[k] ?? '', onChange: (e) => set(k, e.target.value) })
+  const num = (k) => ({ value: d[k], onChange: (e) => set(k, Number(e.target.value)) })
+  const upload = (k, { accept, opts }) => ({
+    accept,
+    onFile: async (file) => {
+      const image = await action.run(() => imageFileToDataUrl(file, opts))
+      if (image) {
+        set(k, image)
+        action.reset()
+      }
+    },
+  })
 
   const save = async () => {
-    setError('')
-    if (!d.name.trim()) return setError('Please give the design a name.')
-    if (!note.trim()) return setError('Please say briefly what changed, for the history.')
-    if (d.kind === 'image' && !d.background) return setError('Please upload the letterhead page image.')
-    setBusy(true)
-    try {
-      await createTemplate({ who, data: { ...pick(d), name: d.name.trim() }, family, version, note: note.trim(), makeCurrent, settings })
-      go('/designs')
-    } catch (err) {
-      setError(errorText(err))
-      setBusy(false)
-    }
+    if (!d.name.trim()) return action.fail('Please give the design a name.')
+    if (!note.trim()) return action.fail('Please say briefly what changed, for the history.')
+    if (d.kind === 'image' && !d.background) return action.fail('Please upload the letterhead page image.')
+    const saved = await action.run(() =>
+      createTemplate({ who, data: { ...pick(d), name: d.name.trim() }, family, version, note: note.trim(), makeCurrent, settings }),
+    )
+    if (saved) go('/designs')
   }
 
   return (
-    <div className="lt-page lt-design-editor">
-      <div className="lt-page-head">
-        <h1>
-          {base ? `Edit ${base.name} — new version v${version}` : 'Upload a new letterhead design'}
-        </h1>
-        <a href="#/designs" className="lt-link">
-          ← Back to designs
-        </a>
-      </div>
+    <>
+      <PageHeader
+        back={{ href: '#/designs', label: 'Designs' }}
+        kicker={base ? `New version · v${version}` : 'New design'}
+        title={base ? `Edit ${base.name}` : 'Upload a letterhead design'}
+        lead={
+          base
+            ? `Changes are saved as v${version}. v${base.version} stays as it is, so letters already issued on it don’t change.`
+            : 'Use a letterhead made in Word, Canva or by a designer. Export the blank page as an A4 image.'
+        }
+      />
 
       <div className="lt-design-grid">
-        <form className="lt-card lt-form" onSubmit={(e) => e.preventDefault()}>
-          <label className="lt-field">
-            Design name
-            <input type="text" value={d.name} onChange={(e) => set('name', e.target.value)} />
-          </label>
+        <Card accent>
+          <form onSubmit={(e) => e.preventDefault()}>
+            <Field label="Design name">
+              <input type="text" {...text('name')} />
+            </Field>
 
-          {d.kind === 'image' ? (
-            <>
-              <label className="lt-field">
-                Letterhead page image (A4, portrait)
-                <input type="file" accept="image/png,image/jpeg,image/webp" onChange={upload('background', { maxWidth: 1654, maxHeight: 2339, format: 'image/jpeg' })} />
-              </label>
-              <p className="lt-small lt-muted">
-                Export the full blank letterhead page from Word, Canva or your designer as a PNG or JPG, A4 size. If you have a PDF, open it and
-                save the page as an image first.
-              </p>
-            </>
-          ) : (
-            <>
-              <label className="lt-field">
-                Logo
-                <input type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" onChange={upload('logo', { maxWidth: 900, maxHeight: 900, keepSvg: true })} />
-              </label>
-              <div className="lt-two">
-                <label className="lt-field">
-                  Phone
-                  <input type="text" value={d.phone} onChange={(e) => set('phone', e.target.value)} />
-                </label>
-                <label className="lt-field">
-                  Email
-                  <input type="text" value={d.email} onChange={(e) => set('email', e.target.value)} />
-                </label>
-              </div>
-              <label className="lt-field">
-                Website
-                <input type="text" value={d.website} onChange={(e) => set('website', e.target.value)} />
-              </label>
-              <label className="lt-field">
-                Company name (footer)
-                <input type="text" value={d.companyName} onChange={(e) => set('companyName', e.target.value)} />
-              </label>
-              <label className="lt-field">
-                Address (footer)
-                <textarea rows={2} value={d.address} onChange={(e) => set('address', e.target.value)} />
-              </label>
-              <div className="lt-two">
-                <label className="lt-field">
-                  Main colour
-                  <input type="color" value={d.primaryColor} onChange={(e) => set('primaryColor', e.target.value)} />
-                </label>
-                <label className="lt-field">
-                  Accent colour
-                  <input type="color" value={d.accentColor} onChange={(e) => set('accentColor', e.target.value)} />
-                </label>
-              </div>
-              <label className="lt-check">
-                <input type="checkbox" checked={d.watermark} onChange={(e) => set('watermark', e.target.checked)} /> Faint logo watermark in the
-                middle of the page
-              </label>
-              {d.watermark && (
-                <>
-                  <label className="lt-field">
-                    Watermark strength
-                    <input type="range" min="0.02" max="0.12" step="0.01" value={d.watermarkOpacity} onChange={num('watermarkOpacity')} />
-                  </label>
-                  <label className="lt-field">
-                    Watermark image (optional, otherwise the logo is used)
-                    <input type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" onChange={upload('watermarkImage', { maxWidth: 900, maxHeight: 900, keepSvg: true })} />
-                  </label>
-                </>
-              )}
-            </>
-          )}
+            {d.kind === 'image' ? (
+              <FileInput
+                label={d.background ? 'Replace the page image' : 'Choose the letterhead page image (A4, portrait)'}
+                hint="A PNG or JPG of the full blank page. If you have a PDF, open it and save the page as an image first."
+                {...upload('background', PAGE_IMAGE)}
+              />
+            ) : (
+              <>
+                <fieldset className="lt-fieldset">
+                  <legend>Logo and contact</legend>
+                  <FileInput label="Replace the logo" {...upload('logo', LOGO_IMAGE)} />
+                  <div className="lt-row">
+                    <Field label="Phone">
+                      <input type="text" {...text('phone')} />
+                    </Field>
+                    <Field label="Email">
+                      <input type="text" {...text('email')} />
+                    </Field>
+                  </div>
+                  <Field label="Website">
+                    <input type="text" {...text('website')} />
+                  </Field>
+                  <Field label="Company name (footer)">
+                    <input type="text" {...text('companyName')} />
+                  </Field>
+                  <Field label="Address (footer)">
+                    <textarea rows={2} {...text('address')} />
+                  </Field>
+                </fieldset>
 
-          <label className="lt-field">
-            Letter text font
-            <select value={d.bodyFont} onChange={(e) => set('bodyFont', e.target.value)}>
-              <option value="serif">Serif (classic, formal)</option>
-              <option value="sans">Sans-serif (modern)</option>
-            </select>
-          </label>
-          <fieldset className="lt-fieldset">
-            <legend>Space for the letter text (mm)</legend>
-            <div className="lt-three">
-              <label className="lt-field">
-                Top
-                <input type="number" min="20" max="120" value={d.headerHeight} onChange={num('headerHeight')} />
-              </label>
-              <label className="lt-field">
-                Bottom
-                <input type="number" min="10" max="80" value={d.footerHeight} onChange={num('footerHeight')} />
-              </label>
-              <label className="lt-field">
-                Sides
-                <input type="number" min="10" max="45" value={d.sideMargin} onChange={num('sideMargin')} />
-              </label>
+                <fieldset className="lt-fieldset">
+                  <legend>Colours and watermark</legend>
+                  <div className="lt-row">
+                    <Field label="Main colour">
+                      <input type="color" {...text('primaryColor')} />
+                    </Field>
+                    <Field label="Accent colour">
+                      <input type="color" {...text('accentColor')} />
+                    </Field>
+                  </div>
+                  <Check checked={d.watermark} onChange={(v) => set('watermark', v)}>
+                    Faint logo watermark in the middle of the page
+                  </Check>
+                  {d.watermark && (
+                    <>
+                      <Field label="Watermark strength">
+                        <input type="range" min="0.02" max="0.12" step="0.01" {...num('watermarkOpacity')} />
+                      </Field>
+                      <FileInput label="Watermark image (optional, otherwise the logo)" {...upload('watermarkImage', LOGO_IMAGE)} />
+                    </>
+                  )}
+                </fieldset>
+              </>
+            )}
+
+            <fieldset className="lt-fieldset">
+              <legend>Text and spacing</legend>
+              <Field label="Letter text font">
+                <select {...text('bodyFont')}>
+                  <option value="serif">Serif (classic, formal)</option>
+                  <option value="sans">Sans-serif (modern)</option>
+                </select>
+              </Field>
+              <div className="lt-row">
+                <Field label="Top (mm)">
+                  <input type="number" min="20" max="120" {...num('headerHeight')} />
+                </Field>
+                <Field label="Bottom (mm)">
+                  <input type="number" min="10" max="80" {...num('footerHeight')} />
+                </Field>
+                <Field label="Sides (mm)">
+                  <input type="number" min="10" max="45" {...num('sideMargin')} />
+                </Field>
+              </div>
+            </fieldset>
+
+            <Field label="What changed?" hint="Kept in the design history.">
+              <input type="text" value={note} onChange={(e) => setNote(e.target.value)} placeholder="e.g. New office address" />
+            </Field>
+            <Check checked={makeCurrent} onChange={setMakeCurrent}>
+              Use this design for new letters straight away
+            </Check>
+            {action.error && <Notice kind="error">{action.error}</Notice>}
+            <div className="lt-form-actions">
+              <Button variant="secondary" href="#/designs">
+                Cancel
+              </Button>
+              <Button variant="primary" icon="check" disabled={action.busy} onClick={save}>
+                {action.busy ? 'Saving…' : `Save as v${version}`}
+              </Button>
             </div>
-          </fieldset>
-
-          <label className="lt-field">
-            What changed? (kept in the history)
-            <input type="text" value={note} onChange={(e) => setNote(e.target.value)} placeholder="e.g. New office address" />
-          </label>
-          <label className="lt-check">
-            <input type="checkbox" checked={makeCurrent} onChange={(e) => setMakeCurrent(e.target.checked)} /> Use this design for new letters
-            straight away
-          </label>
-          {error && <Notice kind="error">{error}</Notice>}
-          <div className="lt-toolbar-actions">
-            <a href="#/designs" className="lt-btn lt-btn-ghost">
-              Cancel
-            </a>
-            <button type="button" className="lt-btn lt-btn-primary" disabled={busy} onClick={save}>
-              {busy ? 'Saving…' : `Save as v${version}`}
-            </button>
-          </div>
-        </form>
+          </form>
+        </Card>
 
         <div className="lt-preview-col">
-          <p className="lt-muted lt-small">Preview with sample text</p>
-          <div className="lt-preview-small">
+          <p className="lt-kicker">
+            <span className="lt-dot" aria-hidden="true" />
+            Live preview
+          </p>
+          <div className="lt-preview-frame">
             <LetterSheet template={d} letter={SAMPLE_LETTER} refText="PT/2026/0000" dateText={formatLetterDate()} />
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }

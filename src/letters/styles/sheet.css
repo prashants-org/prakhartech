@@ -1,0 +1,73 @@
+/* ═══════════════════════════════════════════════════════════════
+   The letter on its letterhead, on screen and in print (A4).
+   Header, footer, watermark and background repeat on every printed
+   page; the table head/foot spacers keep the text clear of them.
+   ═══════════════════════════════════════════════════════════════ */
+.lh-sheet {
+  position: relative; width: 210mm; min-height: 297mm; background: #fff; color: #2b2a29;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, .12), 0 0 0 1px rgba(15, 23, 42, .04); overflow: hidden; flex: none;
+}
+.lh-font-serif { font-family: 'Source Serif 4', Georgia, serif; }
+.lh-font-sans { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; }
+.lh-bg { position: absolute; top: 0; left: 0; width: 210mm; height: 297mm; object-fit: fill; z-index: 0; pointer-events: none; }
+.lh-watermark { position: absolute; left: 50%; top: 148.5mm; transform: translate(-50%, -50%); width: 95mm; z-index: 0; pointer-events: none; }
+.lh-header { position: absolute; top: 0; left: 0; width: 210mm; height: var(--lh-hh); padding-top: 11mm; text-align: center; z-index: 1; }
+.lh-logo { display: block; margin: 0 auto; height: calc(var(--lh-hh) - 30mm); max-width: 110mm; object-fit: contain; }
+.lh-contact { font: 500 8.5pt 'Inter', sans-serif; color: #6b6f76; letter-spacing: .04em; margin-top: 3.5mm; }
+.lh-contact span + span::before { content: '|'; margin: 0 3mm; color: var(--lh-accent); }
+.lh-rules { position: absolute; left: 20mm; right: 20mm; bottom: 3mm; height: 1.6mm; border-top: 1.5pt solid var(--lh-primary); border-bottom: .5pt solid var(--lh-accent); }
+.lh-footer {
+  position: absolute; left: 20mm; width: 170mm; bottom: 0; height: var(--lh-fh); padding-top: 3mm; z-index: 1;
+  border-top: .5pt solid var(--lh-accent); text-align: center; font: 8pt/1.6 'Inter', sans-serif; color: #6b6f76;
+}
+.lh-footer b { color: var(--lh-primary); letter-spacing: .08em; font-weight: 600; }
+.lh-cancelled {
+  position: absolute; left: 50%; top: 120mm; transform: translate(-50%, -50%) rotate(-24deg); z-index: 5; pointer-events: none;
+  font: 700 54pt 'Inter', sans-serif; letter-spacing: .12em; color: rgba(163, 21, 29, .28); border: 5pt solid rgba(163, 21, 29, .28); padding: 2mm 8mm;
+}
+
+.lh-flow { position: relative; z-index: 2; width: 100%; border-collapse: collapse; }
+.lh-flow td { padding: 0; }
+/* The spacers repeat on every printed page, so the gap under the header is part of them. */
+.lh-space-top { height: calc(var(--lh-hh) + 6mm); }
+.lh-space-bottom { height: calc(var(--lh-fh) + 4mm); }
+.lh-content { padding: 0 var(--lh-side) 4mm !important; font-size: 11pt; line-height: 1.6; }
+.lh-meta { display: flex; justify-content: space-between; font-size: 10pt; color: #6b6f76; margin-bottom: 7mm; }
+.lh-meta b { color: #2b2a29; font-weight: 600; }
+.lh-pre { white-space: pre-line; }
+.lh-recipient { margin-bottom: 5mm; min-height: 1.6em; }
+.lh-subject { display: flex; font-weight: 600; margin-bottom: 5mm; }
+.lh-subject-text { flex: 1; min-width: 0; }
+.lh-body { min-height: 1.6em; }
+.lh-body p { margin: 0 0 3.5mm; }
+.lh-body ul, .lh-body ol { margin: 0 0 3.5mm; padding-left: 7mm; }
+.lh-closing { margin-top: 5mm; }
+.lh-signzone { position: relative; height: 22mm; }
+.lh-placed { position: absolute; z-index: 3; user-select: none; }
+.lh-placed-stamp { opacity: .92; }
+.lh-placed.is-draggable { cursor: grab; outline: 1px dashed rgba(37, 61, 97, .35); outline-offset: 2px; touch-action: none; }
+.lh-placed.is-draggable:active { cursor: grabbing; }
+.lh-name { font-weight: 600; }
+.lh-designation { white-space: pre-line; }
+
+.lh-edit { outline: none; border-radius: 2px; min-height: 1.5em; }
+.lh-edit:hover { background: rgba(37, 61, 97, .04); }
+.lh-edit:focus { background: rgba(37, 61, 97, .05); box-shadow: 0 0 0 1px rgba(37, 61, 97, .25); }
+.lh-edit:empty::before { content: attr(data-placeholder); color: #9aa1ad; pointer-events: none; }
+
+@media print {
+  @page { size: A4; margin: 0; }
+  html, body { background: #fff !important; }
+  .no-print { display: none !important; }
+  .lt-main, .lt-desk, .lt-sheet-wrap {
+    width: auto !important; padding: 0 !important; margin: 0 !important;
+    display: block !important; overflow: visible !important; animation: none !important;
+  }
+  .lh-sheet { box-shadow: none; min-height: 0; overflow: visible; zoom: 1 !important; }
+  /* Repeat on every printed page */
+  .lh-header, .lh-footer, .lh-bg, .lh-watermark, .lh-cancelled { position: fixed; }
+  .lh-header, .lh-bg { top: 0; left: 0; }
+  .lh-footer { bottom: 0; }
+  .lh-signzone, .lh-name, .lh-designation { break-inside: avoid; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

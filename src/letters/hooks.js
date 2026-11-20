@@ -1,0 +1,43 @@
+// Hooks shared by several pages.
+import { useCallback, useMemo, useState } from 'react'
+import { collection, query, where } from 'firebase/firestore'
+import { db } from './firebase'
+import { useLiveQuery } from './data'
+import { errorText } from './errors'
+
+const IDLE = { busy: false, error: '', done: false }
+
+/**
+ * Runs an async action and tracks it: `busy` while running, `error` (readable text) if it
+ * failed, `done` once it succeeded. `run` resolves to the action's result (true if it returned
+ * nothing), or undefined if it failed, so `if (await run(...))` means "it worked".
+ */
+export function useAction() {
+  const [state, setState] = useState(IDLE)
+  const run = useCallback(async (fn) => {
+    setState({ busy: true, error: '', done: false })
+    try {
+      const result = await fn()
+      setState({ busy: false, error: '', done: true })
+      return result === undefined ? true : result
+    } catch (e) {
+      setState({ busy: false, error: errorText(e), done: false })
+      return undefined
+    }
+  }, [])
+  const fail = useCallback((error) => setState({ busy: false, error, done: false }), [])
+  const reset = useCallback(() => setState(IDLE), [])
+  return { ...state, run, fail, reset }
+}
+
+/** The signed-in person's newest saved signature: undefined while loading, null if none. */
+export function useMySignature(email) {
+  const q = useMemo(() => query(collection(db, 'assets'), where('kind', '==', 'signature'), where('ownerEmail', '==', email)), [email])
+  const { data } = useLiveQuery(q, `signature:${email}`)
+  return useMemo(() => {
+    if (!data) return undefined
+    let newest = null
+    for (const s of data) if (!newest || (s.createdAt?.toMillis?.() || 0) > (newest.createdAt?.toMillis?.() || 0)) newest = s
+    return newest
+  }, [data])
+}
