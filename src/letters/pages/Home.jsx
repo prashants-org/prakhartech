@@ -3,13 +3,13 @@ import { useSession } from '../context'
 import { useLiveQuery } from '../data'
 import { lettersQuery } from '../queries'
 import { emptyLetter } from '../defaults'
-import { loadDraft, startNewDraft } from '../drafts'
+import { loadDraft, openSavedDraft, startNewDraft } from '../drafts'
 import { BUILTIN_TEMPLATES } from '../builtinTemplates'
-import { firstLine, formatDateTime, formatLetterDate, isDraftEmpty, istMonthKey, istYear, letterTitle } from '../lib'
+import { firstLine, formatDateTime, formatLetterDate, isBlankLayout, isDraftEmpty, istMonthKey, istYear, letterTitle } from '../lib'
 import { useMySignature, useSavedDrafts } from '../hooks'
 import { go } from '../router'
 import Icon from '../components/Icon'
-import { Badge, Button, Card, Empty, Loading, Notice, PageHeader } from '../components/ui'
+import { Badge, Button, Empty, Loading, Notice, PageHeader } from '../components/ui'
 import { errorText } from '../errors'
 
 // Templates offered for a quick start, the ones most offices reach for first.
@@ -24,6 +24,10 @@ function greeting(date = new Date()) {
 
 const toDate = (v) => (v?.toDate ? v.toDate() : null)
 const draftTitle = (letter) => (letterTitle(letter) === 'Letter' ? 'Untitled letter' : letterTitle(letter))
+const toLine = (letter) => (isBlankLayout(letter) ? 'Blank letter' : firstLine(letter.recipient) ? `To ${firstLine(letter.recipient)}` : 'No recipient yet')
+const monthName = () => new Intl.DateTimeFormat('en-IN', { month: 'long', timeZone: 'Asia/Kolkata' }).format(new Date())
+// Both lists show the same number of rows, so the two cards stay level.
+const ROWS = 5
 
 export default function Home() {
   const { who, profile, user, isAdmin, settings } = useSession()
@@ -59,6 +63,10 @@ export default function Home() {
     startNewDraft(who.email, profile, loadDraft(who.email, profile), t)
     go('/new')
   }
+  const openDraft = (id) => {
+    openSavedDraft(who.email, profile, id)
+    go('/new')
+  }
 
   return (
     <>
@@ -89,25 +97,16 @@ export default function Home() {
       )}
 
       <div className="lt-stats">
-        <Stat href="#/register" icon="file" label={`Issued in ${stats?.year ?? istYear()}`} value={stats?.thisYear} note={stats?.cancelled ? `${stats.cancelled} cancelled` : undefined} />
-        <Stat href="#/register" icon="calendar" label="Issued this month" value={stats?.thisMonth} />
-        <Stat href="#/register" icon="pen" label="Issued by you this year" value={stats?.mine} />
-        <Stat href="#/drafts" icon="inbox" label="Saved drafts" value={drafts.length + (hasCurrent ? 1 : 0)} note={hasCurrent ? '1 open now' : undefined} />
+        <Stat href="#/register" icon="file" label={`Issued in ${stats?.year ?? istYear()}`} value={stats?.thisYear} note={stats?.cancelled ? `${stats.cancelled} cancelled` : 'none cancelled'} />
+        <Stat href="#/register" icon="calendar" label="Issued this month" value={stats?.thisMonth} note={monthName()} />
+        <Stat href="#/register" icon="pen" label="Issued by you" value={stats?.mine} note={`in ${stats?.year ?? istYear()}`} />
+        <Stat href="#/drafts" icon="inbox" label="Drafts" value={drafts.length + (hasCurrent ? 1 : 0)} note={hasCurrent ? '1 open now' : 'none open'} />
       </div>
 
-      <div className="lt-home-grid">
-        <Card
-          title="Recent letters"
-          icon="list"
-          flush
-          actions={
-            <Button size="sm" variant="ghost" href="#/register">
-              Open the register
-            </Button>
-          }
-        >
+      <div className="lt-dash-row">
+        <Panel title="Recent letters" icon="list" more={{ href: '#/register', label: 'Open the register' }}>
           {error ? (
-            <div className="lt-home-pad">
+            <div className="lt-panel-pad">
               <Notice kind="error">{errorText(error)}</Notice>
             </div>
           ) : !letters ? (
@@ -115,81 +114,123 @@ export default function Home() {
           ) : letters.length === 0 ? (
             <Empty icon="file">No letters have been issued yet. The ones you issue will show here.</Empty>
           ) : (
-            <ul className="lt-recent">
-              {letters.slice(0, 7).map((l) => {
+            <ul className="lt-rows">
+              {letters.slice(0, ROWS).map((l) => {
                 const cancelled = l.status === 'cancelled'
                 return (
-                  <li key={l.id} className={cancelled ? 'is-faded' : undefined}>
-                    <a href={`#/letter/${l.id}`} className="lt-recent-link">
-                      <span className="lt-recent-main">
-                        <span className="lt-ref">{l.ref}</span>
-                        <b>{letterTitle(l)}</b>
-                        <span className="lt-sub">
-                          {firstLine(l.recipient) ? `To ${firstLine(l.recipient)} · ` : ''}
-                          {l.issuedBy?.name} · {formatDateTime(l.issuedAt)}
-                        </span>
-                      </span>
-                      <Badge status={l.status}>{cancelled ? 'Cancelled' : 'Issued'}</Badge>
-                    </a>
-                  </li>
+                  <Row
+                    key={l.id}
+                    href={`#/letter/${l.id}`}
+                    faded={cancelled}
+                    kicker={l.ref}
+                    title={letterTitle(l)}
+                    sub={`${firstLine(l.recipient) ? `To ${firstLine(l.recipient)} · ` : ''}${formatDateTime(l.issuedAt)}`}
+                    end={<Badge status={l.status}>{cancelled ? 'Cancelled' : 'Issued'}</Badge>}
+                  />
                 )
               })}
             </ul>
           )}
-        </Card>
+        </Panel>
 
-        <div className="lt-home-side">
-          <Card title="Pick up where you left off" icon="inbox">
-            {hasCurrent ? (
-              <div className="lt-draft-row">
-                <div className="lt-draft-main">
-                  <b>{draftTitle(current)}</b>
-                  <span className="lt-sub">Open on the New letter page</span>
-                </div>
-                <Button size="sm" variant="secondary" href="#/new">
-                  Continue
-                </Button>
-              </div>
-            ) : (
-              <p className="lt-muted lt-tight">Nothing in progress. Start a letter, or open a saved draft.</p>
-            )}
-            {drafts.length > 0 && (
-              <a href="#/drafts" className="lt-more">
-                {drafts.length} saved draft{drafts.length === 1 ? '' : 's'}
-                <Icon name="back" size={14} className="lt-flip" />
-              </a>
-            )}
-          </Card>
-
-          <Card title="Quick start" icon="plus">
-            <div className="lt-quick">
-              {QUICK_TEMPLATES.map((t) => (
-                <button key={t.id} type="button" className="lt-quick-item" onClick={() => startFrom(t)}>
-                  <b>{t.name}</b>
-                  <span>{t.category}</span>
-                </button>
+        <Panel title="Drafts" icon="inbox" more={{ href: '#/drafts', label: 'All drafts' }}>
+          {!hasCurrent && drafts.length === 0 ? (
+            <Empty icon="inbox">Nothing in progress. Letters you start and put aside will show here.</Empty>
+          ) : (
+            <ul className="lt-rows">
+              {hasCurrent && <Row href="#/new" kicker="Open now" title={draftTitle(current)} sub={toLine(current)} end={<Badge tone="accent">Continue</Badge>} />}
+              {drafts.slice(0, ROWS - (hasCurrent ? 1 : 0)).map((d) => (
+                <Row
+                  key={d.id}
+                  onClick={() => openDraft(d.id)}
+                  kicker="Saved draft"
+                  title={draftTitle(d.letter)}
+                  sub={`${toLine(d.letter)} · ${formatDateTime(new Date(d.savedAt))}`}
+                  end={<Badge>Open</Badge>}
+                />
               ))}
-            </div>
-            <p className="lt-sub lt-quick-note">
-              {hasCurrent ? 'The letter open now is kept in Drafts. ' : ''}
-              <a href="#/templates">All templates</a>
-            </p>
-          </Card>
-        </div>
+            </ul>
+          )}
+        </Panel>
       </div>
+
+      <Panel title="Start from a template" icon="copy" more={{ href: '#/templates', label: 'All templates' }}>
+        <div className="lt-quick">
+          {QUICK_TEMPLATES.map((t) => (
+            <button key={t.id} type="button" className="lt-quick-item" onClick={() => startFrom(t)}>
+              <span className="lt-quick-icon">
+                <Icon name={t.layout === 'blank' ? 'file' : 'pen'} size={16} />
+              </span>
+              <b>{t.name}</b>
+              <span>{t.category}</span>
+            </button>
+          ))}
+        </div>
+      </Panel>
     </>
   )
 }
 
+/** A dashboard card: a title row, its content, and a link to the full page at the foot. */
+function Panel({ title, icon, more, children }) {
+  return (
+    <section className="lt-card lt-card--flush lt-panel">
+      <div className="lt-card-head">
+        <h2>
+          <span className="lt-card-icon">
+            <Icon name={icon} size={17} />
+          </span>
+          {title}
+        </h2>
+      </div>
+      <div className="lt-panel-body">{children}</div>
+      <a href={more.href} className="lt-panel-more">
+        {more.label}
+        <Icon name="back" size={14} className="lt-flip" />
+      </a>
+    </section>
+  )
+}
+
+/** One line in a dashboard list: a link, or a button when it runs an action. */
+function Row({ href, onClick, faded, kicker, title, sub, end }) {
+  const inner = (
+    <>
+      <span className="lt-row-main">
+        <span className="lt-row-kicker">{kicker}</span>
+        <b>{title}</b>
+        <span className="lt-sub">{sub}</span>
+      </span>
+      {end}
+    </>
+  )
+  return (
+    <li className={faded ? 'is-faded' : undefined}>
+      {href ? (
+        <a href={href} className="lt-row">
+          {inner}
+        </a>
+      ) : (
+        <button type="button" className="lt-row" onClick={onClick}>
+          {inner}
+        </button>
+      )}
+    </li>
+  )
+}
+
+/** A count at the top of the dashboard, linking to the page it counts. */
 function Stat({ href, icon, label, value, note }) {
   return (
     <a href={href} className="lt-stat">
-      <span className="lt-card-icon">
-        <Icon name={icon} size={17} />
-      </span>
-      <span className="lt-stat-text">
-        <b>{value ?? '–'}</b>
+      <span className="lt-stat-top">
+        <span className="lt-card-icon">
+          <Icon name={icon} size={17} />
+        </span>
         <span>{label}</span>
+      </span>
+      <span className="lt-stat-num">
+        <b>{value ?? '–'}</b>
         {note && <small>{note}</small>}
       </span>
     </a>
