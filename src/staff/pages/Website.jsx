@@ -60,7 +60,7 @@ function Updated({ data }) {
   if (!data?.updatedBy) return <span>Showing the details built into the website: nobody has changed them here yet.</span>
   return (
     <span>
-      Last changed by <b>{data.updatedBy.name}</b> on {formatDateTime(data.updatedAt)}.
+      Last changed by <b>{data.updatedBy.name}</b> {data.updatedAt?.toMillis ? `on ${formatDateTime(data.updatedAt)}` : 'just now'}.
     </span>
   )
 }
